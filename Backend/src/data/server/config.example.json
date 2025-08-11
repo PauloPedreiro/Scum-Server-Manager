@@ -1,0 +1,112 @@
+{
+  "serverPath": "C:\\Servers\\Scum\\SCUM\\Binaries\\Win64",
+  "steamCMDPath": "C:\\Servers\\steamcmd",
+  "installPath": "C:\\Servers\\Scum",
+  "batPath": "C:\\Servers\\start-server-no-pause.bat",
+  "port": 8904,
+  "maxPlayers": 64,
+  "useBattleye": true,
+  "autoRestart": false,
+  "restartInterval": 3600000,
+  "logLevel": "info",
+  "checkInterval": 30000,
+  "discord_bot": {
+    "enabled": true,
+    "token": "TOKEN_DO_BOT",
+    "guild_id": "1343764652114575513",
+    "webhook_key": "Chat_in_Game",
+    "channels": {
+      "vehicle_registration": "1395477789313994812",
+      "vehicle_mount_registration": "1395634763733405756",
+      "vehicle_denunciation": "1396238276808937567",
+      "squads": "1401426550225633451",
+      "vehicle_control": "1401294570888892446",
+      "link_request": "1403596371155484713",
+      "linked_notify": "1403602746019549327"
+    },
+    "features": {
+      "vehicle_registration": {
+        "enabled": true,
+        "command_prefix": "/rv",
+        "auto_register": true,
+        "cooldown_seconds": 30,
+        "embed_color": "#00ff00",
+        "notification_channel": "vehicle_registration"
+      },
+      "vehicle_mount_registration": {
+        "enabled": true,
+        "command_prefix": "/rm",
+        "auto_register": true,
+        "cooldown_seconds": 30,
+        "embed_color": "#ff8800",
+        "notification_channel": "vehicle_mount_registration"
+      },
+      "vehicle_mount_complete": {
+        "enabled": true,
+        "command_prefix": "/mc",
+        "auto_register": true,
+        "cooldown_seconds": 30,
+        "embed_color": "#00ff88",
+        "notification_channel": "vehicle_registration"
+      },
+      "vehicle_denunciation": {
+        "enabled": true,
+        "command_prefix": "/dv",
+        "auto_register": false,
+        "cooldown_seconds": 28,
+        "embed_color": "#ff0000",
+        "notification_channel": "vehicle_denunciation",
+        "required_roles": [
+          "Staff",
+          "STAFF",
+          "Adm",
+          "ADM"
+        ]
+      },
+      "user_linking": {
+        "enabled": true,
+        "auto_link": true,
+        "link_expiration_hours": 24,
+        "link_button_timeout": 300000
+      },
+      "notifications": {
+        "error_notifications": true,
+        "success_notifications": true
+      }
+    }
+  },
+  "funny_statistics": {
+    "enabled": true,
+    "database_path": "C:\\Servers\\scum\\SCUM\\Saved\\SaveFiles\\SCUM.db",
+    "temp_path": "./temp/SCUM.db",
+    "schedule": {
+      "enabled": true,
+      "times": ["12:00", "22:00"],
+      "timezone": "America/Sao_Paulo"
+    },
+    "sunday_special": {
+      "enabled": true,
+      "time": "14:00"
+    },
+    "webhook_key": "funny-statistic",
+    "embed_color": "#ff6b6b",
+    "cooldown_minutes": 30
+  },
+  "scheduler": {
+    "enabled": true,
+    "interval": 30000,
+    "frontend_fallback": true,
+    "endpoints": [
+      "/api/adminlog",
+      "/api/chat_in_game",
+      "/api/LogVeiculos",
+      "/api/famepoints",
+      "/api/bunkers/status",
+      "/api/players/painelplayers",
+      "/api/squads"
+    ],
+    "retry_attempts": 3,
+    "retry_delay": 5000,
+    "timeout": 10000
+  }
+}
