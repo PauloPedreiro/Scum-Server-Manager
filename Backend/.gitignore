@@ -123,6 +123,7 @@ Thumbs.db
 # Config files with sensitive data
 config.json
 secrets.json
+src/data/server/config.json
 
 # Build outputs
 dist/
