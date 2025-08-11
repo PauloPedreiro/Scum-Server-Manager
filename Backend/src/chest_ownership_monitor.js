@@ -152,6 +152,43 @@ class ChestOwnershipMonitor {
     return s.replace(/_/g, ' ');
   }
 
+  normalizeVehicleDisplayName(rawName) {
+    try {
+      if (!rawName) return 'DESCONHECIDO';
+      let s = String(rawName);
+      s = s.replace('Vehicle:BPC_', '');
+      s = s.replace(/^BPC_/i, '');
+      s = s.replace(/_ES$/i, '');
+      s = s.replace(/_/g, ' ');
+      s = s.replace(/item\s*container/ig, '');
+      s = s.replace(/\s+/g, ' ').trim();
+      if (!s) return 'DESCONHECIDO';
+
+      const normalizedLower = s.toLowerCase();
+      const dictionary = {
+        'wolfswagen': 'WolfsWagen',
+        'rager': 'Rager',
+        'laika': 'Laika',
+        'cruiser': 'Cruiser',
+        'dirtbike': 'Dirtbike',
+        'tractor': 'Tractor',
+        'kinglet mariner': 'Kinglet Mariner',
+        'kinglet duster': 'Kinglet Duster',
+        'ris': 'RIS'
+      };
+      if (dictionary[normalizedLower]) return dictionary[normalizedLower];
+
+      const preserveUpper = new Set(['RIS']);
+      return s.split(' ').map(word => {
+        const upper = word.toUpperCase();
+        if (preserveUpper.has(upper)) return upper;
+        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+      }).join(' ');
+    } catch (_) {
+      return String(rawName);
+    }
+  }
+
   mapVehicleToImage(vehicleName) {
     if (!vehicleName) return null;
     const name = String(vehicleName).toLowerCase();

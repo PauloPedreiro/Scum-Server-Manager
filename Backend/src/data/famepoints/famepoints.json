@@ -2,8 +2,8 @@
   "76561198040636105": {
     "playerName": "Pedreiro",
     "steamId": "76561198040636105",
-    "totalFame": 1007.203186,
-    "timestamp": "2025-08-09T21:00:24.477Z"
+    "totalFame": 1015.351746,
+    "timestamp": "2025-08-11T06:09:56.628Z"
   },
   "76561198836511515": {
     "playerName": "rodrigomendes",
@@ -21,7 +21,7 @@
     "playerName": "ARKANJO",
     "steamId": "76561198094354554",
     "totalFame": 3088.168701,
-    "timestamp": "2025-08-10T04:39:21.786Z"
+    "timestamp": "2025-08-11T05:57:02.794Z"
   },
   "76561197963358180": {
     "playerName": "Reav",
@@ -110,8 +110,8 @@
   "76561197995901898": {
     "playerName": "Aqu1n0",
     "steamId": "76561197995901898",
-    "totalFame": 685.093628,
-    "timestamp": "2025-08-10T00:16:10.625Z"
+    "totalFame": 702.78241,
+    "timestamp": "2025-08-11T06:09:56.628Z"
   },
   "76561198240075378": {
     "playerName": "Vassili Kikov",
@@ -147,7 +147,7 @@
     "playerName": "Rocha",
     "steamId": "76561199086720901",
     "totalFame": 360.52478,
-    "timestamp": "2025-08-10T04:39:21.786Z"
+    "timestamp": "2025-08-11T05:57:02.794Z"
   },
   "76561198035995505": {
     "playerName": "Devil601",
@@ -160,5 +160,11 @@
     "steamId": "76561198325140823",
     "totalFame": 103.973312,
     "timestamp": "2025-08-10T00:16:10.647Z"
+  },
+  "76561198140683162": {
+    "playerName": "Jovigono",
+    "steamId": "76561198140683162",
+    "totalFame": 80.807007,
+    "timestamp": "2025-08-11T06:09:56.627Z"
   }
 }

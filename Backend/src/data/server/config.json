@@ -12,7 +12,7 @@
   "checkInterval": 30000,
   "discord_bot": {
     "enabled": true,
-    "token": "TOKEN_DO_BOT",
+    "token": "MTM5NTQ5NjY1NDE1NjU5NTQwNA.G3PaG7.r-zM2fzjligbf46-mL-Bhm4_l1Ds9HhMOCVNr4",
     "guild_id": "1343764652114575513",
     "webhook_key": "Chat_in_Game",
     "channels": {

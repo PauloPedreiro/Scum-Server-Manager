@@ -12,9 +12,14 @@
         "vehicleId": "4807639",
         "vehicleType": "Barba",
         "registeredAt": "2025-08-09T22:18:34.044Z"
+      },
+      {
+        "vehicleId": "4981234",
+        "vehicleType": "WolfsWagen",
+        "registeredAt": "2025-08-11T06:08:39.485Z"
       }
     ],
-    "lastUpdated": "2025-08-09T22:18:34.044Z"
+    "lastUpdated": "2025-08-11T06:08:39.485Z"
   },
   "76561198398160339": {
     "playerName": "BlueArcher_BR",

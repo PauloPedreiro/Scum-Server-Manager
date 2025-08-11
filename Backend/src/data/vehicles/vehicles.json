@@ -1513,5 +1513,65 @@
       "z": 33086.922
     },
     "processedAt": "2025-08-09T23:51:26.937Z"
+  },
+  {
+    "timestamp": "2025.08.11-04.01.10",
+    "event": "VehicleInactiveTimerReached",
+    "vehicleType": "RIS_ES",
+    "vehicleId": "4170004",
+    "ownerSteamId": "N/A",
+    "ownerPlayerId": "N/A",
+    "ownerName": "Sem Proprietário",
+    "location": {
+      "x": -169912.203,
+      "y": -697855.938,
+      "z": 821.732
+    },
+    "processedAt": "2025-08-11T05:57:32.877Z"
+  },
+  {
+    "timestamp": "2025.08.11-04.01.10",
+    "event": "Disappeared",
+    "vehicleType": "RIS_ES",
+    "vehicleId": "4170004",
+    "ownerSteamId": "N/A",
+    "ownerPlayerId": "N/A",
+    "ownerName": "Sem Proprietário",
+    "location": {
+      "x": -169912.203,
+      "y": -697855.938,
+      "z": 821.732
+    },
+    "processedAt": "2025-08-11T05:57:32.877Z"
+  },
+  {
+    "timestamp": "2025.08.11-04.01.10",
+    "event": "VehicleInactiveTimerReached",
+    "vehicleType": "Laika_ES",
+    "vehicleId": "4186098",
+    "ownerSteamId": "N/A",
+    "ownerPlayerId": "N/A",
+    "ownerName": "Sem Proprietário",
+    "location": {
+      "x": -838567.438,
+      "y": 140783.766,
+      "z": 42682.07
+    },
+    "processedAt": "2025-08-11T05:57:32.877Z"
+  },
+  {
+    "timestamp": "2025.08.11-04.01.10",
+    "event": "Disappeared",
+    "vehicleType": "Laika_ES",
+    "vehicleId": "4186098",
+    "ownerSteamId": "N/A",
+    "ownerPlayerId": "N/A",
+    "ownerName": "Sem Proprietário",
+    "location": {
+      "x": -838567.438,
+      "y": 140783.766,
+      "z": 42682.07
+    },
+    "processedAt": "2025-08-11T05:57:32.877Z"
   }
 ]
