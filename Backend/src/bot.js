@@ -92,13 +92,13 @@ class DiscordBot {
         try {
             console.log('🔍 Processando mensagem:', messageContent);
             
-            // Padrão: 🎯 Pedreiro (76561198040636105): /rv 110050
-            const rvMatch = messageContent.match(/(?:🎯|🌐|👥)\s*([^(]+)\s*\((\d+)\):\s*\/rv\s+(\d+)/);
-            const rmMatch = messageContent.match(/(?:🎯|🌐|👥)\s*([^(]+)\s*\((\d+)\):\s*\/rm\s+(\d+)/);
-            const mcMatch = messageContent.match(/(?:🎯|🌐|👥)\s*([^(]+)\s*\((\d+)\):\s*\/mc\s+(\d+)(?:\s+(.+))?/);
-            const dvMatch = messageContent.match(/(?:🎯|🌐|👥)\s*([^(]+)\s*\((\d+)\):\s*\/dv\s+(\d+)\s+(\{[^}]+\})/);
-            const rgStartMatch = messageContent.match(/(?:🎯|🌐|👥)\s*([^(]+)\s*\((\d+)\):\s*\/rg\s*$/i);
-            const rgCodeMatch = messageContent.match(/(?:🎯|🌐|👥)\s*([^(]+)\s*\((\d+)\):\s*\/rg\s+(\d{4,8})/i);
+            // Padrão: 🎯 Pedreiro: /rv 110050 (sem Steam ID na mensagem)
+            const rvMatch = messageContent.match(/(?:🎯|🌐|👥)\s*([^:]+):\s*\/rv\s+(\d+)/);
+            const rmMatch = messageContent.match(/(?:🎯|🌐|👥)\s*([^:]+):\s*\/rm\s+(\d+)/);
+            const mcMatch = messageContent.match(/(?:🎯|🌐|👥)\s*([^:]+):\s*\/mc\s+(\d+)(?:\s+(.+))?/);
+            const dvMatch = messageContent.match(/(?:🎯|🌐|👥)\s*([^:]+):\s*\/dv\s+(\d+)\s+(\{[^}]+\})/);
+            const rgStartMatch = messageContent.match(/(?:🎯|🌐|👥)\s*([^:]+):\s*\/rg\s*$/i);
+            const rgCodeMatch = messageContent.match(/(?:🎯|🌐|👥)\s*([^:]+):\s*\/rg\s+(\d{4,8})/i);
             
             console.log('🔍 Matches encontrados:');
             console.log('  rvMatch:', rvMatch);
@@ -117,24 +117,27 @@ class DiscordBot {
                 return;
             }
 
-            let playerName, steamId, vehicleId, vehicleType;
+            let playerName, vehicleId, vehicleType;
         
             let location = null;
             if (commandType === 'mc') {
-                [, playerName, steamId, vehicleId, vehicleType] = match;
+                [, playerName, vehicleId, vehicleType] = match;
                 vehicleType = vehicleType || null; // Tipo é opcional para /mc
             } else if (commandType === 'dv') {
-                [, playerName, steamId, vehicleId, location] = match;
+                [, playerName, vehicleId, location] = match;
                 vehicleType = location; // Para /dv, vehicleType contém a localização
             } else if (commandType === 'rg_start') {
-                [, playerName, steamId] = match;
+                [, playerName] = match;
             } else if (commandType === 'rg_code') {
-                [, playerName, steamId, vehicleId] = match; // vehicleId carrega o código
+                [, playerName, vehicleId] = match; // vehicleId carrega o código
             } else {
                 // Para /rv e /rm, extrair apenas ID - tipo será obtido do banco
-                [, playerName, steamId, vehicleId] = match;
+                [, playerName, vehicleId] = match;
                 vehicleType = null; // Será obtido do banco
             }
+            
+            // Obter Steam ID através do mapeamento de nomes
+            const steamId = this.getSteamIdFromPlayerName(playerName);
         
             logger.command(commandType, playerName, steamId, vehicleId, { vehicleType });
             

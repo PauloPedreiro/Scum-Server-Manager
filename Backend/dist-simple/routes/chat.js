@@ -169,7 +169,7 @@ router.get('/chat_in_game', async (req, res) => {
                 }
                 
                 const chatTypeEmoji = getChatTypeEmoji(msg.chatType);
-                const text = `${chatTypeEmoji} ${msg.playerName} (${msg.steamId}): ${msg.message}`;
+                const text = `${chatTypeEmoji} ${msg.playerName}: ${msg.message}`;
                 try {
                     const response = await makeRequest({
                         url: webhookUrl,
