@@ -1,0 +1,25 @@
+<svg width="192" height="192" viewBox="0 0 192 192" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="96" cy="96" r="96" fill="#1a1a1a"/>
+  
+  <!-- Outer ring -->
+  <circle cx="96" cy="96" r="80" stroke="#22c55e" stroke-width="4" fill="none"/>
+  
+  <!-- Inner ring -->
+  <circle cx="96" cy="96" r="60" stroke="#22c55e" stroke-width="2" fill="none"/>
+  
+  <!-- Center icon - Server/Computer -->
+  <rect x="76" y="76" width="40" height="40" rx="4" fill="#22c55e"/>
+  
+  <!-- Server lines -->
+  <rect x="82" y="84" width="28" height="2" fill="#1a1a1a"/>
+  <rect x="82" y="90" width="28" height="2" fill="#1a1a1a"/>
+  <rect x="82" y="96" width="28" height="2" fill="#1a1a1a"/>
+  <rect x="82" y="102" width="28" height="2" fill="#1a1a1a"/>
+  
+  <!-- Corner accents -->
+  <circle cx="40" cy="40" r="4" fill="#22c55e"/>
+  <circle cx="152" cy="40" r="4" fill="#22c55e"/>
+  <circle cx="40" cy="152" r="4" fill="#22c55e"/>
+  <circle cx="152" cy="152" r="4" fill="#22c55e"/>
+</svg>

@@ -1,0 +1,12 @@
+{
+  "file": "admin_20250729025529.log",
+  "content": [
+    "2025.07.29-02.55.29: Game version: 1.0.1.3.96391",
+    "2025.07.29-02.55.29: Deleting players that haven't logged in for 180 day(s)...",
+    "2025.07.29-02.55.29: Completed in 0.004s for 0 player profiles and 0 players.",
+    "2025.07.29-03.01.53: '76561198040636105:Pedreiro(1)' Command: 'SpawnVehicle BPC_Kinglet_Duster'",
+    "2025.07.29-03.02.19: '76561198040636105:Pedreiro(1)' Command: 'SpawnItem Lock_Item_Advanced'",
+    "2025.07.29-03.07.30: '76561198040636105:Pedreiro(1)' Command: 'SpawnVehicle BPC_Kinglet_Duster'"
+  ],
+  "savedAt": "2025-07-29T03:51:47.232Z"
+}

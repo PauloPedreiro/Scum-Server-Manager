@@ -1,0 +1,13 @@
+{
+  "watch": ["*.js", "routes/", "src/"],
+  "ignore": [
+    "src/data/players/players.json",
+    "src/data/admin/adminlog.json",
+    "src/data/temp/*",
+    "*.log"
+  ],
+  "ext": "js,json",
+  "env": {
+    "NODE_ENV": "development"
+  }
+} 

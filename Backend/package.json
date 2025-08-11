@@ -1,0 +1,49 @@
+{
+  "name": "scum-server-manager-backend",
+  "version": "1.0.0",
+  "description": "Backend para gerenciamento de servidor SCUM",
+  "main": "server.js",
+  "bin": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "build": "node build.js",
+    "build-test": "node build.js --test",
+    "build-no-axios": "node build.js --no-axios",
+    "build-nexe": "node build-nexe.js",
+    "build-simple": "node build-simple.js",
+    "build-exe": "node build-exe-simple.js",
+    "build-pkg": "pkg .",
+    "build-win": "pkg . --targets node18-win-x64",
+    "build-linux": "pkg . --targets node18-linux-x64",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "scum",
+    "server",
+    "manager",
+    "backend",
+    "api"
+  ],
+  "author": "SCUM Server Manager",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.10.0",
+    "bcrypt": "^5.1.1",
+    "cors": "^2.8.5",
+    "discord.js": "^14.21.0",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "glob": "^10.4.5",
+    "jsonwebtoken": "^9.0.2",
+    "luxon": "^3.7.1",
+    "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1",
+    "pkg": "^5.8.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

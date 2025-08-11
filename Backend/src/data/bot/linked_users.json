@@ -1,0 +1,22 @@
+{
+  "592132368635265034": {
+    "steam_id": "76561198040636105",
+    "linked_at": "2025-08-09T05:37:57.779Z",
+    "permissions": [
+      "vehicle_registration",
+      "vehicle_mount_registration"
+    ],
+    "last_activity": "2025-08-09T05:37:57.779Z",
+    "total_registrations": 0
+  },
+  "380682856726396928": {
+    "steam_id": "76561197963358180",
+    "linked_at": "2025-08-09T15:22:17.468Z",
+    "permissions": [
+      "vehicle_registration",
+      "vehicle_mount_registration"
+    ],
+    "last_activity": "2025-08-09T15:22:17.468Z",
+    "total_registrations": 0
+  }
+}

@@ -1,0 +1,234 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+  }
+  
+  body {
+    background-color: #0a0a0a;
+    color: #f5f5dc;
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  #root {
+    overflow-x: hidden;
+    height: 100vh;
+    min-height: 100vh;
+  }
+
+  /* Melhorar experiência de toque em dispositivos móveis */
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Ajustar tamanho de fonte para mobile */
+  @media (max-width: 768px) {
+    html {
+      font-size: 14px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    html {
+      font-size: 13px;
+    }
+  }
+}
+
+@layer components {
+  .scum-button {
+    @apply bg-scum-secondary hover:bg-scum-accent text-scum-light font-semibold py-2 px-4 rounded border border-scum-primary transition-all duration-200 transform hover:scale-105 active:scale-95;
+  }
+
+  .scum-button-mobile {
+    @apply bg-scum-secondary hover:bg-scum-accent text-scum-light font-semibold py-3 px-6 rounded-lg border border-scum-primary transition-all duration-200 transform active:scale-95 text-sm;
+  }
+  
+  .scum-input {
+    @apply bg-scum-gray border border-scum-primary text-scum-light placeholder-scum-muted rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-scum-accent focus:border-transparent;
+  }
+
+  .scum-input-mobile {
+    @apply bg-scum-gray border border-scum-primary text-scum-light placeholder-scum-muted rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-scum-accent focus:border-transparent text-base;
+  }
+  
+  .scum-card {
+    @apply bg-scum-gray/50 backdrop-blur-sm border border-scum-primary rounded-lg shadow-military;
+  }
+
+  .scum-card-mobile {
+    @apply bg-scum-gray/50 backdrop-blur-sm border border-scum-primary rounded-xl shadow-military p-4;
+  }
+  
+  .military-text {
+    @apply font-military tracking-wider;
+  }
+  
+  .digital-text {
+    @apply font-digital;
+  }
+
+  /* Container responsivo */
+  .container-responsive {
+    @apply w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Grid responsivo para cards */
+  .grid-responsive {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6;
+  }
+
+  /* Sidebar responsivo */
+  .sidebar-mobile {
+    @apply fixed inset-y-0 left-0 z-50 w-64 bg-scum-gray/95 backdrop-blur-md border-r border-scum-primary transform transition-transform duration-300 ease-in-out;
+  }
+
+  .sidebar-mobile-hidden {
+    @apply -translate-x-full;
+  }
+
+  .sidebar-mobile-visible {
+    @apply translate-x-0;
+  }
+
+  /* Overlay para mobile */
+  .mobile-overlay {
+    @apply fixed inset-0 bg-black/50 backdrop-blur-sm z-40;
+  }
+
+  /* Botão de menu mobile */
+  .mobile-menu-button {
+    @apply fixed top-4 left-4 z-50 p-2 bg-scum-gray/80 backdrop-blur-sm border border-scum-primary rounded-lg text-scum-light hover:bg-scum-gray transition-all duration-200;
+  }
+}
+
+@layer utilities {
+  .text-shadow {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  }
+  
+  .glow {
+    box-shadow: 0 0 20px rgba(210, 105, 30, 0.3);
+  }
+  
+  .rust-border {
+    border: 2px solid transparent;
+    background: linear-gradient(#2d2d2d, #2d2d2d) padding-box,
+                linear-gradient(45deg, #d2691e, #8b4513) border-box;
+  }
+  
+  .scum-glow {
+    box-shadow: 0 0 15px rgba(210, 105, 30, 0.2);
+  }
+  
+  .scum-glow:hover {
+    box-shadow: 0 0 25px rgba(210, 105, 30, 0.4);
+  }
+  
+  .backdrop-blur-custom {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+  
+  .animate-pulse-slow {
+    animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  
+  /* Animação RGB para o botão de doação */
+  @keyframes gradient {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+  
+  /* Animação de batimento do coração leve */
+  @keyframes heartbeat {
+    0% {
+      transform: scale(1);
+    }
+    25% {
+      transform: scale(1.02);
+    }
+    50% {
+      transform: scale(1);
+    }
+    75% {
+      transform: scale(1.03);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  
+  .animate-gradient {
+    animation: gradient 3s ease infinite;
+  }
+  
+  /* Efeito de brilho RGB temático SCUM */
+  .rgb-glow {
+    box-shadow: 0 0 20px rgba(107, 142, 35, 0.4),
+                0 0 40px rgba(139, 69, 19, 0.3),
+                0 0 60px rgba(210, 105, 30, 0.2);
+  }
+  
+  .rgb-glow:hover {
+    box-shadow: 0 0 30px rgba(107, 142, 35, 0.6),
+                0 0 60px rgba(139, 69, 19, 0.4),
+                0 0 90px rgba(210, 105, 30, 0.3);
+  }
+
+  /* Utilitários responsivos */
+  .mobile-only {
+    @apply block md:hidden;
+  }
+
+  .desktop-only {
+    @apply hidden md:block;
+  }
+
+  .tablet-only {
+    @apply hidden sm:block lg:hidden;
+  }
+
+  /* Espaçamento responsivo */
+  .space-responsive {
+    @apply space-y-4 sm:space-y-6 lg:space-y-8;
+  }
+
+  .p-responsive {
+    @apply p-4 sm:p-6 lg:p-8;
+  }
+
+  .px-responsive {
+    @apply px-4 sm:px-6 lg:px-8;
+  }
+
+  .py-responsive {
+    @apply py-4 sm:py-6 lg:py-8;
+  }
+} 

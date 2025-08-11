@@ -1,0 +1,5 @@
+{
+  "scripts": ["server.js"],
+  "targets": ["node18-win-x64"],
+  "outputPath": "dist"
+}

@@ -1,0 +1,81 @@
+LISTA SIMPLIFICADA - COLUNAS DA TABELA SURVIVAL_STATS
+=======================================================
+
+1. ID do Perfil do Usuário
+2. Maior Pontos de Fama Positivos
+3. Portas Reivindicadas
+4. Animais Mortos
+5. Minutos Sobrevividos
+6. Abates
+7. Mortes
+8. Fechaduras Arrombadas
+9. Puppets Mortos
+10. Armas Fabricadas
+11. Balas Fabricadas
+12. Flechas Fabricadas
+13. Roupas Fabricadas
+14. Maior Distância de Abate
+15. Abates Corpo a Corpo
+16. Abates com Arco
+17. Jogadores Nocauteados
+18. Total de Defecações
+19. Total de Urinações
+20. Tiros Disparados
+21. Contêineres Saqueados
+22. Itens Colocados em Contêineres
+23. Mortes por Prisioneiros
+24. Animais Esfolados
+25. Comida Consumida
+26. Distância Percorrida a Pé
+27. Ferimentos Tratados
+28. Itens Coletados
+29. Líquido Bebido
+30. Dentes Perdidos
+31. Total de Calorias Consumidas
+32. Tiros Disparados
+33. Tiros Acertados
+34. Tiros na Cabeça
+35. Golpes de Arma Corpo a Corpo
+36. Acertos de Arma Corpo a Corpo
+37. Armas Corpo a Corpo Fabricadas
+38. Abates de Drones
+39. Abates de Sentinelas
+40. Abates de Prisioneiros
+41. Puppets Nocauteados
+42. Diarreias
+43. Vômitos
+44. Distância Percorrida em Veículo
+45. Cogumelos Comidos
+46. Maior Massa Muscular
+47. Maior Gordura
+48. Ataques Cardíacos
+49. Overdoses
+50. Fomes
+51. Maior Dano Sofrido
+52. Maior Peso Carregado
+53. Menor Pontos de Fama Negativos
+54. Distância Percorrida Nadando
+55. Corvos Mortos
+56. Gaivotas Mortas
+57. Cavalos Mortos
+58. Javalis Mortos
+59. Ursos Mortos
+60. Cabras Mortas
+61. Cervos Mortos
+62. Galinhas Mortas
+63. Coelhos Mortos
+64. Burros Mortos
+65. Vezes Atacado por Urso
+66. Maior Distância de Abate de Animal
+67. Álcool Bebido
+68. Vegetação Cortada
+69. Distância Percorrida de Barco
+70. Distância Navegada
+71. Vezes Capturado por Tubarão
+72. Vezes Escapou de Mordida de Tubarão
+73. Lobos Mortos
+74. Últimos Dias Consecutivos de Prêmio de Fama
+75. Abates com Arma de Fogo
+76. Abates com as Mãos Nuas
+
+Total: 76 colunas

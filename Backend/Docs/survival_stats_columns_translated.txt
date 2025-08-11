@@ -1,0 +1,461 @@
+COLUNAS DA TABELA SURVIVAL_STATS (COM TRADUÇÕES)
+==================================================
+
+
+1. Nome: user_profile_id (ID do Perfil do Usuário)
+   Tipo: INTEGER
+   Not Null: Sim
+   Default: Nenhum
+   Primary Key: Sim
+
+2. Nome: highest_positive_fame_points (Maior Pontos de Fama Positivos)
+   Tipo: REAL
+   Not Null: Não
+   Default: 0.0
+   Primary Key: Não
+
+3. Nome: doors_claimed (Portas Reivindicadas)
+   Tipo: INTEGER
+   Not Null: Não
+   Default: 0
+   Primary Key: Não
+
+4. Nome: animals_killed (Animais Mortos)
+   Tipo: INTEGER
+   Not Null: Não
+   Default: 0
+   Primary Key: Não
+
+5. Nome: minutes_survived (Minutos Sobrevividos)
+   Tipo: REAL
+   Not Null: Não
+   Default: 0.0
+   Primary Key: Não
+
+6. Nome: kills (Abates)
+   Tipo: INTEGER
+   Not Null: Não
+   Default: 0
+   Primary Key: Não
+
+7. Nome: deaths (Mortes)
+   Tipo: INTEGER
+   Not Null: Não
+   Default: 0
+   Primary Key: Não
+
+8. Nome: locks_picked (Fechaduras Arrombadas)
+   Tipo: INTEGER
+   Not Null: Não
+   Default: 0
+   Primary Key: Não
+
+9. Nome: puppets_killed (Puppets Mortos)
+   Tipo: INTEGER
+   Not Null: Não
+   Default: 0
+   Primary Key: Não
+
+10. Nome: guns_crafted (Armas Fabricadas)
+   Tipo: INTEGER
+   Not Null: Não
+   Default: 0
+   Primary Key: Não
+
+11. Nome: bullets_crafted (Balas Fabricadas)
+   Tipo: INTEGER
+   Not Null: Não
+   Default: 0
+   Primary Key: Não
+
+12. Nome: arrows_crafted (Flechas Fabricadas)
+   Tipo: INTEGER
+   Not Null: Não
+   Default: 0
+   Primary Key: Não
+
+13. Nome: clothing_crafted (Roupas Fabricadas)
+   Tipo: INTEGER
+   Not Null: Não
+   Default: 0
+   Primary Key: Não
+
+14. Nome: longest_kill_distance (Maior Distância de Abate)
+   Tipo: REAL
+   Not Null: Não
+   Default: 0.0
+   Primary Key: Não
+
+15. Nome: melee_kills (Abates Corpo a Corpo)
+   Tipo: INTEGER
+   Not Null: Não
+   Default: 0
+   Primary Key: Não
+
+16. Nome: archery_kills (Abates com Arco)
+   Tipo: INTEGER
+   Not Null: Não
+   Default: 0
+   Primary Key: Não
+
+17. Nome: players_knocked_out (Jogadores Nocauteados)
+   Tipo: INTEGER
+   Not Null: Não
+   Default: 0
+   Primary Key: Não
+
+18. Nome: total_defecations (Total de Defecações)
+   Tipo: INTEGER
+   Not Null: Não
+   Default: 0
+   Primary Key: Não
+
+19. Nome: total_urinations (Total de Urinações)
+   Tipo: INTEGER
+   Not Null: Não
+   Default: 0
+   Primary Key: Não
+
+20. Nome: lights_fired (Tiros Disparados)
+   Tipo: INTEGER
+   Not Null: Não
+   Default: 0
+   Primary Key: Não
+
+21. Nome: containers_looted (Contêineres Saqueados)
+   Tipo: INTEGER
+   Not Null: Não
+   Default: 0
+   Primary Key: Não
+
+22. Nome: items_put_into_containers (Itens Colocados em Contêineres)
+   Tipo: INTEGER
+   Not Null: Não
+   Default: 0
+   Primary Key: Não
+
+23. Nome: deaths_by_prisoners (Mortes por Prisioneiros)
+   Tipo: INTEGER
+   Not Null: Não
+   Default: 0
+   Primary Key: Não
+
+24. Nome: animals_skinned (Animais Esfolados)
+   Tipo: INTEGER
+   Not Null: Não
+   Default: 0
+   Primary Key: Não
+
+25. Nome: food_eaten (Comida Consumida)
+   Tipo: REAL
+   Not Null: Não
+   Default: 0.0
+   Primary Key: Não
+
+26. Nome: distance_travelled_by_foot (Distância Percorrida a Pé)
+   Tipo: REAL
+   Not Null: Não
+   Default: 0.0
+   Primary Key: Não
+
+27. Nome: wounds_patched (Ferimentos Tratados)
+   Tipo: INTEGER
+   Not Null: Não
+   Default: 0
+   Primary Key: Não
+
+28. Nome: items_picked_up (Itens Coletados)
+   Tipo: INTEGER
+   Not Null: Não
+   Default: 0
+   Primary Key: Não
+
+29. Nome: liquid_drank (Líquido Bebido)
+   Tipo: REAL
+   Not Null: Não
+   Default: 0.0
+   Primary Key: Não
+
+30. Nome: teeth_lost (Dentes Perdidos)
+   Tipo: INTEGER
+   Not Null: Não
+   Default: 0
+   Primary Key: Não
+
+31. Nome: total_calories_intake (Total de Calorias Consumidas)
+   Tipo: INTEGER
+   Not Null: Não
+   Default: 0
+   Primary Key: Não
+
+32. Nome: shots_fired (Tiros Disparados)
+   Tipo: INTEGER
+   Not Null: Não
+   Default: 0
+   Primary Key: Não
+
+33. Nome: shots_hit (Tiros Acertados)
+   Tipo: INTEGER
+   Not Null: Não
+   Default: 0
+   Primary Key: Não
+
+34. Nome: headshots (Tiros na Cabeça)
+   Tipo: INTEGER
+   Not Null: Não
+   Default: 0
+   Primary Key: Não
+
+35. Nome: melee_weapon_swings (Golpes de Arma Corpo a Corpo)
+   Tipo: INTEGER
+   Not Null: Não
+   Default: 0
+   Primary Key: Não
+
+36. Nome: melee_weapon_hits (Acertos de Arma Corpo a Corpo)
+   Tipo: INTEGER
+   Not Null: Não
+   Default: 0
+   Primary Key: Não
+
+37. Nome: melee_weapons_crafted (Armas Corpo a Corpo Fabricadas)
+   Tipo: INTEGER
+   Not Null: Não
+   Default: 0
+   Primary Key: Não
+
+38. Nome: drone_kills (Abates de Drones)
+   Tipo: INTEGER
+   Not Null: Não
+   Default: 0
+   Primary Key: Não
+
+39. Nome: sentry_kills (Abates de Sentinelas)
+   Tipo: INTEGER
+   Not Null: Não
+   Default: 0
+   Primary Key: Não
+
+40. Nome: prisoner_kills (Abates de Prisioneiros)
+   Tipo: INTEGER
+   Not Null: Não
+   Default: 0
+   Primary Key: Não
+
+41. Nome: puppets_knocked_out (Puppets Nocauteados)
+   Tipo: INTEGER
+   Not Null: Não
+   Default: 0
+   Primary Key: Não
+
+42. Nome: diarrheas (Diarreias)
+   Tipo: INTEGER
+   Not Null: Não
+   Default: 0
+   Primary Key: Não
+
+43. Nome: vomits (Vômitos)
+   Tipo: INTEGER
+   Not Null: Não
+   Default: 0
+   Primary Key: Não
+
+44. Nome: distance_travelled_in_vehicle (Distância Percorrida em Veículo)
+   Tipo: REAL
+   Not Null: Não
+   Default: 0.0
+   Primary Key: Não
+
+45. Nome: mushrooms_eaten (Cogumelos Comidos)
+   Tipo: INTEGER
+   Not Null: Não
+   Default: 0
+   Primary Key: Não
+
+46. Nome: highest_muscle_mass (Maior Massa Muscular)
+   Tipo: REAL
+   Not Null: Não
+   Default: 0.0
+   Primary Key: Não
+
+47. Nome: highest_fat (Maior Gordura)
+   Tipo: REAL
+   Not Null: Não
+   Default: 0.0
+   Primary Key: Não
+
+48. Nome: heart_attacks (Ataques Cardíacos)
+   Tipo: INTEGER
+   Not Null: Não
+   Default: 0
+   Primary Key: Não
+
+49. Nome: overdose (Overdoses)
+   Tipo: INTEGER
+   Not Null: Não
+   Default: 0
+   Primary Key: Não
+
+50. Nome: starvation (Fomes)
+   Tipo: INTEGER
+   Not Null: Não
+   Default: 0
+   Primary Key: Não
+
+51. Nome: highest_damage_taken (Maior Dano Sofrido)
+   Tipo: REAL
+   Not Null: Não
+   Default: 0.0
+   Primary Key: Não
+
+52. Nome: highest_weight_carried (Maior Peso Carregado)
+   Tipo: REAL
+   Not Null: Não
+   Default: 0.0
+   Primary Key: Não
+
+53. Nome: lowest_negative_fame_points (Menor Pontos de Fama Negativos)
+   Tipo: REAL
+   Not Null: Não
+   Default: 0.0
+   Primary Key: Não
+
+54. Nome: distance_travelled_swimming (Distância Percorrida Nadando)
+   Tipo: REAL
+   Not Null: Não
+   Default: 0.0
+   Primary Key: Não
+
+55. Nome: crows_killed (Corvos Mortos)
+   Tipo: INTEGER
+   Not Null: Não
+   Default: 0
+   Primary Key: Não
+
+56. Nome: seagulls_killed (Gaivotas Mortas)
+   Tipo: INTEGER
+   Not Null: Não
+   Default: 0
+   Primary Key: Não
+
+57. Nome: horses_killed (Cavalos Mortos)
+   Tipo: INTEGER
+   Not Null: Não
+   Default: 0
+   Primary Key: Não
+
+58. Nome: boars_killed (Javalis Mortos)
+   Tipo: INTEGER
+   Not Null: Não
+   Default: 0
+   Primary Key: Não
+
+59. Nome: bears_killed (Ursos Mortos)
+   Tipo: INTEGER
+   Not Null: Não
+   Default: 0
+   Primary Key: Não
+
+60. Nome: goats_killed (Cabras Mortas)
+   Tipo: INTEGER
+   Not Null: Não
+   Default: 0
+   Primary Key: Não
+
+61. Nome: deers_killed (Cervos Mortos)
+   Tipo: INTEGER
+   Not Null: Não
+   Default: 0
+   Primary Key: Não
+
+62. Nome: chickens_killed (Galinhas Mortas)
+   Tipo: INTEGER
+   Not Null: Não
+   Default: 0
+   Primary Key: Não
+
+63. Nome: rabbits_killed (Coelhos Mortos)
+   Tipo: INTEGER
+   Not Null: Não
+   Default: 0
+   Primary Key: Não
+
+64. Nome: donkeys_killed (Burros Mortos)
+   Tipo: INTEGER
+   Not Null: Não
+   Default: 0
+   Primary Key: Não
+
+65. Nome: times_mauled_by_bear (Vezes Atacado por Urso)
+   Tipo: INTEGER
+   Not Null: Não
+   Default: 0
+   Primary Key: Não
+
+66. Nome: longest_animal_kill_distance (Maior Distância de Abate de Animal)
+   Tipo: REAL
+   Not Null: Não
+   Default: 0.0
+   Primary Key: Não
+
+67. Nome: alcohol_drank (Álcool Bebido)
+   Tipo: INTEGER
+   Not Null: Sim
+   Default: 0
+   Primary Key: Não
+
+68. Nome: foliage_cut (Vegetação Cortada)
+   Tipo: INTEGER
+   Not Null: Sim
+   Default: 0
+   Primary Key: Não
+
+69. Nome: distance_travel_by_boat (Distância Percorrida de Barco)
+   Tipo: REAL
+   Not Null: Sim
+   Default: 0.0
+   Primary Key: Não
+
+70. Nome: distance_sailed (Distância Navegada)
+   Tipo: REAL
+   Not Null: Sim
+   Default: 0.0
+   Primary Key: Não
+
+71. Nome: times_caught_by_shark (Vezes Capturado por Tubarão)
+   Tipo: INTEGER
+   Not Null: Sim
+   Default: 0
+   Primary Key: Não
+
+72. Nome: times_escaped_shark_bite (Vezes Escapou de Mordida de Tubarão)
+   Tipo: INTEGER
+   Not Null: Sim
+   Default: 0
+   Primary Key: Não
+
+73. Nome: wolves_killed (Lobos Mortos)
+   Tipo: INTEGER
+   Not Null: Não
+   Default: 0
+   Primary Key: Não
+
+74. Nome: last_fame_point_award_consecutive_days (Últimos Dias Consecutivos de Prêmio de Fama)
+   Tipo: INTEGER
+   Not Null: Não
+   Default: 0
+   Primary Key: Não
+
+75. Nome: firearm_kills (Abates com Arma de Fogo)
+   Tipo: INTEGER
+   Not Null: Não
+   Default: 0
+   Primary Key: Não
+
+76. Nome: bare_handed_kills (Abates com as Mãos Nuas)
+   Tipo: INTEGER
+   Not Null: Não
+   Default: 0
+   Primary Key: Não
+
+

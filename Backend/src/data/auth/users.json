@@ -1,0 +1,13 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "username": "admin",
+      "password": "$2b$10$fwUAi99uYlzvoK9kpzaDveQUpZwrQHzrzD95uqzpG9LpplFhOfUfi",
+      "role": "admin",
+      "created_at": "2025-01-20T10:00:00Z",
+      "last_login": "2025-08-10T00:15:37.971Z",
+      "active": true
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="256" cy="256" r="256" fill="#1a1a1a"/>
+  
+  <!-- Outer ring -->
+  <circle cx="256" cy="256" r="220" stroke="#22c55e" stroke-width="8" fill="none"/>
+  
+  <!-- Inner ring -->
+  <circle cx="256" cy="256" r="160" stroke="#22c55e" stroke-width="4" fill="none"/>
+  
+  <!-- Center icon - Server/Computer -->
+  <rect x="200" y="200" width="112" height="112" rx="8" fill="#22c55e"/>
+  
+  <!-- Server lines -->
+  <rect x="220" y="220" width="72" height="4" fill="#1a1a1a"/>
+  <rect x="220" y="240" width="72" height="4" fill="#1a1a1a"/>
+  <rect x="220" y="260" width="72" height="4" fill="#1a1a1a"/>
+  <rect x="220" y="280" width="72" height="4" fill="#1a1a1a"/>
+  <rect x="220" y="300" width="72" height="4" fill="#1a1a1a"/>
+  
+  <!-- Corner accents -->
+  <circle cx="100" cy="100" r="12" fill="#22c55e"/>
+  <circle cx="412" cy="100" r="12" fill="#22c55e"/>
+  <circle cx="100" cy="412" r="12" fill="#22c55e"/>
+  <circle cx="412" cy="412" r="12" fill="#22c55e"/>
+  
+  <!-- Additional decorative elements -->
+  <circle cx="256" cy="120" r="8" fill="#22c55e"/>
+  <circle cx="256" cy="392" r="8" fill="#22c55e"/>
+  <circle cx="120" cy="256" r="8" fill="#22c55e"/>
+  <circle cx="392" cy="256" r="8" fill="#22c55e"/>
+</svg>

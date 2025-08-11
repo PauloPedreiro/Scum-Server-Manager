@@ -1,0 +1,272 @@
+{
+  "11001": {
+    "vehicleId": "11001",
+    "vehicleType": "QUAD",
+    "steamId": "76561198040636105",
+    "discordUserId": "592132368635265034",
+    "discordUsername": "pedreiro.",
+    "completedAt": "2025-07-19T23:01:07.446Z",
+    "originalMountRegistration": {
+      "vehicleId": "11001",
+      "vehicleType": "QUAD",
+      "steamId": "76561198040636105",
+      "discordUserId": "592132368635265034",
+      "discordUsername": "pedreiro.",
+      "registeredAt": "2025-07-19T22:59:39.128Z",
+      "channelId": "1395634763733405756"
+    },
+    "channelId": "1395477789313994812"
+  },
+  "11005": {
+    "vehicleId": "11005",
+    "vehicleType": "RANGE DO BLUE",
+    "steamId": "76561198040636105",
+    "discordUserId": "592132368635265034",
+    "discordUsername": "pedreiro.",
+    "completedAt": "2025-07-19T23:18:39.041Z",
+    "originalMountRegistration": {
+      "vehicleId": "11005",
+      "vehicleType": "RANGE DO BLUE",
+      "steamId": "76561198040636105",
+      "discordUserId": "592132368635265034",
+      "discordUsername": "pedreiro.",
+      "registeredAt": "2025-07-19T23:18:07.586Z",
+      "channelId": "1395634763733405756"
+    },
+    "channelId": "1395477789313994812"
+  },
+  "11006": {
+    "vehicleId": "11006",
+    "vehicleType": "RANGER",
+    "steamId": "76561199617993331",
+    "discordUserId": "838762461405904906",
+    "discordUsername": "tuticats",
+    "completedAt": "2025-07-20T22:52:57.149Z",
+    "originalMountRegistration": {
+      "vehicleId": "11006",
+      "vehicleType": "RANGER",
+      "steamId": "76561199617993331",
+      "discordUserId": "838762461405904906",
+      "discordUsername": "tuticats",
+      "registeredAt": "2025-07-20T22:52:09.526Z",
+      "channelId": "1395634763733405756"
+    },
+    "channelId": "1395477789313994812"
+  },
+  "110041": {
+    "vehicleId": "110041",
+    "vehicleType": "FAZENDO TESTE DO BOT",
+    "steamId": "76561198040636105",
+    "discordUserId": "592132368635265034",
+    "discordUsername": "pedreiro.",
+    "completedAt": "2025-07-20T12:34:26.910Z",
+    "originalMountRegistration": {
+      "vehicleId": "110041",
+      "vehicleType": "FAZENDO TESTE DO BOT",
+      "steamId": "76561198040636105",
+      "discordUserId": "592132368635265034",
+      "discordUsername": "pedreiro.",
+      "registeredAt": "2025-07-20T12:29:01.636Z",
+      "channelId": "1395634763733405756"
+    },
+    "channelId": "1395477789313994812"
+  },
+  "110043": {
+    "vehicleId": "110043",
+    "vehicleType": "TESTE DO BOT",
+    "steamId": "76561198040636105",
+    "discordUserId": "592132368635265034",
+    "discordUsername": "pedreiro.",
+    "completedAt": "2025-07-20T12:37:25.627Z",
+    "originalMountRegistration": {
+      "vehicleId": "110043",
+      "vehicleType": "TESTE DO BOT",
+      "steamId": "76561198040636105",
+      "discordUserId": "592132368635265034",
+      "discordUsername": "pedreiro.",
+      "registeredAt": "2025-07-20T12:36:55.679Z",
+      "channelId": "1395634763733405756"
+    },
+    "channelId": "1395477789313994812"
+  },
+  "110053": {
+    "vehicleId": "110053",
+    "vehicleType": "RANGER",
+    "steamId": "76561198040636105",
+    "discordUserId": "592132368635265034",
+    "discordUsername": "pedreiro.",
+    "completedAt": "2025-07-20T12:56:28.272Z",
+    "originalMountRegistration": {
+      "vehicleId": "110053",
+      "vehicleType": "RANGER",
+      "steamId": "76561198040636105",
+      "discordUserId": "592132368635265034",
+      "discordUsername": "pedreiro.",
+      "registeredAt": "2025-07-20T12:54:57.889Z",
+      "channelId": "1395634763733405756"
+    },
+    "channelId": "1395477789313994812"
+  },
+  "110054": {
+    "vehicleId": "110054",
+    "vehicleType": "LIKA",
+    "steamId": "76561198040636105",
+    "discordUserId": "592132368635265034",
+    "discordUsername": "pedreiro.",
+    "completedAt": "2025-07-20T12:57:27.859Z",
+    "originalMountRegistration": {
+      "vehicleId": "110054",
+      "vehicleType": "LIKA",
+      "steamId": "76561198040636105",
+      "discordUserId": "592132368635265034",
+      "discordUsername": "pedreiro.",
+      "registeredAt": "2025-07-20T12:55:57.829Z",
+      "channelId": "1395634763733405756"
+    },
+    "channelId": "1395477789313994812"
+  },
+  "111003": {
+    "vehicleId": "111003",
+    "vehicleType": "RANGER",
+    "steamId": "76561198040636105",
+    "discordUserId": "592132368635265034",
+    "discordUsername": "pedreiro.",
+    "completedAt": "2025-07-20T05:54:05.085Z",
+    "originalMountRegistration": {
+      "vehicleId": "111003",
+      "vehicleType": "RANGER",
+      "steamId": "76561198040636105",
+      "discordUserId": "592132368635265034",
+      "discordUsername": "pedreiro.",
+      "registeredAt": "2025-07-20T05:42:02.270Z",
+      "channelId": "1395634763733405756"
+    },
+    "channelId": "1395477789313994812"
+  },
+  "631424": {
+    "vehicleId": "631424",
+    "vehicleType": "RANGER",
+    "steamId": "76561198398160339",
+    "discordUserId": "314232694550822914",
+    "discordUsername": "bluearcher_br",
+    "completedAt": "2025-07-19T20:31:20.026Z",
+    "originalMountRegistration": {
+      "vehicleId": "631424",
+      "vehicleType": "RANGER",
+      "steamId": "76561198398160339",
+      "discordUserId": "314232694550822914",
+      "discordUsername": "bluearcher_br",
+      "registeredAt": "2025-07-19T20:30:29.920Z",
+      "channelId": "1395634763733405756"
+    },
+    "channelId": "1395477789313994812"
+  },
+  "1350049": {
+    "vehicleId": "1350049",
+    "vehicleType": "RANGER",
+    "steamId": "76561198040636105",
+    "discordUserId": "592132368635265034",
+    "discordUsername": "pedreiro.",
+    "completedAt": "2025-07-19T19:56:50.467Z",
+    "originalMountRegistration": {
+      "vehicleId": "1350049",
+      "vehicleType": "RANGER",
+      "steamId": "76561198040636105",
+      "discordUserId": "592132368635265034",
+      "discordUsername": "pedreiro.",
+      "registeredAt": "2025-07-19T19:56:17.163Z",
+      "channelId": "1395634763733405756"
+    },
+    "channelId": "1395477789313994812"
+  },
+  "1360080": {
+    "vehicleId": "1360080",
+    "vehicleType": "RANGER",
+    "steamId": "76561198040636105",
+    "discordUserId": "592132368635265034",
+    "discordUsername": "pedreiro.",
+    "completedAt": "2025-07-19T20:17:51.038Z",
+    "originalMountRegistration": {
+      "vehicleId": "1360080",
+      "vehicleType": "RANGER",
+      "steamId": "76561198040636105",
+      "discordUserId": "592132368635265034",
+      "discordUsername": "pedreiro.",
+      "registeredAt": "2025-07-19T20:17:20.405Z",
+      "channelId": "1395634763733405756"
+    },
+    "channelId": "1395477789313994812"
+  },
+  "2205985": {
+    "vehicleId": "2205985",
+    "vehicleType": "TRATOR",
+    "steamId": "76561198040636105",
+    "discordUserId": "592132368635265034",
+    "discordUsername": "pedreiro.",
+    "completedAt": "2025-07-19T22:13:07.691Z",
+    "originalMountRegistration": {
+      "vehicleId": "2205985",
+      "vehicleType": "TRATOR",
+      "steamId": "76561198040636105",
+      "discordUserId": "592132368635265034",
+      "discordUsername": "pedreiro.",
+      "registeredAt": "2025-07-19T22:12:33.831Z",
+      "channelId": "1395634763733405756"
+    },
+    "channelId": "1395477789313994812"
+  },
+  "2206085": {
+    "vehicleId": "2206085",
+    "vehicleType": "TRATOR",
+    "steamId": "76561198040636105",
+    "discordUserId": "592132368635265034",
+    "discordUsername": "pedreiro.",
+    "completedAt": "2025-07-19T22:55:24.942Z",
+    "originalMountRegistration": {
+      "vehicleId": "2206085",
+      "vehicleType": "TRATOR",
+      "steamId": "76561198040636105",
+      "discordUserId": "592132368635265034",
+      "discordUsername": "pedreiro.",
+      "registeredAt": "2025-07-19T22:53:19.354Z",
+      "channelId": "1395634763733405756"
+    },
+    "channelId": "1395477789313994812"
+  },
+  "2228379": {
+    "vehicleId": "2228379",
+    "vehicleType": "RANGER",
+    "steamId": "76561198040636105",
+    "discordUserId": "592132368635265034",
+    "discordUsername": "pedreiro.",
+    "completedAt": "2025-07-19T13:11:50.375Z",
+    "originalMountRegistration": {
+      "vehicleId": "2228379",
+      "vehicleType": "RANGER",
+      "steamId": "76561198040636105",
+      "discordUserId": "592132368635265034",
+      "discordUsername": "pedreiro.",
+      "registeredAt": "2025-07-19T13:07:04.649Z",
+      "channelId": "1395634763733405756"
+    },
+    "channelId": "1395477789313994812"
+  },
+  "2341857": {
+    "vehicleId": "2341857",
+    "vehicleType": "QUAD",
+    "steamId": "76561198040636105",
+    "discordUserId": "592132368635265034",
+    "discordUsername": "pedreiro.",
+    "completedAt": "2025-07-19T22:58:13.645Z",
+    "originalMountRegistration": {
+      "vehicleId": "2341857",
+      "vehicleType": "QUAD",
+      "steamId": "76561198040636105",
+      "discordUserId": "592132368635265034",
+      "discordUsername": "pedreiro.",
+      "registeredAt": "2025-07-19T22:46:13.361Z",
+      "channelId": "1395634763733405756"
+    },
+    "channelId": "1395477789313994812"
+  }
+}

@@ -1,0 +1,410 @@
+{
+  "4024095": {
+    "vehicleId": "4024095",
+    "vehicleType": "WOLFSWAGEN",
+    "steamId": "76561198040636105",
+    "discordUserId": "592132368635265034",
+    "discordUsername": "pedreiro.",
+    "registeredAt": "2025-08-02T23:26:12.705Z",
+    "channelId": "1395477789313994812",
+    "vehicleInfo": {
+      "id": "4024095",
+      "name": "BPC_WolfsWagen",
+      "type": "WolfsWagen",
+      "assetId": "Vehicle:BPC_WolfsWagen",
+      "class": "WolfsWagen_ES",
+      "imageFile": "wolfswagen_es.png"
+    }
+  },
+  "4024103": {
+    "vehicleId": "4024103",
+    "vehicleType": "RAGER",
+    "steamId": "76561198040636105",
+    "discordUserId": "592132368635265034",
+    "discordUsername": "pedreiro.",
+    "registeredAt": "2025-08-02T23:31:58.018Z",
+    "channelId": "1395477789313994812",
+    "vehicleInfo": {
+      "id": "4024103",
+      "name": "BPC_Rager",
+      "type": "Rager",
+      "assetId": "Vehicle:BPC_Rager",
+      "class": "Rager_ES",
+      "imageFile": "rager_es.png"
+    }
+  },
+  "4025897": {
+    "vehicleId": "4025897",
+    "vehicleType": "RAGER",
+    "steamId": "76561198040636105",
+    "discordUserId": "592132368635265034",
+    "discordUsername": "pedreiro.",
+    "registeredAt": "2025-08-02T23:44:45.057Z",
+    "channelId": "1395477789313994812",
+    "vehicleInfo": {
+      "id": "4025897",
+      "name": "BPC_Rager",
+      "type": "Rager",
+      "assetId": "Vehicle:BPC_Rager",
+      "class": "Rager_ES",
+      "imageFile": "rager_es.png"
+    }
+  },
+  "4025927": {
+    "vehicleId": "4025927",
+    "vehicleType": "WOLFSWAGEN",
+    "steamId": "76561198040636105",
+    "discordUserId": "592132368635265034",
+    "discordUsername": "pedreiro.",
+    "registeredAt": "2025-08-02T23:54:55.672Z",
+    "channelId": "1395477789313994812",
+    "vehicleInfo": {
+      "id": "4025927",
+      "name": "BPC_WolfsWagen",
+      "type": "WolfsWagen",
+      "assetId": "Vehicle:BPC_WolfsWagen",
+      "class": "WolfsWagen_ES",
+      "imageFile": "wolfswagen_es.png"
+    }
+  },
+  "4025934": {
+    "vehicleId": "4025934",
+    "vehicleType": "LAIKA",
+    "steamId": "76561198040636105",
+    "discordUserId": "592132368635265034",
+    "discordUsername": "pedreiro.",
+    "registeredAt": "2025-08-02T23:56:50.163Z",
+    "channelId": "1395477789313994812",
+    "vehicleInfo": {
+      "id": "4025934",
+      "name": "BPC_Laika",
+      "type": "Laika",
+      "assetId": "Vehicle:BPC_Laika",
+      "class": "Laika_ES",
+      "imageFile": "laika_es.png"
+    }
+  },
+  "4034403": {
+    "vehicleId": "4034403",
+    "vehicleType": "LAIKA",
+    "steamId": "76561198040636105",
+    "discordUserId": "592132368635265034",
+    "discordUsername": "pedreiro.",
+    "registeredAt": "2025-08-03T02:32:57.595Z",
+    "channelId": "1395477789313994812",
+    "vehicleInfo": {
+      "id": "4034403",
+      "name": "BPC_Laika",
+      "type": "Laika",
+      "assetId": "Vehicle:BPC_Laika",
+      "class": "Laika_ES",
+      "imageFile": "laika_es.png"
+    }
+  },
+  "4035072": {
+    "vehicleId": "4035072",
+    "vehicleType": "WOLFSWAGEN",
+    "steamId": "76561198040636105",
+    "discordUserId": "592132368635265034",
+    "discordUsername": "pedreiro.",
+    "registeredAt": "2025-08-03T02:44:53.934Z",
+    "channelId": "1395477789313994812",
+    "vehicleInfo": {
+      "id": "4035072",
+      "name": "BPC_WolfsWagen",
+      "type": "WolfsWagen",
+      "assetId": "Vehicle:BPC_WolfsWagen",
+      "class": "WolfsWagen_ES",
+      "imageFile": "wolfswagen_es.png"
+    }
+  },
+  "4036870": {
+    "vehicleId": "4036870",
+    "vehicleType": "RAGER",
+    "steamId": "76561198040636105",
+    "discordUserId": "592132368635265034",
+    "discordUsername": "pedreiro.",
+    "registeredAt": "2025-08-03T03:26:51.297Z",
+    "channelId": "1395477789313994812",
+    "vehicleInfo": {
+      "id": "4036870",
+      "name": "BPC_Rager",
+      "type": "Rager",
+      "assetId": "Vehicle:BPC_Rager",
+      "class": "Rager_ES",
+      "imageFile": "rager_es.png"
+    }
+  },
+  "4038202": {
+    "vehicleId": "4038202",
+    "vehicleType": "RAGER",
+    "steamId": "76561198040636105",
+    "discordUserId": "592132368635265034",
+    "discordUsername": "pedreiro.",
+    "registeredAt": "2025-08-03T03:36:16.500Z",
+    "channelId": "1395477789313994812",
+    "vehicleInfo": {
+      "id": "4038202",
+      "name": "BPC_Rager",
+      "type": "Rager",
+      "assetId": "Vehicle:BPC_Rager",
+      "class": "Rager_ES",
+      "imageFile": "rager_es.png"
+    }
+  },
+  "4038352": {
+    "vehicleId": "4038352",
+    "vehicleType": "WOLFSWAGEN",
+    "steamId": "76561198040636105",
+    "discordUserId": "592132368635265034",
+    "discordUsername": "pedreiro.",
+    "registeredAt": "2025-08-03T03:44:13.854Z",
+    "channelId": "1395477789313994812",
+    "vehicleInfo": {
+      "id": "4038352",
+      "name": "BPC_WolfsWagen",
+      "type": "WolfsWagen",
+      "assetId": "Vehicle:BPC_WolfsWagen",
+      "class": "WolfsWagen_ES",
+      "imageFile": "wolfswagen_es.png"
+    }
+  },
+  "4038813": {
+    "vehicleId": "4038813",
+    "vehicleType": "LAIKA",
+    "steamId": "76561198040636105",
+    "discordUserId": "592132368635265034",
+    "discordUsername": "pedreiro.",
+    "registeredAt": "2025-08-03T03:52:14.455Z",
+    "channelId": "1395477789313994812",
+    "vehicleInfo": {
+      "id": "4038813",
+      "name": "BPC_Laika",
+      "type": "Laika",
+      "assetId": "Vehicle:BPC_Laika",
+      "class": "Laika_ES",
+      "imageFile": "laika_es.png"
+    }
+  },
+  "4039070": {
+    "vehicleId": "4039070",
+    "vehicleType": "CRUISER",
+    "steamId": "76561198040636105",
+    "discordUserId": "592132368635265034",
+    "discordUsername": "pedreiro.",
+    "registeredAt": "2025-08-03T03:56:36.043Z",
+    "channelId": "1395477789313994812",
+    "vehicleInfo": {
+      "id": "4039070",
+      "name": "BPC_Cruiser",
+      "type": "Cruiser",
+      "assetId": "Vehicle:BPC_Cruiser",
+      "class": "Cruiser_ES",
+      "imageFile": "cruiser.png"
+    }
+  },
+  "4051507": {
+    "vehicleId": "4051507",
+    "vehicleType": "LAIKA",
+    "steamId": "76561198040636105",
+    "discordUserId": "592132368635265034",
+    "discordUsername": "pedreiro.",
+    "registeredAt": "2025-08-03T04:40:03.553Z",
+    "channelId": "1395477789313994812",
+    "vehicleInfo": {
+      "id": "4051507",
+      "name": "BPC_Laika",
+      "type": "Laika",
+      "assetId": "Vehicle:BPC_Laika",
+      "class": "Laika_ES",
+      "imageFile": "laika_es.png"
+    }
+  },
+  "4051967": {
+    "vehicleId": "4051967",
+    "vehicleType": "TRACTOR",
+    "steamId": "76561198040636105",
+    "discordUserId": "592132368635265034",
+    "discordUsername": "pedreiro.",
+    "registeredAt": "2025-08-03T04:45:30.950Z",
+    "channelId": "1395477789313994812",
+    "vehicleInfo": {
+      "id": "4051967",
+      "name": "BPC_Tractor",
+      "type": "Tractor",
+      "assetId": "Vehicle:BPC_Tractor",
+      "class": "Tractor_ES",
+      "imageFile": "tractor_es.png"
+    }
+  },
+  "4054480": {
+    "vehicleId": "4054480",
+    "vehicleType": "KINGLET MARINER",
+    "steamId": "76561198040636105",
+    "discordUserId": "592132368635265034",
+    "discordUsername": "pedreiro.",
+    "registeredAt": "2025-08-03T06:05:28.207Z",
+    "channelId": "1395477789313994812",
+    "vehicleInfo": {
+      "id": "4054480",
+      "name": "BPC_Kinglet_Mariner",
+      "type": "Kinglet Mariner",
+      "assetId": "Vehicle:BPC_Kinglet_Mariner",
+      "class": "Kinglet_Mariner_ES",
+      "imageFile": "kinglet_mariner.png"
+    }
+  },
+  "4054554": {
+    "vehicleId": "4054554",
+    "vehicleType": "TRACTOR",
+    "steamId": "76561198040636105",
+    "discordUserId": "592132368635265034",
+    "discordUsername": "pedreiro.",
+    "registeredAt": "2025-08-03T06:10:55.488Z",
+    "channelId": "1395477789313994812",
+    "vehicleInfo": {
+      "id": "4054554",
+      "name": "BPC_Tractor",
+      "type": "Tractor",
+      "assetId": "Vehicle:BPC_Tractor",
+      "class": "Tractor_ES",
+      "imageFile": "tractor_es.png"
+    }
+  },
+  "4054692": {
+    "vehicleId": "4054692",
+    "vehicleType": "LAIKA",
+    "steamId": "76561198040636105",
+    "discordUserId": "592132368635265034",
+    "discordUsername": "pedreiro.",
+    "registeredAt": "2025-08-03T06:20:03.750Z",
+    "channelId": "1395477789313994812",
+    "vehicleInfo": {
+      "id": "4054692",
+      "name": "BPC_Laika",
+      "type": "Laika",
+      "assetId": "Vehicle:BPC_Laika",
+      "class": "Laika_ES",
+      "imageFile": "laika_es.png"
+    }
+  },
+  "4054760": {
+    "vehicleId": "4054760",
+    "vehicleType": "RIS",
+    "steamId": "76561198040636105",
+    "discordUserId": "592132368635265034",
+    "discordUsername": "pedreiro.",
+    "registeredAt": "2025-08-03T06:23:02.667Z",
+    "channelId": "1395477789313994812",
+    "vehicleInfo": {
+      "id": "4054760",
+      "name": "BPC_RIS",
+      "type": "RIS",
+      "assetId": "Vehicle:BPC_RIS",
+      "class": "RIS_ES",
+      "imageFile": "dirtbike_es.png"
+    }
+  },
+  "4186879": {
+    "vehicleId": "4186879",
+    "vehicleType": "WOLFSWAGEN",
+    "steamId": "76561198040636105",
+    "discordUserId": "592132368635265034",
+    "discordUsername": "pedreiro.",
+    "registeredAt": "2025-08-04T03:58:43.857Z",
+    "channelId": "1395477789313994812",
+    "vehicleInfo": {
+      "id": "4186879",
+      "name": "BPC_WolfsWagen",
+      "type": "WolfsWagen",
+      "assetId": "Vehicle:BPC_WolfsWagen",
+      "class": "WolfsWagen_ES",
+      "imageFile": "wolfswagen_es.png"
+    }
+  },
+  "4200006": {
+    "vehicleId": "4200006",
+    "vehicleType": "RAGER",
+    "steamId": "76561198040636105",
+    "discordUserId": "592132368635265034",
+    "discordUsername": "pedreiro.",
+    "registeredAt": "2025-08-04T04:08:26.169Z",
+    "channelId": "1395477789313994812",
+    "vehicleInfo": {
+      "id": "4200006",
+      "name": "BPC_Rager",
+      "type": "Rager",
+      "assetId": "Vehicle:BPC_Rager",
+      "class": "Rager_ES",
+      "imageFile": "rager_es.png"
+    }
+  },
+  "4200021": {
+    "vehicleId": "4200021",
+    "vehicleType": "RAGER",
+    "steamId": "76561198040636105",
+    "discordUserId": "592132368635265034",
+    "discordUsername": "pedreiro.",
+    "registeredAt": "2025-08-04T04:26:18.733Z",
+    "channelId": "1395477789313994812",
+    "vehicleInfo": {
+      "id": "4200021",
+      "name": "BPC_Rager",
+      "type": "Rager",
+      "assetId": "Vehicle:BPC_Rager",
+      "class": "Rager_ES",
+      "imageFile": "rager_es.png"
+    }
+  },
+  "4200320": {
+    "vehicleId": "4200320",
+    "vehicleType": "CRUISER",
+    "steamId": "76561198040636105",
+    "discordUserId": "592132368635265034",
+    "discordUsername": "pedreiro.",
+    "registeredAt": "2025-08-04T05:14:14.448Z",
+    "channelId": "1395477789313994812",
+    "vehicleInfo": {
+      "id": "4200320",
+      "name": "BPC_Cruiser",
+      "type": "Cruiser",
+      "assetId": "Vehicle:BPC_Cruiser",
+      "class": "Cruiser_ES",
+      "imageFile": "cruiser.png"
+    }
+  },
+  "4200480": {
+    "vehicleId": "4200480",
+    "vehicleType": "LAIKA",
+    "steamId": "76561198040636105",
+    "discordUserId": "592132368635265034",
+    "discordUsername": "pedreiro.",
+    "registeredAt": "2025-08-04T05:25:10.554Z",
+    "channelId": "1395477789313994812",
+    "vehicleInfo": {
+      "id": "4200480",
+      "name": "BPC_Laika",
+      "type": "Laika",
+      "assetId": "Vehicle:BPC_Laika",
+      "class": "Laika_ES",
+      "imageFile": "laika_es.png"
+    }
+  },
+  "4702989": {
+    "vehicleId": "4702989",
+    "vehicleType": "LAIKA",
+    "steamId": "76561198040636105",
+    "discordUserId": "592132368635265034",
+    "discordUsername": "pedreiro.",
+    "registeredAt": "2025-08-09T00:46:58.894Z",
+    "channelId": "1395477789313994812",
+    "vehicleInfo": {
+      "id": "4702989",
+      "name": "BPC_Laika",
+      "type": "Laika",
+      "assetId": "Vehicle:BPC_Laika",
+      "class": null,
+      "imageFile": "laika_es.png"
+    }
+  }
+}
