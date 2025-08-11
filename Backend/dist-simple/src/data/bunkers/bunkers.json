@@ -1,0 +1,48 @@
+{
+  "A1": {
+    "name": "A1",
+    "status": "active",
+    "activated": "00h 00m 00s",
+    "coordinates": {
+      "x": -348529.312,
+      "y": -469201.781,
+      "z": 4247.645
+    },
+    "lastUpdate": "2025.07.29-02.56.32",
+    "activationTime": "2025.07.29-02.56.32"
+  },
+  "A3": {
+    "name": "A3",
+    "status": "active",
+    "activated": "00h 00m 00s",
+    "coordinates": {
+      "x": 230229.672,
+      "y": -447157.625,
+      "z": 9555.422
+    },
+    "lastUpdate": "2025.07.29-02.56.32",
+    "activationTime": "2025.07.29-02.56.32"
+  },
+  "D1": {
+    "name": "D1",
+    "status": "locked",
+    "nextActivation": "23h 53m 18s",
+    "coordinates": {
+      "x": -537889.562,
+      "y": 540004.312,
+      "z": 81279.648
+    },
+    "lastUpdate": "2025.07.29-02.56.32"
+  },
+  "C4": {
+    "name": "C4",
+    "status": "locked",
+    "nextActivation": "23h 53m 18s",
+    "coordinates": {
+      "x": 446323,
+      "y": 263051.188,
+      "z": 18552.514
+    },
+    "lastUpdate": "2025.07.29-02.56.32"
+  }
+}

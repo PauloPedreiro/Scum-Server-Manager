@@ -6,6 +6,8 @@ const axios = require('axios');
 const DiscordBot = require('./src/bot');
 const logger = require('./src/logger');
 const FunnyStatistics = require('./src/funny_statistics');
+const VehicleControlWebhookMonitor = require('./src/vehicle_control_webhook_monitor');
+const SquadEmbedManager = require('./src/squad_embed_manager');
 require('dotenv').config();
 
 const app = express();
@@ -37,7 +39,9 @@ app.use('/api/server', require('./routes/server'));
 app.use('/api/bot', require('./routes/bot'));
 app.use('/api/configserver', require('./routes/configserver'));
 app.use('/api/scheduler', require('./routes/scheduler'));
+app.use('/api/squads', require('./routes/squads'));
 app.use('/api/auth', require('./routes/auth'));
+app.use('/api/vehicle-control', require('./routes/vehicle-control-bot'));
 
 // Rota de teste
 app.get('/', (req, res) => {
@@ -48,6 +52,9 @@ app.get('/', (req, res) => {
 let discordBot = null;
 let funnyStatistics = null;
 let scheduler = null;
+let vehicleControl = null;
+let squadEmbedManager = null;
+let chestOwnershipMonitor = null;
 
 app.listen(PORT, HOST, async () => {
     logger.server(`Servidor iniciado em http://${HOST}:${PORT}`);
@@ -79,7 +86,87 @@ app.listen(PORT, HOST, async () => {
     } catch (error) {
         logger.error('Erro ao iniciar scheduler backend', { error: error.message });
     }
+
+    // Iniciar monitor de Chest Ownership automático
+    try {
+        const ChestOwnershipMonitor = require('./src/chest_ownership_monitor');
+        chestOwnershipMonitor = new ChestOwnershipMonitor();
+        chestOwnershipMonitor.start();
+        logger.server('ChestOwnershipMonitor iniciado com sucesso');
+    } catch (error) {
+        logger.error('Erro ao iniciar ChestOwnershipMonitor', { error: error.message });
+    }
+
+    // Iniciar sistema de controle de veículos com monitoramento de webhook
+    try {
+        console.log('🔄 Iniciando sistema de controle de veículos...');
+        console.log('discordBot:', discordBot ? 'Disponível' : 'Não disponível');
+        console.log('discordBot.client:', discordBot?.client ? 'Disponível' : 'Não disponível');
+        
+        vehicleControl = new VehicleControlWebhookMonitor(discordBot.client);
+        console.log('✅ VehicleControlWebhookMonitor criado');
+        
+        await vehicleControl.start();
+        console.log('✅ VehicleControlWebhookMonitor iniciado');
+        
+        // Conectar o sistema de controle de veículos ao bot
+        discordBot.setVehicleControl(vehicleControl);
+        console.log('✅ VehicleControl conectado ao bot');
+        
+        // Verificar se a conexão foi estabelecida
+        console.log('vehicleControl no bot:', discordBot.vehicleControl ? 'Conectado' : 'Não conectado');
+        
+        logger.server('Sistema de controle de veículos com monitoramento de webhook iniciado com sucesso');
+    } catch (error) {
+        console.error('❌ Erro ao iniciar sistema de controle de veículos:', error);
+        logger.error('Erro ao iniciar sistema de controle de veículos', { error: error.message });
+    }
+
+    // Iniciar sistema de embeds dos squads com bot Discord
+    try {
+        console.log('🏆 Iniciando sistema de embeds dos squads...');
+        squadEmbedManager = new SquadEmbedManager(discordBot.client);
+        console.log('✅ SquadEmbedManager criado');
+        
+        // Inicializar squads automaticamente
+        setTimeout(async () => {
+            try {
+                console.log('🔄 Inicializando squads automaticamente...');
+                const SquadsManager = require('./src/squads');
+                const squadsManager = new SquadsManager();
+                const currentSquads = await squadsManager.getSquadsData();
+                await squadEmbedManager.initializeSquads(currentSquads);
+                console.log('✅ Squads inicializados automaticamente');
+            } catch (error) {
+                console.error('❌ Erro ao inicializar squads automaticamente:', error.message);
+            }
+        }, 3000); // Aguardar 3 segundos para garantir que tudo esteja pronto
+        
+        console.log('✅ Sistema de embeds dos squads pronto');
+        logger.server('Sistema de embeds dos squads iniciado com sucesso');
+    } catch (error) {
+        console.error('❌ Erro ao iniciar sistema de embeds dos squads:', error);
+        logger.error('Erro ao iniciar sistema de embeds dos squads', { error: error.message });
+    }
 });
+
+// Exportar variáveis para uso em outros módulos
+module.exports = {
+    discordBot,
+    funnyStatistics,
+    scheduler,
+    vehicleControl,
+    squadEmbedManager
+};
+
+// Também exportar globalmente para acesso direto
+global.squadEmbedManager = squadEmbedManager;
+
+// Aguardar um pouco para garantir que o SquadEmbedManager seja inicializado
+setTimeout(() => {
+    global.squadEmbedManager = squadEmbedManager;
+    console.log('✅ SquadEmbedManager exportado globalmente');
+}, 5000);
 
 // Tratamento global de erros não tratados
 process.on('uncaughtException', (err) => {

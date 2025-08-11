@@ -1,0 +1,75 @@
+{
+  "name": "scum-server-manager-electron",
+  "version": "1.0.0",
+  "description": "Scum Server Manager - Aplicação Desktop",
+  "main": "electron-app.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder",
+    "build-win": "electron-builder --win",
+    "build-portable": "electron-builder --win portable"
+  },
+  "build": {
+    "appId": "com.scumserver.manager",
+    "productName": "Scum Server Manager",
+    "directories": {
+      "output": "dist-electron"
+    },
+    "files": [
+      "electron-app.js",
+      "server.js",
+      "src/**/*",
+      "routes/**/*",
+      "scripts/**/*",
+      ".env",
+      "env.example",
+      "nodemon.json",
+      "node_modules/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "src/data",
+        "to": "src/data"
+      },
+      {
+        "from": "src/config",
+        "to": "src/config"
+      },
+      {
+        "from": "routes",
+        "to": "routes"
+      },
+      {
+        "from": "scripts",
+        "to": "scripts"
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "portable",
+          "arch": ["x64"]
+        }
+      ],
+      "icon": "icon.ico"
+    },
+    "portable": {
+      "artifactName": "ScumServerManager.exe"
+    }
+  },
+  "dependencies": {
+    "electron": "^28.0.0",
+    "bcrypt": "^5.1.1",
+    "cors": "^2.8.5",
+    "discord.js": "^14.21.0",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "glob": "^10.4.5",
+    "jsonwebtoken": "^9.0.2",
+    "luxon": "^3.7.1",
+    "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "electron-builder": "^24.6.4"
+  }
+}

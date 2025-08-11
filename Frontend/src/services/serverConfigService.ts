@@ -41,7 +41,7 @@ export interface ConfigInfoResponse {
 }
 
 export class ServerConfigService {
-  private static baseUrl = 'http://127.0.0.1:3000/api/configserver';
+  private static baseUrl = '/api/configserver';
 
   // Ler configuração completa
   static async getServerConfig(): Promise<ServerConfigResponse> {

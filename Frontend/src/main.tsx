@@ -9,6 +9,7 @@ import Login from './pages/Login.tsx'
 import Dashboard from './pages/Dashboard.tsx'
 import AuthLogsView from './components/AuthLogsView.tsx'
 import './styles/index.css'
+import './styles/mobile-pwa.css'
 
 const router = createBrowserRouter([
   {

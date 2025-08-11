@@ -2,6 +2,7 @@ const { Client, GatewayIntentBits, EmbedBuilder, ActionRowBuilder, ButtonBuilder
 const fs = require('fs');
 const path = require('path');
 const logger = require('./logger');
+const { getVehicleInfo } = require('../scripts/vehicle_database_query');
 
 class DiscordBot {
     constructor() {
@@ -15,6 +16,7 @@ class DiscordBot {
         
         this.config = this.loadConfig();
         this.dataPath = path.join(__dirname, 'data', 'bot');
+        this.vehicleControl = null; // Referência ao sistema de controle de veículos
         
         this.setupEventHandlers();
     }
@@ -45,12 +47,19 @@ class DiscordBot {
             
             // Iniciar monitoramento de logs
             this.startLogMonitoring();
+
+            // Publicar painel de acesso/vínculo
+            this.ensureAccessRecordPanel().catch((e) => logger.error('Erro ao publicar painel de acesso', { error: e.message }));
         });
 
         this.client.on('interactionCreate', async (interaction) => {
             if (interaction.isButton()) {
                 await this.handleButtonInteraction(interaction);
             }
+        });
+        
+        this.client.on('messageCreate', async (message) => {
+            // manter handler existente
         });
 
         this.client.on('messageCreate', async (message) => {
@@ -81,34 +90,51 @@ class DiscordBot {
 
     async processChatMessage(messageContent) {
         try {
-            // Padrão: 🎯 [DEV] Pedreiro: /rv 110050 quad (sem Steam ID visível)
-            const rvMatch = messageContent.match(/(?:🎯|🌐|👥)\s*([^:]+):\s*\/rv\s+(\d+)\s+(.+)/);
-            const rmMatch = messageContent.match(/(?:🎯|🌐|👥)\s*([^:]+):\s*\/rm\s+(\d+)\s+(.+)/);
-            const mcMatch = messageContent.match(/(?:🎯|🌐|👥)\s*([^:]+):\s*\/mc\s+(\d+)(?:\s+(.+))?/);
-            const dvMatch = messageContent.match(/(?:🎯|🌐|👥)\s*([^:]+):\s*\/dv\s+(\d+)\s+(\{[^}]+\})/);
+            console.log('🔍 Processando mensagem:', messageContent);
             
-            let match = rvMatch || rmMatch || mcMatch || dvMatch;
-            let commandType = rvMatch ? 'rv' : (rmMatch ? 'rm' : (mcMatch ? 'mc' : (dvMatch ? 'dv' : null)));
+            // Padrão: 🎯 Pedreiro (76561198040636105): /rv 110050
+            const rvMatch = messageContent.match(/(?:🎯|🌐|👥)\s*([^(]+)\s*\((\d+)\):\s*\/rv\s+(\d+)/);
+            const rmMatch = messageContent.match(/(?:🎯|🌐|👥)\s*([^(]+)\s*\((\d+)\):\s*\/rm\s+(\d+)/);
+            const mcMatch = messageContent.match(/(?:🎯|🌐|👥)\s*([^(]+)\s*\((\d+)\):\s*\/mc\s+(\d+)(?:\s+(.+))?/);
+            const dvMatch = messageContent.match(/(?:🎯|🌐|👥)\s*([^(]+)\s*\((\d+)\):\s*\/dv\s+(\d+)\s+(\{[^}]+\})/);
+            const rgStartMatch = messageContent.match(/(?:🎯|🌐|👥)\s*([^(]+)\s*\((\d+)\):\s*\/rg\s*$/i);
+            const rgCodeMatch = messageContent.match(/(?:🎯|🌐|👥)\s*([^(]+)\s*\((\d+)\):\s*\/rg\s+(\d{4,8})/i);
+            
+            console.log('🔍 Matches encontrados:');
+            console.log('  rvMatch:', rvMatch);
+            console.log('  rmMatch:', rmMatch);
+            console.log('  mcMatch:', mcMatch);
+            console.log('  dvMatch:', dvMatch);
+            
+            let match = rvMatch || rmMatch || mcMatch || dvMatch || rgStartMatch || rgCodeMatch;
+            let commandType = rvMatch ? 'rv' : (rmMatch ? 'rm' : (mcMatch ? 'mc' : (dvMatch ? 'dv' : (rgStartMatch ? 'rg_start' : (rgCodeMatch ? 'rg_code' : null)))));
+            
+            console.log('🎯 Tipo de comando:', commandType);
+            console.log('📋 Match completo:', match);
             
             if (!match) {
+                console.log('❌ Nenhum comando válido encontrado');
                 return;
             }
 
-            let playerName, vehicleId, vehicleType;
+            let playerName, steamId, vehicleId, vehicleType;
         
             let location = null;
             if (commandType === 'mc') {
-                [, playerName, vehicleId, vehicleType] = match;
+                [, playerName, steamId, vehicleId, vehicleType] = match;
                 vehicleType = vehicleType || null; // Tipo é opcional para /mc
             } else if (commandType === 'dv') {
-                [, playerName, vehicleId, location] = match;
+                [, playerName, steamId, vehicleId, location] = match;
                 vehicleType = location; // Para /dv, vehicleType contém a localização
+            } else if (commandType === 'rg_start') {
+                [, playerName, steamId] = match;
+            } else if (commandType === 'rg_code') {
+                [, playerName, steamId, vehicleId] = match; // vehicleId carrega o código
             } else {
-                [, playerName, vehicleId, vehicleType] = match;
+                // Para /rv e /rm, extrair apenas ID - tipo será obtido do banco
+                [, playerName, steamId, vehicleId] = match;
+                vehicleType = null; // Será obtido do banco
             }
-            
-            // Extrair Steam ID do nome do jogador
-            const steamId = this.getSteamIdFromPlayerName(playerName);
         
             logger.command(commandType, playerName, steamId, vehicleId, { vehicleType });
             
@@ -145,14 +171,27 @@ class DiscordBot {
             fs.writeFileSync(processedPath, JSON.stringify(processed, null, 2));
             
             // Processar comando
+            console.log('🎯 Processando comando:', commandType);
             if (commandType === 'rv') {
+                console.log('🚗 Processando comando /rv');
                 await this.processVehicleCommand(steamId, vehicleId, vehicleType);
             } else if (commandType === 'rm') {
+                console.log('🐎 Processando comando /rm');
                 await this.processVehicleMountCommand(steamId, vehicleId, vehicleType);
             } else if (commandType === 'mc') {
+                console.log('✅ Processando comando /mc');
                 await this.processVehicleMountCompleteCommand(steamId, vehicleId);
             } else if (commandType === 'dv') {
+                console.log('🚨 Processando comando /dv');
                 await this.processVehicleDenounceCommand(steamId, vehicleId, vehicleType);
+            } else if (commandType === 'rg_start') {
+                console.log('🔗 Iniciando fluxo de vínculo /rg');
+                // O painel já existe; apenas registrar intenção
+                logger.info('Pedido de vínculo iniciado no jogo', { playerName, steamId: this.maskSteamIdForLogs(steamId) });
+            } else if (commandType === 'rg_code') {
+                console.log('🔐 Confirmando código de vínculo /rg');
+                const code = vehicleId;
+                await this.confirmLinkCodeFromChat(steamId, code, playerName);
             }
             
         } catch (error) {
@@ -203,6 +242,106 @@ class DiscordBot {
     // Função processLogLine removida - não é mais necessária
     // Os comandos são capturados apenas via webhook Chat_in_Game
 
+    async ensureAccessRecordPanel() {
+        try {
+            const channelId = this.config.discord_bot.channels.link_request;
+            if (!channelId) return;
+            const channel = await this.client.channels.fetch(channelId);
+            if (!channel) return;
+
+            // Verificar se já existe um painel recente do próprio bot
+            try {
+                const recent = await channel.messages.fetch({ limit: 50 });
+                const exists = recent.some((m) => {
+                    if (m.author?.id !== this.client.user.id) return false;
+                    const hasButton = (m.components || []).some(row =>
+                        row.components?.some(c => c.customId === 'link_request_panel')
+                    );
+                    const hasTitle = (m.embeds || []).some(e => e.title?.includes('Vincular sua conta Steam ao Discord'));
+                    return hasButton || hasTitle;
+                });
+                if (exists) return; // já existe painel, não recriar
+            } catch (_) { /* ignore e continua criando */ }
+
+            const embed = new EmbedBuilder()
+                .setTitle('🔐 Vincular sua conta Steam ao Discord')
+                .setDescription('Clique no botão abaixo para receber um código em DM. No jogo, digite: /rg <código>.')
+                .setColor('#5865F2')
+                .setFooter({ text: 'O código expira em 10 minutos' })
+                .setTimestamp();
+
+            const button = new ActionRowBuilder().addComponents(
+                new ButtonBuilder()
+                    .setCustomId('link_request_panel')
+                    .setStyle(ButtonStyle.Primary)
+                    .setLabel('Receber código por DM')
+            );
+
+            await channel.send({ embeds: [embed], components: [button] });
+        } catch (e) {
+            logger.error('Erro ao garantir painel de acesso', { error: e.message });
+        }
+    }
+
+    async createLinkRequestEmbedFromChat(steamId, playerName) {
+        try {
+            const channelId = this.config.discord_bot.channels.link_request;
+            const channel = await this.client.channels.fetch(channelId);
+
+            // gerar código 6 dígitos e expiração 10 minutos
+            const code = Math.floor(100000 + Math.random() * 900000).toString();
+            const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+
+            // salvar pendência
+            const pendingPath = path.join(this.dataPath, 'pending_links.json');
+            let pending = {};
+            if (fs.existsSync(pendingPath)) pending = JSON.parse(fs.readFileSync(pendingPath, 'utf8'));
+            pending[steamId] = { code, playerName, createdAt: new Date().toISOString(), expiresAt: expiresAt.toISOString() };
+            fs.writeFileSync(pendingPath, JSON.stringify(pending, null, 2));
+
+            const embed = new EmbedBuilder()
+                .setTitle('🔗 Vincular Steam ↔ Discord')
+                .setDescription('Clique no botão para receber seu código em DM e confirme no jogo usando /rg <código>.')
+                .addFields(
+                    { name: 'Jogador', value: playerName, inline: true },
+                    { name: 'Validade', value: '10 minutos', inline: true }
+                )
+                .setColor('#5865F2')
+                .setTimestamp();
+
+            const button = new ActionRowBuilder().addComponents(
+                new ButtonBuilder().setCustomId(`link_code_dm:${steamId}`).setStyle(ButtonStyle.Primary).setLabel('Receber código por DM')
+            );
+
+            await channel.send({ embeds: [embed], components: [button] });
+        } catch (e) {
+            logger.error('Erro ao criar embed de vínculo', { error: e.message });
+        }
+    }
+
+    async confirmLinkCodeFromChat(steamId, code, playerName) {
+        try {
+            const pendingPath = path.join(this.dataPath, 'pending_links.json');
+            if (!fs.existsSync(pendingPath)) return;
+            const pending = JSON.parse(fs.readFileSync(pendingPath, 'utf8'));
+            // pendência é por discordId; encontrar quem recebeu esse código
+            const entry = Object.values(pending).find(p => p.code === code && new Date(p.expiresAt) >= new Date());
+            if (!entry) return;
+
+            await this.linkUser(entry.discordId, steamId);
+
+            // Notificar canal de confirmação
+            const notifyId = this.config.discord_bot.channels.linked_notify;
+            const channel = await this.client.channels.fetch(notifyId);
+            await channel.send({ content: `✅ Vinculado: ${playerName} ↔ <@${entry.discordId}>` });
+
+            delete pending[entry.discordId];
+            fs.writeFileSync(pendingPath, JSON.stringify(pending, null, 2));
+        } catch (e) {
+            logger.error('Erro ao confirmar código de vínculo', { error: e.message });
+        }
+    }
+
     async handleButtonInteraction(interaction) {
         if (interaction.customId === 'link_discord') {
             await this.handleLinkButton(interaction);
@@ -210,6 +349,10 @@ class DiscordBot {
             await this.handleMountLinkButton(interaction);
         } else if (interaction.customId === 'link_discord_mount_complete') {
             await this.handleMountCompleteLinkButton(interaction);
+        } else if (interaction.customId === 'link_request_panel') {
+            await this.handleAccessPanelButton(interaction);
+        } else if (interaction.customId.startsWith('link_code_dm:')) {
+            await this.handleSendLinkCodeDM(interaction);
         } else if (interaction.customId === 'verify_denunciation') {
             await this.handleVerifyDenunciationButton(interaction);
         }
@@ -282,6 +425,49 @@ class DiscordBot {
             console.error('Erro ao processar vinculação de conclusão de montagem:', error);
             await interaction.reply({ content: '❌ Erro ao vincular conta', ephemeral: true });
         }
+    }
+
+    async handleSendLinkCodeDM(interaction) {
+        try {
+            const pendingPath = path.join(this.dataPath, 'pending_links.json');
+            let pending = {};
+            if (fs.existsSync(pendingPath)) {
+                try { pending = JSON.parse(fs.readFileSync(pendingPath, 'utf8')); } catch (_) { pending = {}; }
+            }
+            // gerar novo código vinculado ao Discord que clicou
+            const code = Math.floor(100000 + Math.random() * 900000).toString();
+            const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
+            // salvar em chave do discord (pendência aguardando código no jogo)
+            pending[interaction.user.id] = { code, discordId: interaction.user.id, expiresAt };
+            fs.writeFileSync(pendingPath, JSON.stringify(pending, null, 2));
+            try {
+                const dmEmbed = new EmbedBuilder()
+                    .setTitle('🔐 Código de Vinculação')
+                    .setDescription(`Use no jogo: 
+                    \`/rg ${code}\`
+                    `)
+                    .addFields(
+                        { name: 'Validade', value: '10 minutos', inline: true },
+                        { name: 'Servidor', value: 'Scum Server Manager', inline: true }
+                    )
+                    .setColor('#00B894')
+                    .setFooter({ text: 'Não compartilhe este código com outras pessoas.' })
+                    .setTimestamp();
+                await interaction.user.send({ embeds: [dmEmbed] });
+                await interaction.reply({ content: '✅ Código enviado na sua DM.', ephemeral: true });
+            } catch (e) {
+                await interaction.reply({ content: `❌ Não consegui enviar DM. Ative DMs do servidor. Código: ${code}`, ephemeral: true });
+            }
+        } catch (error) {
+            logger.error('Erro ao enviar código por DM', { error: error.message });
+            try { await interaction.reply({ content: '❌ Erro ao enviar DM.', ephemeral: true }); } catch (_) {}
+        }
+    }
+
+    async handleAccessPanelButton(interaction) {
+        // Reutiliza o fluxo de envio de código por DM a partir do painel
+        interaction.customId = 'link_code_dm:panel';
+        return this.handleSendLinkCodeDM(interaction);
     }
 
     async handleVerifyDenunciationButton(interaction) {
@@ -553,7 +739,7 @@ class DiscordBot {
         logger.info("Registro de conclusão de montagem pendente", { vehicleId, steamId, status: "pendente" });
     }
 
-    async registerVehicle(vehicleId, vehicleType, steamId, discordUser) {
+    async registerVehicle(vehicleId, vehicleType, steamId, discordUser, vehicleInfo = null) {
         const registrationsPath = path.join(this.dataPath, 'vehicle_registrations.json');
         let registrations = {};
         
@@ -582,7 +768,8 @@ class DiscordBot {
             discordUserId: discordUser.id,
             discordUsername: discordUser.username,
             registeredAt: new Date().toISOString(),
-            channelId: this.config.discord_bot.channels.vehicle_registration
+            channelId: this.config.discord_bot.channels.vehicle_registration,
+            vehicleInfo: vehicleInfo // Adicionar informações do veículo
         };
 
         registrations[vehicleId] = registration;
@@ -600,11 +787,32 @@ class DiscordBot {
             }
         }
 
+        // Atualizar sistema de controle de veículos se disponível
+        console.log('🔄 Verificando se vehicleControl está disponível...');
+        console.log('vehicleControl:', this.vehicleControl ? 'Disponível' : 'Não disponível');
+        
+        if (this.vehicleControl) {
+            try {
+                console.log('🔄 Reinicializando sistema de controle de veículos...');
+                // Reinicializar sistema para incluir novo registro (com validação no banco)
+                await this.vehicleControl.vehicleControl.initializeFromRegistrations();
+                console.log('🔄 Atualizando embeds do Discord...');
+                await this.vehicleControl.vehicleControl.updateDiscordEmbeds();
+                console.log('✅ Sistema de controle de veículos atualizado após novo registro');
+                logger.info('Sistema de controle de veículos atualizado após novo registro');
+            } catch (error) {
+                console.error('❌ Erro ao atualizar sistema de controle de veículos:', error);
+                logger.error('Erro ao atualizar sistema de controle de veículos', { error: error.message });
+            }
+        } else {
+            console.log('⚠️ VehicleControl não está disponível - embeds não serão atualizados automaticamente');
+        }
+
         // Enviar embed de sucesso
         await this.sendSuccessEmbed(registration);
     }
 
-    async registerVehicleMount(vehicleId, vehicleType, steamId, discordUser) {
+    async registerVehicleMount(vehicleId, vehicleType, steamId, discordUser, vehicleInfo = null) {
         const registrationsPath = path.join(this.dataPath, 'vehicle_mount_registrations.json');
         let registrations = {};
         
@@ -633,7 +841,8 @@ class DiscordBot {
             discordUserId: discordUser.id,
             discordUsername: discordUser.username,
             registeredAt: new Date().toISOString(),
-            channelId: this.config.discord_bot.channels.vehicle_mount_registration
+            channelId: this.config.discord_bot.channels.vehicle_mount_registration,
+            vehicleInfo: vehicleInfo // Adicionar informações do veículo
         };
 
         registrations[vehicleId] = registration;
@@ -656,6 +865,16 @@ class DiscordBot {
     }
 
     async completeVehicleMount(vehicleId, steamId, discordUser) {
+        // Consultar informações do veículo no banco
+        let vehicleInfo = null;
+        try {
+            vehicleInfo = await getVehicleInfo(vehicleId);
+            logger.info("Informações do veículo obtidas para montagem", { vehicleId, name: vehicleInfo.name, type: vehicleInfo.type });
+        } catch (error) {
+            logger.error("Erro ao consultar veículo no banco para montagem", { vehicleId, error: error.message });
+            // Continuar sem as informações do banco
+        }
+
         // Buscar informações do veículo no registro de montagem
         const mountRegistrationsPath = path.join(this.dataPath, 'vehicle_mount_registrations.json');
         let mountRegistrations = {};
@@ -694,7 +913,8 @@ class DiscordBot {
             discordUsername: discordUser.username,
             completedAt: new Date().toISOString(),
             originalMountRegistration: mountRegistration,
-            channelId: this.config.discord_bot.channels.vehicle_registration
+            channelId: this.config.discord_bot.channels.vehicle_registration,
+            vehicleInfo: vehicleInfo // Adicionar informações do veículo
         };
 
         completedRegistrations[vehicleId] = completedRegistration;
@@ -739,13 +959,42 @@ class DiscordBot {
             }
         }
 
+        // Atualizar sistema de controle de veículos se disponível
+        console.log('🔄 Verificando se vehicleControl está disponível (MC)...');
+        console.log('vehicleControl:', this.vehicleControl ? 'Disponível' : 'Não disponível');
+        
+        if (this.vehicleControl) {
+            try {
+                console.log('🔄 Reinicializando sistema de controle de veículos (MC)...');
+                // Reinicializar sistema para incluir novo registro
+                this.vehicleControl.vehicleControl.initializeFromRegistrations();
+                console.log('🔄 Atualizando embeds do Discord (MC)...');
+                await this.vehicleControl.vehicleControl.updateDiscordEmbeds();
+                console.log('✅ Sistema de controle de veículos atualizado após montagem concluída');
+                logger.info('Sistema de controle de veículos atualizado após montagem concluída');
+            } catch (error) {
+                console.error('❌ Erro ao atualizar sistema de controle de veículos (MC):', error);
+                logger.error('Erro ao atualizar sistema de controle de veículos', { error: error.message });
+            }
+        } else {
+            console.log('⚠️ VehicleControl não está disponível (MC) - embeds não serão atualizados automaticamente');
+        }
+
         // Enviar embed de sucesso para montagem concluída
         await this.sendVehicleMountCompleteSuccessEmbed(completedRegistration);
     }
 
     async sendSuccessEmbed(registration) {
         try {
+            console.log('🚀 Iniciando envio do embed de sucesso...');
+            console.log('📊 Dados do registro:', {
+                vehicleId: registration.vehicleId,
+                vehicleType: registration.vehicleType,
+                vehicleInfo: registration.vehicleInfo
+            });
+            
             const channel = await this.client.channels.fetch(this.config.discord_bot.channels.vehicle_registration);
+            console.log('📺 Canal obtido:', channel?.id);
             
             const embed = new EmbedBuilder()
                 .setTitle('🎮 Registro de Veículo')
@@ -760,11 +1009,37 @@ class DiscordBot {
                 .setFooter({ text: 'Registro automático via comando /rv' })
                 .setTimestamp();
 
-            await channel.send({ embeds: [embed] });
+            // Adicionar imagem do veículo se disponível
+            if (registration.vehicleInfo && registration.vehicleInfo.imageFile) {
+                const imagePath = path.join(__dirname, 'data', 'imagens', 'carros', registration.vehicleInfo.imageFile);
+                console.log('🖼️ Tentando enviar imagem:', imagePath);
+                console.log('📁 Arquivo existe:', fs.existsSync(imagePath));
+                
+                if (fs.existsSync(imagePath)) {
+                    embed.setThumbnail(`attachment://${registration.vehicleInfo.imageFile}`);
+                    console.log('✅ Enviando embed com imagem');
+                    await channel.send({ 
+                        embeds: [embed], 
+                        files: [{ 
+                            attachment: imagePath, 
+                            name: registration.vehicleInfo.imageFile 
+                        }] 
+                    });
+                } else {
+                    console.log('⚠️ Imagem não encontrada, enviando embed sem imagem');
+                    await channel.send({ embeds: [embed] });
+                }
+            } else {
+                console.log('⚠️ Sem informações de imagem, enviando embed básico');
+                await channel.send({ embeds: [embed] });
+            }
+            
+            console.log('✅ Embed enviado com sucesso!');
             logger.info("Embed de sucesso enviado", { vehicleId: registration.vehicleId });
             
         } catch (error) {
-            console.error('Erro ao enviar embed de sucesso:', error);
+            console.error('❌ Erro ao enviar embed de sucesso:', error);
+            logger.error('Erro ao enviar embed de sucesso', { error: error.message });
         }
     }
 
@@ -785,7 +1060,25 @@ class DiscordBot {
                 .setFooter({ text: 'Registro automático via comando /rm' })
                 .setTimestamp();
 
-            await channel.send({ embeds: [embed] });
+            // Adicionar imagem do veículo se disponível
+            if (registration.vehicleInfo && registration.vehicleInfo.imageFile) {
+                const imagePath = path.join(__dirname, 'data', 'imagens', 'carros', registration.vehicleInfo.imageFile);
+                if (fs.existsSync(imagePath)) {
+                    embed.setThumbnail(`attachment://${registration.vehicleInfo.imageFile}`);
+                    await channel.send({ 
+                        embeds: [embed], 
+                        files: [{ 
+                            attachment: imagePath, 
+                            name: registration.vehicleInfo.imageFile 
+                        }] 
+                    });
+                } else {
+                    await channel.send({ embeds: [embed] });
+                }
+            } else {
+                await channel.send({ embeds: [embed] });
+            }
+            
             logger.info("Embed de sucesso de montagem enviado", { vehicleId: registration.vehicleId });
             
         } catch (error) {
@@ -1084,7 +1377,7 @@ class DiscordBot {
     async handleWebhookMessage(message) {
         try {
                     // Verificar se é uma mensagem do chat do jogo
-        if (!message.content || (!message.content.includes('/rv') && !message.content.includes('/rm') && !message.content.includes('/mc') && !message.content.includes('/dv'))) {
+        if (!message.content || (!message.content.includes('/rv') && !message.content.includes('/rm') && !message.content.includes('/mc') && !message.content.includes('/dv') && !message.content.toLowerCase().includes('/rg'))) {
             return;
         }
 
@@ -1101,14 +1394,25 @@ class DiscordBot {
     async processVehicleCommand(steamId, vehicleId, vehicleType) {
         try {
             // Verificar se é um comando válido
-            if (!vehicleId || !vehicleType || isNaN(vehicleId)) {
-                await this.sendErrorEmbed('Comando inválido', `/rv ${vehicleId} ${vehicleType}`);
+            if (!vehicleId || isNaN(vehicleId)) {
+                await this.sendErrorEmbed('Comando inválido', `/rv ${vehicleId}`);
                 return;
             }
 
             // Verificar cooldown (silencioso - não envia embed)
             if (this.isOnCooldown(steamId)) {
                 logger.warn("Cooldown ativo", { steamId, command: "rv", cooldownSeconds: 30 });
+                return;
+            }
+
+            // Consultar informações do veículo no banco
+            let vehicleInfo;
+            try {
+                vehicleInfo = await getVehicleInfo(vehicleId);
+                logger.info("Informações do veículo obtidas", { vehicleId, name: vehicleInfo.name, type: vehicleInfo.type });
+            } catch (error) {
+                logger.error("Erro ao consultar veículo no banco", { vehicleId, error: error.message });
+                await this.sendErrorEmbed(`Veículo com ID ${vehicleId} não encontrado no banco de dados`, `/rv ${vehicleId}`);
                 return;
             }
 
@@ -1120,8 +1424,6 @@ class DiscordBot {
                 linkedUsers = JSON.parse(fs.readFileSync(linkedUsersPath, 'utf8'));
             }
 
-
-            
             const discordUserId = Object.keys(linkedUsers).find(key => linkedUsers[key].steam_id === steamId);
 
             if (discordUserId) {
@@ -1129,19 +1431,19 @@ class DiscordBot {
                 logger.info("Usuário já vinculado", { steamId, discordId: discordUserId });
                 try {
                     const discordUser = await this.client.users.fetch(discordUserId);
-                    await this.registerVehicle(vehicleId, vehicleType, steamId, discordUser);
+                    await this.registerVehicle(vehicleId, vehicleInfo.type, steamId, discordUser, vehicleInfo);
                     this.setCooldown(steamId);
                     logger.info("Registro de veículo automático", { vehicleId, steamId, method: "automático" });
                 } catch (error) {
                     logger.warn("Discord ID inválido", { discordUserId });
                     // Se o Discord ID não for válido, criar nova solicitação pendente
-                    await this.createPendingRequest(steamId, vehicleId, vehicleType);
+                    await this.createPendingRequest(steamId, vehicleId, vehicleInfo.type, vehicleInfo);
                 }
                 
             } else {
                 // Steam ID não vinculado - criar solicitação pendente
                 logger.info("Usuário não vinculado", { steamId, status: "pendente" });
-                await this.createPendingRequest(steamId, vehicleId, vehicleType);
+                await this.createPendingRequest(steamId, vehicleId, vehicleInfo.type, vehicleInfo);
             }
 
         } catch (error) {
@@ -1152,14 +1454,25 @@ class DiscordBot {
     async processVehicleMountCommand(steamId, vehicleId, vehicleType) {
         try {
             // Verificar se é um comando válido
-            if (!vehicleId || !vehicleType || isNaN(vehicleId)) {
-                await this.sendVehicleMountErrorEmbed('Comando inválido', `/rm ${vehicleId} ${vehicleType}`);
+            if (!vehicleId || isNaN(vehicleId)) {
+                await this.sendVehicleMountErrorEmbed('Comando inválido', `/rm ${vehicleId}`);
                 return;
             }
 
             // Verificar cooldown (silencioso - não envia embed)
             if (this.isOnCooldown(steamId)) {
                 logger.warn("Cooldown ativo", { steamId, command: "rm", cooldownSeconds: 30 });
+                return;
+            }
+
+            // Consultar informações do veículo no banco
+            let vehicleInfo;
+            try {
+                vehicleInfo = await getVehicleInfo(vehicleId);
+                logger.info("Informações do veículo obtidas para montagem", { vehicleId, name: vehicleInfo.name, type: vehicleInfo.type });
+            } catch (error) {
+                logger.error("Erro ao consultar veículo no banco para montagem", { vehicleId, error: error.message });
+                await this.sendVehicleMountErrorEmbed(`Veículo com ID ${vehicleId} não encontrado no banco de dados`, `/rm ${vehicleId}`);
                 return;
             }
 
@@ -1171,8 +1484,6 @@ class DiscordBot {
                 linkedUsers = JSON.parse(fs.readFileSync(linkedUsersPath, 'utf8'));
             }
 
-
-            
             const discordUserId = Object.keys(linkedUsers).find(key => linkedUsers[key].steam_id === steamId);
 
             if (discordUserId) {
@@ -1180,19 +1491,19 @@ class DiscordBot {
                 logger.info("Usuário já vinculado para montagem", { steamId, discordId: discordUserId });
                 try {
                     const discordUser = await this.client.users.fetch(discordUserId);
-                    await this.registerVehicleMount(vehicleId, vehicleType, steamId, discordUser);
+                    await this.registerVehicleMount(vehicleId, vehicleInfo.type, steamId, discordUser, vehicleInfo);
                     this.setCooldown(steamId);
                     logger.info("Registro de montagem automático", { vehicleId, steamId, method: "automático" });
                 } catch (error) {
                     logger.warn("Discord ID inválido", { discordUserId });
                     // Se o Discord ID não for válido, criar nova solicitação pendente
-                    await this.createPendingMountRequest(steamId, vehicleId, vehicleType);
+                    await this.createPendingMountRequest(steamId, vehicleId, vehicleInfo.type, vehicleInfo);
                 }
                 
             } else {
                 // Steam ID não vinculado - criar solicitação pendente
                 logger.info("Usuário não vinculado para montagem", { steamId, status: "pendente" });
-                await this.createPendingMountRequest(steamId, vehicleId, vehicleType);
+                await this.createPendingMountRequest(steamId, vehicleId, vehicleInfo.type, vehicleInfo);
             }
 
         } catch (error) {
@@ -1445,6 +1756,11 @@ class DiscordBot {
         logger.info("Solicitação pendente de conclusão criada", { steamId });
     }
 
+    setVehicleControl(vehicleControl) {
+        this.vehicleControl = vehicleControl;
+        logger.info('Sistema de controle de veículos conectado ao bot');
+    }
+
     async start() {
         if (!this.config || !this.config.discord_bot || !this.config.discord_bot.enabled) {
             logger.error("Bot Discord desabilitado na configuração");
@@ -1526,8 +1842,16 @@ class DiscordBot {
 
     async sendVehicleMountCompleteSuccessEmbed(completedRegistration) {
         try {
+            console.log('🚀 Iniciando envio do embed de montagem concluída...');
+            console.log('📊 Dados do registro:', {
+                vehicleId: completedRegistration.vehicleId,
+                vehicleType: completedRegistration.vehicleType,
+                vehicleInfo: completedRegistration.vehicleInfo
+            });
+            
             // Enviar embed para o canal de registro de veículos (onde o veículo será transferido)
             const channel = await this.client.channels.fetch(this.config.discord_bot.channels.vehicle_registration);
+            console.log('📺 Canal obtido:', channel?.id);
             
             const embed = new EmbedBuilder()
                 .setTitle('✅ Montagem de Veículo Concluída')
@@ -1542,11 +1866,37 @@ class DiscordBot {
                 .setFooter({ text: 'Registro automático via comando /mc' })
                 .setTimestamp();
 
-            await channel.send({ embeds: [embed] });
+            // Adicionar imagem do veículo se disponível
+            if (completedRegistration.vehicleInfo && completedRegistration.vehicleInfo.imageFile) {
+                const imagePath = path.join(__dirname, 'data', 'imagens', 'carros', completedRegistration.vehicleInfo.imageFile);
+                console.log('🖼️ Tentando enviar imagem:', imagePath);
+                console.log('📁 Arquivo existe:', fs.existsSync(imagePath));
+                
+                if (fs.existsSync(imagePath)) {
+                    embed.setThumbnail(`attachment://${completedRegistration.vehicleInfo.imageFile}`);
+                    console.log('✅ Enviando embed com imagem');
+                    await channel.send({ 
+                        embeds: [embed], 
+                        files: [{ 
+                            attachment: imagePath, 
+                            name: completedRegistration.vehicleInfo.imageFile 
+                        }] 
+                    });
+                } else {
+                    console.log('⚠️ Imagem não encontrada, enviando embed sem imagem');
+                    await channel.send({ embeds: [embed] });
+                }
+            } else {
+                console.log('⚠️ Sem informações de imagem, enviando embed básico');
+                await channel.send({ embeds: [embed] });
+            }
+            
+            console.log('✅ Embed de montagem concluída enviado com sucesso!');
             logger.info("Embed de sucesso enviado para montagem concluída");
             
         } catch (error) {
-            console.error('Erro ao enviar embed de sucesso para montagem concluída:', error);
+            console.error('❌ Erro ao enviar embed de sucesso para montagem concluída:', error);
+            logger.error('Erro ao enviar embed de montagem concluída', { error: error.message });
         }
     }
 
@@ -1655,7 +2005,21 @@ class DiscordBot {
 
     async createVehicleDenunciation(steamId, vehicleId, location) {
         try {
+            console.log('🚀 Iniciando criação de denúncia de veículo...');
+            console.log('📊 Dados da denúncia:', { vehicleId, steamId, location });
+            
+            // Consultar informações do veículo no banco
+            let vehicleInfo = null;
+            try {
+                vehicleInfo = await getVehicleInfo(vehicleId);
+                logger.info("Informações do veículo obtidas para denúncia", { vehicleId, name: vehicleInfo.name, type: vehicleInfo.type });
+            } catch (error) {
+                logger.error("Erro ao consultar veículo no banco para denúncia", { vehicleId, error: error.message });
+                // Continuar sem as informações do banco
+            }
+            
             const channel = await this.client.channels.fetch(this.config.discord_bot.channels.vehicle_denunciation);
+            console.log('📺 Canal obtido:', channel?.id);
             
             // Extrair coordenadas da localização
             const coordMatch = location.match(/X=([-\d.]+)\s+Y=([-\d.]+)\s+Z=([-\d.]+)/);
@@ -1714,15 +2078,41 @@ class DiscordBot {
                         .setStyle(ButtonStyle.Danger)
                 );
 
-            const message = await channel.send({ embeds: [embed], components: [button] });
+            // Adicionar imagem do veículo se disponível
+            if (vehicleInfo && vehicleInfo.imageFile) {
+                const imagePath = path.join(__dirname, 'data', 'imagens', 'carros', vehicleInfo.imageFile);
+                console.log('🖼️ Tentando enviar imagem:', imagePath);
+                console.log('📁 Arquivo existe:', fs.existsSync(imagePath));
+                
+                if (fs.existsSync(imagePath)) {
+                    embed.setThumbnail(`attachment://${vehicleInfo.imageFile}`);
+                    console.log('✅ Enviando embed com imagem');
+                    const message = await channel.send({ 
+                        embeds: [embed], 
+                        components: [button],
+                        files: [{ 
+                            attachment: imagePath, 
+                            name: vehicleInfo.imageFile 
+                        }] 
+                    });
+                } else {
+                    console.log('⚠️ Imagem não encontrada, enviando embed sem imagem');
+                    const message = await channel.send({ embeds: [embed], components: [button] });
+                }
+            } else {
+                console.log('⚠️ Sem informações de imagem, enviando embed básico');
+                const message = await channel.send({ embeds: [embed], components: [button] });
+            }
             
             // Salvar denúncia
             await this.saveDenunciation(steamId, vehicleId, location, message.id);
             
+            console.log('✅ Denúncia de veículo criada com sucesso!');
             logger.info("Denúncia de veículo criada", { vehicleId, steamId, status: "criada" });
             
         } catch (error) {
-            console.error('Erro ao criar denúncia de veículo:', error);
+            console.error('❌ Erro ao criar denúncia de veículo:', error);
+            logger.error('Erro ao criar denúncia de veículo', { error: error.message });
         }
     }
 

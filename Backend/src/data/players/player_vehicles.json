@@ -1,0 +1,125 @@
+{
+  "76561198040636105": {
+    "playerName": "Pedreiro",
+    "steamId": "76561198040636105",
+    "activeVehicles": [
+      {
+        "vehicleId": "4806011",
+        "vehicleType": "Barba",
+        "registeredAt": "2025-08-09T21:56:59.607Z"
+      },
+      {
+        "vehicleId": "4807639",
+        "vehicleType": "Barba",
+        "registeredAt": "2025-08-09T22:18:34.044Z"
+      }
+    ],
+    "lastUpdated": "2025-08-09T22:18:34.044Z"
+  },
+  "76561198398160339": {
+    "playerName": "BlueArcher_BR",
+    "steamId": "76561198398160339",
+    "activeVehicles": [
+      {
+        "vehicleId": "2766025",
+        "vehicleType": "Rager Item Container",
+        "registeredAt": "2025-08-09T14:27:51.548Z"
+      }
+    ],
+    "lastUpdated": "2025-08-09T14:27:51.548Z"
+  },
+  "76561198129911132": {
+    "playerName": "Til4toxico",
+    "steamId": "76561198129911132",
+    "activeVehicles": [
+      {
+        "vehicleId": "4452426",
+        "vehicleType": "Kinglet Duster",
+        "registeredAt": "2025-08-09T15:07:42.206Z"
+      }
+    ],
+    "lastUpdated": "2025-08-09T15:07:42.206Z"
+  },
+  "76561199486993078": {
+    "playerName": "Ruiva",
+    "steamId": "76561199486993078",
+    "activeVehicles": [
+      {
+        "vehicleId": "4570004",
+        "vehicleType": "Rager",
+        "registeredAt": "2025-08-09T15:07:42.727Z"
+      },
+      {
+        "vehicleId": "4783082",
+        "vehicleType": "Big Inventory Expansion Item Container",
+        "registeredAt": "2025-08-09T19:17:08.300Z"
+      },
+      {
+        "vehicleId": "4581702",
+        "vehicleType": "WolfsWagen",
+        "registeredAt": "2025-08-09T19:39:09.374Z"
+      }
+    ],
+    "lastUpdated": "2025-08-09T19:39:09.374Z"
+  },
+  "76561197963358180": {
+    "playerName": "Reav",
+    "steamId": "76561197963358180",
+    "activeVehicles": [],
+    "lastUpdated": "2025-08-09T15:22:21.167Z"
+  },
+  "76561199086720901": {
+    "playerName": "Rocha",
+    "steamId": "76561199086720901",
+    "activeVehicles": [
+      {
+        "vehicleId": "4680004",
+        "vehicleType": "Laika",
+        "registeredAt": "2025-08-09T19:39:10.113Z"
+      }
+    ],
+    "lastUpdated": "2025-08-09T19:39:10.113Z"
+  },
+  "76561198094354554": {
+    "playerName": "ARKANJO",
+    "steamId": "76561198094354554",
+    "activeVehicles": [],
+    "lastUpdated": "2025-08-09T23:25:38.050Z"
+  },
+  "76561198398645131": {
+    "playerName": "LoboRanzinza",
+    "steamId": "76561198398645131",
+    "activeVehicles": [
+      {
+        "vehicleId": "2590332",
+        "vehicleType": "Rager",
+        "registeredAt": "2025-08-09T22:34:11.699Z"
+      }
+    ],
+    "lastUpdated": "2025-08-09T22:34:11.699Z"
+  },
+  "76561198056594028": {
+    "playerName": "Pite Munhoz",
+    "steamId": "76561198056594028",
+    "activeVehicles": [
+      {
+        "vehicleId": "3642931",
+        "vehicleType": "Dirtbike",
+        "registeredAt": "2025-08-09T23:24:13.090Z"
+      }
+    ],
+    "lastUpdated": "2025-08-09T23:24:13.090Z"
+  },
+  "76561198055770683": {
+    "playerName": "Fujhiru  Nakombi",
+    "steamId": "76561198055770683",
+    "activeVehicles": [
+      {
+        "vehicleId": "3830007",
+        "vehicleType": "Wolfswagen Item Container",
+        "registeredAt": "2025-08-09T23:24:13.669Z"
+      }
+    ],
+    "lastUpdated": "2025-08-09T23:24:13.669Z"
+  }
+}

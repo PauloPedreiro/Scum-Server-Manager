@@ -1,7 +1,48 @@
 const fs = require('fs');
 const path = require('path');
-const axios = require('axios');
+const http = require('http');
+const https = require('https');
+const url = require('url');
 const { DateTime } = require('luxon');
+
+// Função para fazer requisições HTTP (substitui axios)
+function makeRequest(options) {
+    return new Promise((resolve, reject) => {
+        const parsedUrl = url.parse(options.url);
+        const requestOptions = {
+            hostname: parsedUrl.hostname,
+            port: parsedUrl.port || (parsedUrl.protocol === 'https:' ? 443 : 80),
+            path: parsedUrl.path,
+            method: options.method || 'GET',
+            headers: options.headers || {}
+        };
+
+        const client = parsedUrl.protocol === 'https:' ? https : http;
+        const req = client.request(requestOptions, (res) => {
+            let data = '';
+            res.on('data', (chunk) => {
+                data += chunk;
+            });
+            res.on('end', () => {
+                resolve({
+                    status: res.statusCode,
+                    data: data,
+                    headers: res.headers
+                });
+            });
+        });
+
+        req.on('error', (err) => {
+            reject(err);
+        });
+
+        if (options.data) {
+            req.write(JSON.stringify(options.data));
+        }
+
+        req.end();
+    });
+}
 
 // Importar configurações e logger
 const config = require('./data/server/config.json');
@@ -21,9 +62,59 @@ class Scheduler {
             lastSuccess: null
         };
         this.config = config.scheduler;
-        this.endpoints = this.config.endpoints;
+        
+        // Processar endpoints para suportar configuração antiga e nova
+        this.endpoints = this.processEndpoints();
+        
+        // Controle individual de tempo para cada endpoint
+        this.endpointTimers = new Map();
+        this.endpointLastExecution = new Map();
+        
         this.stateFile = path.join(__dirname, 'data', 'scheduler_state.json');
         this.loadState();
+    }
+
+    // Processar endpoints para suportar configuração antiga e nova
+    processEndpoints() {
+        const endpoints = this.config.endpoints || [];
+        
+        return endpoints.map(endpoint => {
+            // Se é string (configuração antiga), converter para objeto
+            if (typeof endpoint === 'string') {
+                return {
+                    path: endpoint,
+                    interval: this.config.default_interval || this.config.interval || 30000,
+                    enabled: true
+                };
+            }
+            
+            // Se já é objeto (configuração nova), usar como está
+            return {
+                path: endpoint.path,
+                interval: endpoint.interval || this.config.default_interval || 30000,
+                enabled: endpoint.enabled !== false
+            };
+        });
+    }
+
+    // Verificar se um endpoint específico pode executar
+    canExecuteEndpoint(endpointPath) {
+        const endpoint = this.endpoints.find(ep => ep.path === endpointPath);
+        if (!endpoint || !endpoint.enabled) return false;
+        
+        const lastExecution = this.endpointLastExecution.get(endpointPath);
+        if (!lastExecution) return true;
+        
+        const now = Date.now();
+        const timeSinceLastExecution = now - lastExecution;
+        const minInterval = endpoint.interval * 0.8; // 80% do intervalo
+        
+        return timeSinceLastExecution >= minInterval;
+    }
+
+    // Marcar execução de um endpoint específico
+    markEndpointExecution(endpointPath) {
+        this.endpointLastExecution.set(endpointPath, Date.now());
     }
 
     // Carregar estado salvo
@@ -56,44 +147,22 @@ class Scheduler {
         }
     }
 
-    // Verificar se pode executar (evitar conflitos)
-    canExecute(source) {
-        if (!this.lastExecution) return true;
-        
-        const now = Date.now();
-        const timeSinceLastExecution = now - this.lastExecution;
-        const minInterval = this.config.interval * 0.8; // 80% do intervalo
-        
-        if (timeSinceLastExecution < minInterval) {
-            logger.info(`Execução bloqueada: ${Math.round(timeSinceLastExecution/1000)}s desde última execução`, {
-                source,
-                timeSinceLastExecution,
-                minInterval
-            });
-            return false;
-        }
-        
-        return true;
-    }
-
     // Executar um endpoint específico
     async executeEndpoint(endpoint) {
         try {
-            const url = `http://127.0.0.1:3000${endpoint}`;
-            const response = await axios.get(url, {
-                timeout: this.config.timeout
-            });
+            const url = `http://127.0.0.1:3000${endpoint.path}`;
+            const response = await makeRequest({ url });
             
-            logger.info(`Endpoint executado com sucesso: ${endpoint}`, {
+            logger.info(`Endpoint executado com sucesso: ${endpoint.path}`, {
                 status: response.status,
-                endpoint
+                endpoint: endpoint.path
             });
             
             return { success: true, status: response.status, endpoint };
         } catch (error) {
-            logger.error(`Erro ao executar endpoint: ${endpoint}`, {
+            logger.error(`Erro ao executar endpoint: ${endpoint.path}`, {
                 error: error.message,
-                endpoint
+                endpoint: endpoint.path
             });
             
             return { 
@@ -106,8 +175,9 @@ class Scheduler {
 
     // Executar sequência de endpoints
     async executeSequence(source = 'backend') {
-        if (!this.canExecute(source)) {
-            return { success: false, reason: 'execution_blocked' };
+        if (!this.config.enabled) {
+            logger.info('Scheduler desabilitado na configuração');
+            return { success: false, reason: 'scheduler_disabled' };
         }
 
         const startTime = Date.now();
@@ -127,6 +197,16 @@ class Scheduler {
 
         // Executar endpoints sequencialmente
         for (const endpoint of this.endpoints) {
+            if (!this.canExecuteEndpoint(endpoint.path)) {
+                logger.info(`Execução bloqueada para endpoint: ${endpoint.path}`, {
+                    endpoint: endpoint.path,
+                    timeSinceLastExecution: Date.now() - this.endpointLastExecution.get(endpoint.path)
+                });
+                results.push({ success: false, error: 'execution_blocked', endpoint });
+                failureCount++;
+                continue;
+            }
+
             const result = await this.executeEndpoint(endpoint);
             results.push(result);
             
@@ -135,6 +215,8 @@ class Scheduler {
             } else {
                 failureCount++;
             }
+
+            this.markEndpointExecution(endpoint.path); // Marcar execução
 
             // Pequena pausa entre endpoints
             await new Promise(resolve => setTimeout(resolve, 1000));
@@ -159,7 +241,7 @@ class Scheduler {
             successCount,
             failureCount,
             overallSuccess,
-            results: results.map(r => ({ endpoint: r.endpoint, success: r.success }))
+            results: results.map(r => ({ endpoint: r.endpoint.path, success: r.success }))
         });
 
         return {
@@ -185,13 +267,19 @@ class Scheduler {
         }
 
         this.isRunning = true;
+        const defaultInterval = this.config.default_interval || this.config.interval || 30000;
+        
         this.interval = setInterval(async () => {
             await this.executeSequence('backend');
-        }, this.config.interval);
+        }, defaultInterval);
 
         logger.info('Scheduler iniciado', {
-            interval: this.config.interval,
-            endpoints: this.endpoints
+            defaultInterval,
+            endpoints: this.endpoints.map(ep => ({
+                path: ep.path,
+                interval: ep.interval,
+                enabled: ep.enabled
+            }))
         });
 
         return true;
@@ -223,17 +311,35 @@ class Scheduler {
     getStatus() {
         const now = Date.now();
         const timeSinceLastExecution = this.lastExecution ? now - this.lastExecution : null;
+        const defaultInterval = this.config.default_interval || this.config.interval || 30000;
+        
+        // Status individual de cada endpoint
+        const endpointStatus = this.endpoints.map(endpoint => {
+            const lastExec = this.endpointLastExecution.get(endpoint.path);
+            const timeSinceLast = lastExec ? now - lastExec : null;
+            const canExecute = this.canExecuteEndpoint(endpoint.path);
+            
+            return {
+                path: endpoint.path,
+                interval: endpoint.interval,
+                enabled: endpoint.enabled,
+                lastExecution: lastExec,
+                timeSinceLastExecution: timeSinceLast,
+                canExecute,
+                nextExecution: lastExec ? lastExec + endpoint.interval : null
+            };
+        });
         
         return {
             isRunning: this.isRunning,
             enabled: this.config.enabled,
-            interval: this.config.interval,
+            defaultInterval,
             lastExecution: this.lastExecution,
             executionSource: this.executionSource,
             timeSinceLastExecution,
             stats: this.stats,
-            endpoints: this.endpoints,
-            nextExecution: this.isRunning ? this.lastExecution + this.config.interval : null
+            endpoints: endpointStatus,
+            nextExecution: this.isRunning ? this.lastExecution + defaultInterval : null
         };
     }
 
@@ -241,7 +347,7 @@ class Scheduler {
     canFrontendExecute() {
         if (!this.config.frontend_fallback) return false;
         if (!this.isRunning) return true;
-        return !this.canExecute('frontend');
+        return !this.canExecuteEndpoint('frontend'); // Usar canExecuteEndpoint para frontend
     }
 }
 

@@ -2,7 +2,9 @@ const express = require('express');
 const router = express.Router();
 const fs = require('fs');
 const path = require('path');
-const axios = require('axios');
+const http = require('http');
+const https = require('https');
+const url = require('url');
 const logger = require('../src/logger');
 
 const ADMIN_LOG_PATH = process.env.SCUM_LOG_PATH;
@@ -47,6 +49,160 @@ function copyAdminLogToTemp(logFileName) {
         console.error(`Erro ao copiar log admin: ${error.message}`);
         return null;
     }
+}
+
+// Função para verificar se usuário está vinculado ao Discord
+function checkDiscordLink(steamId) {
+    try {
+        const linkedUsersPath = 'src/data/bot/linked_users.json';
+        if (!fs.existsSync(linkedUsersPath)) {
+            logger.debug('Arquivo linked_users.json não encontrado');
+            return null;
+        }
+        
+        const linkedUsers = JSON.parse(fs.readFileSync(linkedUsersPath, 'utf8'));
+        logger.debug(`Verificando Steam ID: ${steamId}`);
+        logger.debug(`Usuários vinculados: ${JSON.stringify(linkedUsers)}`);
+        
+        // Procurar pelo Steam ID nos usuários vinculados
+        for (const [discordId, userData] of Object.entries(linkedUsers)) {
+            logger.debug(`Comparando: ${userData.steam_id} === ${steamId} = ${userData.steam_id === steamId}`);
+            if (userData.steam_id === steamId) {
+                logger.debug(`Usuário encontrado: ${discordId}`);
+                return {
+                    discordId: discordId,
+                    linkedAt: userData.linked_at,
+                    permissions: userData.permissions || []
+                };
+            }
+        }
+        
+        logger.debug('Usuário não encontrado na lista de vinculados');
+        return null;
+    } catch (error) {
+        logger.error('Erro ao verificar usuário vinculado', { error: error.message });
+        return null;
+    }
+}
+
+// Função para formatar mensagem do log de admin
+function formatAdminLogMessage(line) {
+    // Extrair informações da linha usando regex
+    const regex = /^(\d{4}\.\d{2}\.\d{2}-\d{2}\.\d{2}\.\d{2}): '(\d+):([^']+)' (.+)$/;
+    const match = line.match(regex);
+    
+    if (!match) {
+        // Se não conseguir parsear, retorna como texto simples
+        return {
+            content: `📋 **Log de Admin**\n\`\`\`${line}\`\`\``
+        };
+    }
+    
+    const [, timestamp, steamId, playerName, action] = match;
+    
+    // Determinar cor baseada no tipo de ação
+    let color = 0x00ff00; // Verde padrão
+    let emoji = "📋";
+    
+    if (action.includes('Command:')) {
+        color = 0xff6b35; // Laranja para comandos
+        emoji = "⚡";
+    } else if (action.includes('teleport')) {
+        color = 0x9b59b6; // Roxo para teleportes
+        emoji = "🚀";
+    } else if (action.includes('SpawnItem')) {
+        color = 0xf1c40f; // Amarelo para spawn de itens
+        emoji = "🎁";
+    } else if (action.includes('SetGodMode')) {
+        color = 0xe74c3c; // Vermelho para god mode
+        emoji = "🛡️";
+    } else if (action.includes('ShowOtherPlayerInfo')) {
+        color = 0x3498db; // Azul para informações de jogador
+        emoji = "👁️";
+    }
+    
+    // Formatar timestamp
+    let date;
+    try {
+        // Converter o formato do SCUM para ISO
+        const timestampParts = timestamp.split('-');
+        const datePart = timestampParts[0].replace(/\./g, '-');
+        const timePart = timestampParts[1].replace(/\./g, ':');
+        const isoString = `${datePart}T${timePart}`;
+        date = new Date(isoString);
+        
+        // Verificar se a data é válida
+        if (isNaN(date.getTime())) {
+            date = new Date(); // Usar data atual se inválida
+        }
+    } catch (error) {
+        date = new Date(); // Usar data atual em caso de erro
+    }
+    
+    const formattedTime = date.toLocaleString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+    });
+    
+    // Verificar se usuário está vinculado ao Discord
+    const discordLink = checkDiscordLink(steamId);
+    const discordInfo = discordLink ? `✅ Vinculado (<@${discordLink.discordId}>)` : `❌ Não vinculado`;
+    
+    // Criar embed
+    return {
+        embeds: [{
+            title: `${emoji} Atividade de Admin`,
+            description: `**Jogador:** ${playerName}\n**Steam ID:** \`${steamId}\`\n**Discord:** ${discordInfo}\n**Ação:** ${action}\n**Horário:** ${formattedTime}`,
+            color: color,
+            timestamp: date.toISOString(),
+            footer: {
+                text: "SCUM Server Manager - Log de Admin"
+            }
+        }]
+    };
+}
+
+// Função para fazer requisições HTTP (substitui axios)
+function makeRequest(options) {
+    return new Promise((resolve, reject) => {
+        const parsedUrl = url.parse(options.url);
+        const requestOptions = {
+            hostname: parsedUrl.hostname,
+            port: parsedUrl.port || (parsedUrl.protocol === 'https:' ? 443 : 80),
+            path: parsedUrl.path,
+            method: options.method || 'GET',
+            headers: options.headers || {}
+        };
+
+        const client = parsedUrl.protocol === 'https:' ? https : http;
+        const req = client.request(requestOptions, (res) => {
+            let data = '';
+            res.on('data', (chunk) => {
+                data += chunk;
+            });
+            res.on('end', () => {
+                resolve({
+                    status: res.statusCode,
+                    data: data,
+                    headers: res.headers
+                });
+            });
+        });
+
+        req.on('error', (err) => {
+            reject(err);
+        });
+
+        if (options.data) {
+            req.write(JSON.stringify(options.data));
+        }
+
+        req.end();
+    });
 }
 
 // Endpoint principal
@@ -138,8 +294,16 @@ router.get('/', async (req, res) => {
             if (line) {
                 logger.debug(`Enviando linha: ${line}`);
                 try {
-                    const response = await axios.post(adminWebhookUrl, {
-                        content: line
+                    // Formatar a mensagem para melhor legibilidade
+                    const formattedMessage = formatAdminLogMessage(line);
+                    
+                    const response = await makeRequest({
+                        url: adminWebhookUrl,
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        data: formattedMessage
                     });
                     logger.debug(`Linha enviada com sucesso: ${response.status}`);
                 } catch (err) {

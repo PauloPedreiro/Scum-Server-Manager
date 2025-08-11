@@ -2,7 +2,9 @@ const express = require('express');
 const router = express.Router();
 const fs = require('fs');
 const path = require('path');
-const axios = require('axios');
+const http = require('http');
+const https = require('https');
+const url = require('url');
 
 const CHAT_LOG_PATH = process.env.SCUM_LOG_PATH;
 const TEMP_PATH = 'src/data/temp';
@@ -100,6 +102,45 @@ function getChatTypeEmoji(chatType) {
     return emojiMap[chatType] || `(${chatType})`;
 }
 
+// Função para fazer requisições HTTP (substitui axios)
+function makeRequest(options) {
+    return new Promise((resolve, reject) => {
+        const parsedUrl = url.parse(options.url);
+        const requestOptions = {
+            hostname: parsedUrl.hostname,
+            port: parsedUrl.port || (parsedUrl.protocol === 'https:' ? 443 : 80),
+            path: parsedUrl.path,
+            method: options.method || 'GET',
+            headers: options.headers || {}
+        };
+
+        const client = parsedUrl.protocol === 'https:' ? https : http;
+        const req = client.request(requestOptions, (res) => {
+            let data = '';
+            res.on('data', (chunk) => {
+                data += chunk;
+            });
+            res.on('end', () => {
+                resolve({
+                    status: res.statusCode,
+                    data: data,
+                    headers: res.headers
+                });
+            });
+        });
+
+        req.on('error', (err) => {
+            reject(err);
+        });
+
+        if (options.data) {
+            req.write(JSON.stringify(options.data));
+        }
+
+        req.end();
+    });
+}
+
 router.get('/chat_in_game', async (req, res) => {
     try {
         // 1. Encontrar o último log de chat
@@ -121,20 +162,25 @@ router.get('/chat_in_game', async (req, res) => {
         if (webhookUrl && messages.length > 0) {
             console.log(`Enviando ${messages.length} mensagens para o Discord...`);
             for (const msg of messages) {
-                // Pular mensagens do tipo Squad
+                // Pular mensagens Squad apenas se NÃO forem comandos relevantes (/rg, /rv, /rm, /mc, /dv)
                 if (msg.chatType === 'Squad') {
-                    console.log(`⏭️ Mensagem Squad ignorada: ${msg.playerName}: ${msg.message}`);
-                    continue;
+                    const isRelevantCommand = /^\/(rg|rv|rm|mc|dv)\b/i.test(msg.message);
+                    if (!isRelevantCommand) {
+                        console.log(`⏭️ Mensagem Squad ignorada: ${msg.playerName}: ${msg.message}`);
+                        continue;
+                    }
                 }
                 
                 const chatTypeEmoji = getChatTypeEmoji(msg.chatType);
-                const text = `${chatTypeEmoji} ${msg.playerName}: ${msg.message}`;
+                const text = `${chatTypeEmoji} ${msg.playerName} (${msg.steamId}): ${msg.message}`;
                 try {
-                    const response = await axios.post(webhookUrl, { content: text }, {
+                    const response = await makeRequest({
+                        url: webhookUrl,
+                        method: 'POST',
+                        data: { content: text },
                         headers: {
                             'Content-Type': 'application/json'
-                        },
-                        timeout: 10000
+                        }
                     });
                     console.log(`✅ Mensagem enviada: ${msg.playerName}: ${msg.message}`);
                 } catch (error) {
@@ -182,11 +228,13 @@ router.get('/force-webhook', async (req, res) => {
         ];
         
         for (const message of testMessages) {
-            await axios.post(webhookUrl, { content: message }, {
+            await makeRequest({
+                url: webhookUrl,
+                method: 'POST',
+                data: { content: message },
                 headers: {
                     'Content-Type': 'application/json'
-                },
-                timeout: 10000
+                }
             });
             await new Promise(resolve => setTimeout(resolve, 1000)); // Delay entre mensagens
         }

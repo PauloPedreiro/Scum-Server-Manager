@@ -567,5 +567,263 @@
     "processed_at": 1753052506375,
     "command_type": "rm",
     "player_name": "[ADM]TutiCats"
+  },
+  "76561198040636105_3000005_rm": {
+    "timestamp": "2025-07-29T03:34:05.926Z",
+    "processed_at": 1753760045926,
+    "command_type": "rm",
+    "player_name": "[DEV] Pedreiro"
+  },
+  "76561198040636105_3000005_mc": {
+    "timestamp": "2025-07-29T03:34:07.274Z",
+    "processed_at": 1753760047274,
+    "command_type": "mc",
+    "player_name": "[DEV] Pedreiro"
+  },
+  "76561198040636105_3000022_rm": {
+    "timestamp": "2025-07-29T03:34:07.833Z",
+    "processed_at": 1753760047833,
+    "command_type": "rm",
+    "player_name": "[DEV] Pedreiro"
+  },
+  "76561198040636105_3000022_mc": {
+    "timestamp": "2025-07-29T03:34:08.438Z",
+    "processed_at": 1753760048438,
+    "command_type": "mc",
+    "player_name": "[DEV] Pedreiro"
+  },
+  "76561198040636105_2200006_rv": {
+    "timestamp": "2025-07-30T12:58:48.459Z",
+    "processed_at": 1753880328459,
+    "command_type": "rv",
+    "player_name": "Pedreiro"
+  },
+  "76561198040636105_2320010_rv": {
+    "timestamp": "2025-08-01T22:07:18.804Z",
+    "processed_at": 1754086038804,
+    "command_type": "rv",
+    "player_name": "Pedreiro"
+  },
+  "76561198040636105_3911770_rv": {
+    "timestamp": "2025-08-02T05:39:13.896Z",
+    "processed_at": 1754113153896,
+    "command_type": "rv",
+    "player_name": "[DEV] Pedreiro"
+  },
+  "76561198040636105_3912387_rv": {
+    "timestamp": "2025-08-02T06:04:06.019Z",
+    "processed_at": 1754114646019,
+    "command_type": "rv",
+    "player_name": "[DEV] Pedreiro"
+  },
+  "76561198040636105_3912414_rm": {
+    "timestamp": "2025-08-02T06:06:20.878Z",
+    "processed_at": 1754114780878,
+    "command_type": "rm",
+    "player_name": "[DEV] Pedreiro"
+  },
+  "76561198040636105_3912414_dv": {
+    "timestamp": "2025-08-02T06:09:20.068Z",
+    "processed_at": 1754114960068,
+    "command_type": "dv",
+    "player_name": "[DEV] Pedreiro"
+  },
+  "76561198040636105_3912414_mc": {
+    "timestamp": "2025-08-02T06:10:50.073Z",
+    "processed_at": 1754115050073,
+    "command_type": "mc",
+    "player_name": "[DEV] Pedreiro"
+  },
+  "76561198040636105_3912437_dv": {
+    "timestamp": "2025-08-02T06:17:32.486Z",
+    "processed_at": 1754115452486,
+    "command_type": "dv",
+    "player_name": "[DEV] Pedreiro"
+  },
+  "76561198040636105_3912437_mc": {
+    "timestamp": "2025-08-02T06:23:02.017Z",
+    "processed_at": 1754115782017,
+    "command_type": "mc",
+    "player_name": "[DEV] Pedreiro"
+  },
+  "76561198040636105_3912437_rm": {
+    "timestamp": "2025-08-02T06:22:01.889Z",
+    "processed_at": 1754115721889,
+    "command_type": "rm",
+    "player_name": "[DEV] Pedreiro"
+  },
+  "76561198040636105_4022705_rm": {
+    "timestamp": "2025-08-02T22:29:06.196Z",
+    "processed_at": 1754173746196,
+    "command_type": "rm",
+    "player_name": "[DEV] Pedreiro"
+  },
+  "76561198040636105_4022705_mc": {
+    "timestamp": "2025-08-02T22:30:35.029Z",
+    "processed_at": 1754173835029,
+    "command_type": "mc",
+    "player_name": "[DEV] Pedreiro"
+  },
+  "76561198040636105_4023050_rv": {
+    "timestamp": "2025-08-02T22:48:12.036Z",
+    "processed_at": 1754174892036,
+    "command_type": "rv",
+    "player_name": "[DEV] Pedreiro"
+  },
+  "76561198040636105_4024095_rv": {
+    "timestamp": "2025-08-02T23:26:12.257Z",
+    "processed_at": 1754177172257,
+    "command_type": "rv",
+    "player_name": "[DEV] Pedreiro"
+  },
+  "76561198040636105_4024103_rv": {
+    "timestamp": "2025-08-02T23:31:57.508Z",
+    "processed_at": 1754177517508,
+    "command_type": "rv",
+    "player_name": "[DEV] Pedreiro"
+  },
+  "76561198040636105_4025897_rv": {
+    "timestamp": "2025-08-02T23:44:44.593Z",
+    "processed_at": 1754178284593,
+    "command_type": "rv",
+    "player_name": "[DEV] Pedreiro"
+  },
+  "76561198040636105_4025927_rv": {
+    "timestamp": "2025-08-02T23:54:55.137Z",
+    "processed_at": 1754178895137,
+    "command_type": "rv",
+    "player_name": "[DEV] Pedreiro"
+  },
+  "76561198040636105_4025934_rv": {
+    "timestamp": "2025-08-02T23:56:50.030Z",
+    "processed_at": 1754179010029,
+    "command_type": "rv",
+    "player_name": "[DEV] Pedreiro"
+  },
+  "76561198040636105_4034403_rv": {
+    "timestamp": "2025-08-03T02:32:57.109Z",
+    "processed_at": 1754188377109,
+    "command_type": "rv",
+    "player_name": "[DEV] Pedreiro"
+  },
+  "76561198040636105_4035072_rv": {
+    "timestamp": "2025-08-03T02:44:53.474Z",
+    "processed_at": 1754189093474,
+    "command_type": "rv",
+    "player_name": "[DEV] Pedreiro"
+  },
+  "76561198040636105_4036870_rv": {
+    "timestamp": "2025-08-03T03:26:50.884Z",
+    "processed_at": 1754191610884,
+    "command_type": "rv",
+    "player_name": "[DEV] Pedreiro"
+  },
+  "76561198040636105_4038202_rv": {
+    "timestamp": "2025-08-03T03:36:15.868Z",
+    "processed_at": 1754192175868,
+    "command_type": "rv",
+    "player_name": "[DEV] Pedreiro"
+  },
+  "76561198040636105_4038352_rv": {
+    "timestamp": "2025-08-03T03:44:13.269Z",
+    "processed_at": 1754192653269,
+    "command_type": "rv",
+    "player_name": "[DEV] Pedreiro"
+  },
+  "76561198040636105_4038813_rv": {
+    "timestamp": "2025-08-03T03:52:14.007Z",
+    "processed_at": 1754193134007,
+    "command_type": "rv",
+    "player_name": "[DEV] Pedreiro"
+  },
+  "76561198040636105_4039070_rv": {
+    "timestamp": "2025-08-03T03:56:35.633Z",
+    "processed_at": 1754193395633,
+    "command_type": "rv",
+    "player_name": "[DEV] Pedreiro"
+  },
+  "76561198040636105_4051507_rv": {
+    "timestamp": "2025-08-03T04:40:03.099Z",
+    "processed_at": 1754196003099,
+    "command_type": "rv",
+    "player_name": "[DEV] Pedreiro"
+  },
+  "76561198040636105_4051967_rv": {
+    "timestamp": "2025-08-03T04:45:30.717Z",
+    "processed_at": 1754196330717,
+    "command_type": "rv",
+    "player_name": "[DEV] Pedreiro"
+  },
+  "76561198040636105_4054480_rv": {
+    "timestamp": "2025-08-03T06:05:27.764Z",
+    "processed_at": 1754201127764,
+    "command_type": "rv",
+    "player_name": "[DEV] Pedreiro"
+  },
+  "76561198040636105_4054554_rv": {
+    "timestamp": "2025-08-03T06:10:55.365Z",
+    "processed_at": 1754201455365,
+    "command_type": "rv",
+    "player_name": "[DEV] Pedreiro"
+  },
+  "76561198040636105_4054692_rv": {
+    "timestamp": "2025-08-03T06:20:03.255Z",
+    "processed_at": 1754202003255,
+    "command_type": "rv",
+    "player_name": "[DEV] Pedreiro"
+  },
+  "76561198040636105_4054760_rv": {
+    "timestamp": "2025-08-03T06:23:02.508Z",
+    "processed_at": 1754202182508,
+    "command_type": "rv",
+    "player_name": "[DEV] Pedreiro"
+  },
+  "76561198040636105_4186879_rv": {
+    "timestamp": "2025-08-04T03:58:43.383Z",
+    "processed_at": 1754279923383,
+    "command_type": "rv",
+    "player_name": "[DEV] Pedreiro"
+  },
+  "76561198040636105_4200006_rv": {
+    "timestamp": "2025-08-04T04:08:25.470Z",
+    "processed_at": 1754280505470,
+    "command_type": "rv",
+    "player_name": "[DEV] Pedreiro"
+  },
+  "76561198040636105_4200021_rv": {
+    "timestamp": "2025-08-04T04:26:18.310Z",
+    "processed_at": 1754281578310,
+    "command_type": "rv",
+    "player_name": "[DEV] Pedreiro"
+  },
+  "76561198040636105_4200320_rv": {
+    "timestamp": "2025-08-04T05:14:14.008Z",
+    "processed_at": 1754284454008,
+    "command_type": "rv",
+    "player_name": "[DEV] Pedreiro"
+  },
+  "76561198040636105_4200480_rv": {
+    "timestamp": "2025-08-04T05:25:10.053Z",
+    "processed_at": 1754285110053,
+    "command_type": "rv",
+    "player_name": "[DEV] Pedreiro"
+  },
+  "76561198040636105_4702989_rv": {
+    "timestamp": "2025-08-09T00:46:58.404Z",
+    "processed_at": 1754700418404,
+    "command_type": "rv",
+    "player_name": "[DEV] Pedreiro "
+  },
+  "76561198040636105_266781_rg_code": {
+    "timestamp": "2025-08-09T05:37:57.776Z",
+    "processed_at": 1754717877776,
+    "command_type": "rg_code",
+    "player_name": "[DEV] Pedreiro "
+  },
+  "76561197963358180_777727_rg_code": {
+    "timestamp": "2025-08-09T15:22:17.466Z",
+    "processed_at": 1754752937466,
+    "command_type": "rg_code",
+    "player_name": "[ADM] Reav "
   }
 }

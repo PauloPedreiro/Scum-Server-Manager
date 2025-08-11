@@ -1,0 +1,60 @@
+/* Mobile PWA specific styles */
+@media (display-mode: standalone) {
+  /* Remove any browser UI elements */
+  body {
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: transparent;
+    overscroll-behavior: none;
+  }
+  
+  /* Ensure full screen on mobile */
+  html, body {
+    height: 100vh;
+    height: -webkit-fill-available;
+    overflow: hidden;
+  }
+  
+  /* Hide scrollbars in standalone mode */
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Prevent zoom on double tap */
+  * {
+    touch-action: manipulation;
+  }
+}
+
+/* iOS specific fixes */
+@supports (-webkit-touch-callout: none) {
+  body {
+    /* Prevent bounce on iOS */
+    position: fixed;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+/* Android specific fixes */
+@media screen and (max-width: 768px) {
+  body {
+    /* Ensure proper viewport on Android */
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+  }
+}
+
+/* Standalone mode detection */
+@media (display-mode: standalone) {
+  /* Hide browser-specific elements */
+  .browser-only {
+    display: none !important;
+  }
+  
+  /* Ensure app-like behavior */
+  #root {
+    height: 100vh;
+    height: -webkit-fill-available;
+  }
+}

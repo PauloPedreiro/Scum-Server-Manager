@@ -268,5 +268,99 @@
       "channelId": "1395634763733405756"
     },
     "channelId": "1395477789313994812"
+  },
+  "3912414": {
+    "vehicleId": "3912414",
+    "vehicleType": "CRUISER",
+    "steamId": "76561198040636105",
+    "discordUserId": "592132368635265034",
+    "discordUsername": "pedreiro.",
+    "completedAt": "2025-08-02T06:10:50.083Z",
+    "originalMountRegistration": {
+      "vehicleId": "3912414",
+      "vehicleType": "CRUISER",
+      "steamId": "76561198040636105",
+      "discordUserId": "592132368635265034",
+      "discordUsername": "pedreiro.",
+      "registeredAt": "2025-08-02T06:06:21.031Z",
+      "channelId": "1395634763733405756",
+      "vehicleInfo": {
+        "id": "3912414",
+        "name": "BPC_Cruiser",
+        "type": "Cruiser",
+        "assetId": "Vehicle:BPC_Cruiser",
+        "class": "Cruiser_ES",
+        "imageFile": "cruiser.png"
+      }
+    },
+    "channelId": "1395477789313994812"
+  },
+  "3912437": {
+    "vehicleId": "3912437",
+    "vehicleType": "CRUISER",
+    "steamId": "76561198040636105",
+    "discordUserId": "592132368635265034",
+    "discordUsername": "pedreiro.",
+    "completedAt": "2025-08-02T06:23:02.444Z",
+    "originalMountRegistration": {
+      "vehicleId": "3912437",
+      "vehicleType": "CRUISER",
+      "steamId": "76561198040636105",
+      "discordUserId": "592132368635265034",
+      "discordUsername": "pedreiro.",
+      "registeredAt": "2025-08-02T06:22:02.008Z",
+      "channelId": "1395634763733405756",
+      "vehicleInfo": {
+        "id": "3912437",
+        "name": "BPC_Cruiser",
+        "type": "Cruiser",
+        "assetId": "Vehicle:BPC_Cruiser",
+        "class": "Cruiser_ES",
+        "imageFile": "cruiser.png"
+      }
+    },
+    "channelId": "1395477789313994812",
+    "vehicleInfo": {
+      "id": "3912437",
+      "name": "BPC_Cruiser",
+      "type": "Cruiser",
+      "assetId": "Vehicle:BPC_Cruiser",
+      "class": "Cruiser_ES",
+      "imageFile": "cruiser.png"
+    }
+  },
+  "4022705": {
+    "vehicleId": "4022705",
+    "vehicleType": "LAIKA",
+    "steamId": "76561198040636105",
+    "discordUserId": "592132368635265034",
+    "discordUsername": "pedreiro.",
+    "completedAt": "2025-08-02T22:30:35.129Z",
+    "originalMountRegistration": {
+      "vehicleId": "4022705",
+      "vehicleType": "LAIKA",
+      "steamId": "76561198040636105",
+      "discordUserId": "592132368635265034",
+      "discordUsername": "pedreiro.",
+      "registeredAt": "2025-08-02T22:29:06.323Z",
+      "channelId": "1395634763733405756",
+      "vehicleInfo": {
+        "id": "4022705",
+        "name": "BPC_Laika",
+        "type": "Laika",
+        "assetId": "Vehicle:BPC_Laika",
+        "class": "Laika_ES",
+        "imageFile": "default_vehicle.png"
+      }
+    },
+    "channelId": "1395477789313994812",
+    "vehicleInfo": {
+      "id": "4022705",
+      "name": "BPC_Laika",
+      "type": "Laika",
+      "assetId": "Vehicle:BPC_Laika",
+      "class": "Laika_ES",
+      "imageFile": "default_vehicle.png"
+    }
   }
 }

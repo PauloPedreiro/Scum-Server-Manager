@@ -1,9 +1,9 @@
 {
-  "file": "admin_20250728212822.log",
+  "file": "admin_20250810040055.log",
   "content": [
-    "2025.07.28-21.28.22: Game version: 1.0.1.3.96391",
-    "2025.07.28-21.28.23: Deleting players that haven't logged in for 180 day(s)...",
-    "2025.07.28-21.28.23: Completed in 0.004s for 0 player profiles and 0 players."
+    "2025.08.10-04.00.55: Game version: 1.0.1.3.96391",
+    "2025.08.10-04.00.56: Deleting players that haven't logged in for 180 day(s)...",
+    "2025.08.10-04.00.56: Completed in 0.004s for 0 player profiles and 0 players."
   ],
-  "savedAt": "2025-07-28T23:21:31.041Z"
+  "savedAt": "2025-08-10T04:39:18.741Z"
 }

@@ -1,42 +1,22 @@
 {
-  "314232694550822914": {
-    "steam_id": "76561198398160339",
-    "linked_at": "2025-07-19T20:30:29.558Z",
+  "592132368635265034": {
+    "steam_id": "76561198040636105",
+    "linked_at": "2025-08-09T05:37:57.779Z",
     "permissions": [
       "vehicle_registration",
       "vehicle_mount_registration"
     ],
-    "last_activity": "2025-07-19T20:31:20.027Z",
-    "total_registrations": 2
+    "last_activity": "2025-08-09T05:37:57.779Z",
+    "total_registrations": 0
   },
   "380682856726396928": {
     "steam_id": "76561197963358180",
-    "linked_at": "2025-07-20T02:59:53.505Z",
+    "linked_at": "2025-08-09T15:22:17.468Z",
     "permissions": [
       "vehicle_registration",
       "vehicle_mount_registration"
     ],
-    "last_activity": "2025-07-20T23:01:46.022Z",
-    "total_registrations": 3
-  },
-  "592132368635265034": {
-    "steam_id": "76561198040636105",
-    "linked_at": "2025-07-20T05:39:01.008Z",
-    "permissions": [
-      "vehicle_registration",
-      "vehicle_mount_registration"
-    ],
-    "last_activity": "2025-07-20T23:01:45.540Z",
-    "total_registrations": 16
-  },
-  "838762461405904906": {
-    "steam_id": "76561199617993331",
-    "linked_at": "2025-07-20T22:52:09.047Z",
-    "permissions": [
-      "vehicle_registration",
-      "vehicle_mount_registration"
-    ],
-    "last_activity": "2025-07-20T22:52:57.152Z",
-    "total_registrations": 2
+    "last_activity": "2025-08-09T15:22:17.468Z",
+    "total_registrations": 0
   }
 }
