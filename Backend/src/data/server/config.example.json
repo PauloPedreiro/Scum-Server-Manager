@@ -12,8 +12,8 @@
   "checkInterval": 30000,
   "discord_bot": {
     "enabled": true,
-    "token": "TOKEN_DO_BOT",
-    "guild_id": "1343764652114575513",
+    "token": "${DISCORD_BOT_TOKEN}",
+    "guild_id": "${DISCORD_GUILD_ID}",
     "webhook_key": "Chat_in_Game",
     "channels": {
       "vehicle_registration": "1395477789313994812",

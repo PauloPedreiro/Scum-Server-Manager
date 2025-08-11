@@ -124,6 +124,7 @@ Thumbs.db
 config.json
 secrets.json
 src/data/server/config.json
+src/data/server/config.local.json
 
 # Build outputs
 dist/
