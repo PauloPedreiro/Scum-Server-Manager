@@ -39,13 +39,13 @@
     "playerName": "Welaska",
     "steamId": "76561198073447119",
     "totalFame": 510.550385,
-    "timestamp": "2025-08-11T14:59:41.723Z"
+    "timestamp": "2025-08-11T19:07:23.091Z"
   },
   "76561198108944382": {
     "playerName": "Romulo",
     "steamId": "76561198108944382",
     "totalFame": 410.464905,
-    "timestamp": "2025-08-11T14:59:41.723Z"
+    "timestamp": "2025-08-11T19:07:23.090Z"
   },
   "76561198398160339": {
     "playerName": "BlueArcher_BR",
@@ -68,8 +68,8 @@
   "76561198399245730": {
     "playerName": "skywalker",
     "steamId": "76561198399245730",
-    "totalFame": 582.517273,
-    "timestamp": "2025-08-02T19:38:53.620Z"
+    "totalFame": 436.357269,
+    "timestamp": "2025-08-11T19:08:14.656Z"
   },
   "76561198861633490": {
     "playerName": "Takashi",
@@ -80,14 +80,14 @@
   "76561198056594028": {
     "playerName": "Pite Munhoz",
     "steamId": "76561198056594028",
-    "totalFame": 681.277039,
-    "timestamp": "2025-08-10T00:16:10.640Z"
+    "totalFame": 654.248657,
+    "timestamp": "2025-08-11T19:08:14.655Z"
   },
   "76561198422507274": {
     "playerName": "LOBO 47",
     "steamId": "76561198422507274",
     "totalFame": 1845.700928,
-    "timestamp": "2025-08-11T14:59:41.722Z"
+    "timestamp": "2025-08-11T19:07:23.090Z"
   },
   "76561198082406872": {
     "playerName": "Heyoon",
@@ -99,7 +99,7 @@
     "playerName": "Gnoma",
     "steamId": "76561199015889569",
     "totalFame": 435.826355,
-    "timestamp": "2025-08-11T14:59:41.724Z"
+    "timestamp": "2025-08-11T19:07:23.091Z"
   },
   "76561198996550601": {
     "playerName": "R4GE",
@@ -110,8 +110,8 @@
   "76561197995901898": {
     "playerName": "Aqu1n0",
     "steamId": "76561197995901898",
-    "totalFame": 702.78241,
-    "timestamp": "2025-08-11T14:56:29.020Z"
+    "totalFame": 720.235779,
+    "timestamp": "2025-08-11T19:08:14.656Z"
   },
   "76561198240075378": {
     "playerName": "Vassili Kikov",
@@ -171,12 +171,24 @@
     "playerName": "Fabrício",
     "steamId": "76561199572456227",
     "totalFame": 321.195129,
-    "timestamp": "2025-08-11T14:59:41.723Z"
+    "timestamp": "2025-08-11T19:07:23.091Z"
   },
   "76561199486993078": {
     "playerName": "Ruiva",
     "steamId": "76561199486993078",
-    "totalFame": 427.232056,
-    "timestamp": "2025-08-11T14:59:41.723Z"
+    "totalFame": 438.653595,
+    "timestamp": "2025-08-11T19:08:14.655Z"
+  },
+  "76561197998321750": {
+    "playerName": "Rafa_Hated",
+    "steamId": "76561197998321750",
+    "totalFame": 139.480804,
+    "timestamp": "2025-08-11T19:08:14.656Z"
+  },
+  "76561198398645131": {
+    "playerName": "LoboRanzinza",
+    "steamId": "76561198398645131",
+    "totalFame": 521.460327,
+    "timestamp": "2025-08-11T19:08:14.656Z"
   }
 }

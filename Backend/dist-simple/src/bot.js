@@ -174,7 +174,8 @@ class DiscordBot {
             'ARKANJO': '76561198094354554',
             'TutiCats': '76561199617993331',
             'Til4toxico': '76561198129911132',
-            'Rocha': '76561199086720901'
+            'Rocha': '76561199086720901',
+            'MCGAMBR': '76561198329297470'
         };
         
         // Tentar encontrar o nome exato primeiro

@@ -350,13 +350,12 @@
   "76561198073447119": {
     "playerName": "Welaska",
     "steamId": "76561198073447119",
-    "totalPlayTime": 27023640,
-    "lastLogin": "2025-08-11T13:48:20.000Z",
-    "lastLogout": "2025-08-09T06:02:38.000Z",
-    "isOnline": true,
+    "totalPlayTime": 31143640,
+    "lastLogin": "2025-08-11T16:04:07.000Z",
+    "lastLogout": "2025-08-11T17:12:47.000Z",
+    "isOnline": false,
     "tags": [
-      "Novato",
-      "Online"
+      "Novato"
     ],
     "processedSessions": [
       "2025.08.02-13.34.56_login",
@@ -371,15 +370,17 @@
       "2025.08.09-00.25.15_login",
       "2025.08.09-04.02.53_login",
       "2025.08.09-06.02.38_logout",
-      "2025.08.11-13.48.20_login"
+      "2025.08.11-13.48.20_login",
+      "2025.08.11-16.04.07_login",
+      "2025.08.11-17.12.47_logout"
     ]
   },
   "76561198108944382": {
     "playerName": "Romulo",
     "steamId": "76561198108944382",
-    "totalPlayTime": 9866000,
-    "lastLogin": "2025-08-11T12:26:29.000Z",
-    "lastLogout": "2025-08-11T13:41:03.000Z",
+    "totalPlayTime": 13042000,
+    "lastLogin": "2025-08-11T16:09:41.000Z",
+    "lastLogout": "2025-08-11T17:01:37.000Z",
     "isOnline": false,
     "tags": [
       "Iniciante"
@@ -414,7 +415,11 @@
       "2025.08.09-20.52.49_login",
       "2025.08.09-20.54.02_logout",
       "2025.08.11-12.26.29_login",
-      "2025.08.11-13.41.03_logout"
+      "2025.08.11-13.41.03_logout",
+      "2025.08.11-16.08.27_login",
+      "2025.08.11-16.09.27_logout",
+      "2025.08.11-16.09.41_login",
+      "2025.08.11-17.01.37_logout"
     ]
   },
   "76561198082406872": {
@@ -532,9 +537,9 @@
   "76561198399245730": {
     "playerName": "skywalker",
     "steamId": "76561198399245730",
-    "totalPlayTime": 0,
-    "lastLogin": "2025-08-02T19:17:07.000Z",
-    "lastLogout": "2025-08-02T18:21:26.000Z",
+    "totalPlayTime": 268000,
+    "lastLogin": "2025-08-11T17:40:29.000Z",
+    "lastLogout": "2025-08-11T17:44:57.000Z",
     "isOnline": false,
     "tags": [
       "Iniciante"
@@ -545,7 +550,9 @@
       "2025.08.02-17.04.23_login",
       "2025.08.02-18.21.26_logout",
       "2025.08.02-18.21.36_login",
-      "2025.08.02-19.17.07_login"
+      "2025.08.02-19.17.07_login",
+      "2025.08.11-17.40.29_login",
+      "2025.08.11-17.44.57_logout"
     ]
   },
   "76561198861633490": {
@@ -581,7 +588,7 @@
     "playerName": "Ruiva",
     "steamId": "76561199486993078",
     "totalPlayTime": 0,
-    "lastLogin": "2025-08-11T14:05:50.000Z",
+    "lastLogin": "2025-08-11T16:34:04.000Z",
     "lastLogout": "2025-08-09T21:39:36.000Z",
     "isOnline": true,
     "tags": [
@@ -598,19 +605,19 @@
       "2025.08.09-20.10.24_login",
       "2025.08.09-21.39.36_logout",
       "2025.08.09-21.41.13_login",
-      "2025.08.11-14.05.50_login"
+      "2025.08.11-14.05.50_login",
+      "2025.08.11-16.34.04_login"
     ]
   },
   "76561198056594028": {
     "playerName": "Pite Munhoz",
     "steamId": "76561198056594028",
-    "totalPlayTime": 5497000,
-    "lastLogin": "2025-08-11T12:03:52.000Z",
-    "lastLogout": "2025-08-09T23:02:00.000Z",
-    "isOnline": true,
+    "totalPlayTime": 15162000,
+    "lastLogin": "2025-08-11T16:15:08.000Z",
+    "lastLogout": "2025-08-11T18:56:13.000Z",
+    "isOnline": false,
     "tags": [
-      "Iniciante",
-      "Online"
+      "Iniciante"
     ],
     "processedSessions": [
       "2025.08.02-20.52.37_login",
@@ -619,7 +626,9 @@
       "2025.08.03-02.16.31_logout",
       "2025.08.09-21.33.26_login",
       "2025.08.09-23.02.00_logout",
-      "2025.08.11-12.03.52_login"
+      "2025.08.11-12.03.52_login",
+      "2025.08.11-16.15.08_login",
+      "2025.08.11-18.56.13_logout"
     ]
   },
   "76561198443970424": {
@@ -731,16 +740,18 @@
   "76561198978532008": {
     "playerName": "Brutis",
     "steamId": "76561198978532008",
-    "totalPlayTime": 73864116,
-    "lastLogin": "2025-08-03T06:19:39.000Z",
-    "lastLogout": "2025-08-04T02:50:43.116Z",
+    "totalPlayTime": 77326116,
+    "lastLogin": "2025-08-11T16:52:40.000Z",
+    "lastLogout": "2025-08-11T17:50:22.000Z",
     "isOnline": false,
     "tags": [
       "Regular",
       "Novato"
     ],
     "processedSessions": [
-      "2025.08.03-06.19.39_login"
+      "2025.08.03-06.19.39_login",
+      "2025.08.11-16.52.40_login",
+      "2025.08.11-17.50.22_logout"
     ]
   },
   "76561198418275361": {
@@ -765,9 +776,9 @@
   "76561199015889569": {
     "playerName": "Gnoma",
     "steamId": "76561199015889569",
-    "totalPlayTime": 12817079,
-    "lastLogin": "2025-08-11T14:26:27.000Z",
-    "lastLogout": "2025-08-11T14:54:39.000Z",
+    "totalPlayTime": 16345079,
+    "lastLogin": "2025-08-11T16:03:02.000Z",
+    "lastLogout": "2025-08-11T17:01:50.000Z",
     "isOnline": false,
     "tags": [
       "Iniciante"
@@ -781,7 +792,9 @@
       "2025.08.11-13.43.34_login",
       "2025.08.11-14.17.37_logout",
       "2025.08.11-14.26.27_login",
-      "2025.08.11-14.54.39_logout"
+      "2025.08.11-14.54.39_logout",
+      "2025.08.11-16.03.02_login",
+      "2025.08.11-17.01.50_logout"
     ]
   },
   "76561198996550601": {
@@ -803,12 +816,13 @@
   "76561197995901898": {
     "playerName": "Aqu1n0",
     "steamId": "76561197995901898",
-    "totalPlayTime": 8735926,
-    "lastLogin": "2025-08-11T04:31:01.000Z",
-    "lastLogout": "2025-08-11T05:03:01.000Z",
-    "isOnline": false,
+    "totalPlayTime": 12488926,
+    "lastLogin": "2025-08-11T18:02:54.000Z",
+    "lastLogout": "2025-08-11T17:34:30.000Z",
+    "isOnline": true,
     "tags": [
-      "Iniciante"
+      "Iniciante",
+      "Online"
     ],
     "processedSessions": [
       "2025.08.04-03.26.05_login",
@@ -823,7 +837,14 @@
       "2025.08.09-20.45.58_login",
       "2025.08.09-21.12.05_logout",
       "2025.08.11-04.31.01_login",
-      "2025.08.11-05.03.01_logout"
+      "2025.08.11-05.03.01_logout",
+      "2025.08.11-16.06.35_login",
+      "2025.08.11-16.38.21_logout",
+      "2025.08.11-16.50.43_login",
+      "2025.08.11-17.06.07_logout",
+      "2025.08.11-17.19.07_login",
+      "2025.08.11-17.34.30_logout",
+      "2025.08.11-18.02.54_login"
     ]
   },
   "76561199052564103": {
@@ -862,11 +883,12 @@
     "playerName": "LoboRanzinza",
     "steamId": "76561198398645131",
     "totalPlayTime": 0,
-    "lastLogin": "2025-08-09T21:22:26.000Z",
+    "lastLogin": "2025-08-11T17:47:23.000Z",
     "lastLogout": "2025-08-09T00:09:19.000Z",
-    "isOnline": false,
+    "isOnline": true,
     "tags": [
-      "Iniciante"
+      "Iniciante",
+      "Online"
     ],
     "processedSessions": [
       "2025.08.08-20.03.34_login",
@@ -874,7 +896,8 @@
       "2025.08.09-00.04.42_login",
       "2025.08.09-00.09.19_logout",
       "2025.08.09-00.09.31_login",
-      "2025.08.09-21.22.26_login"
+      "2025.08.09-21.22.26_login",
+      "2025.08.11-17.47.23_login"
     ]
   },
   "76561198325140823": {
@@ -897,11 +920,12 @@
     "playerName": "Miranda",
     "steamId": "76561199129734191",
     "totalPlayTime": 104000,
-    "lastLogin": "2025-08-11T06:00:43.000Z",
+    "lastLogin": "2025-08-11T16:05:30.000Z",
     "lastLogout": "2025-08-08T23:28:46.000Z",
-    "isOnline": false,
+    "isOnline": true,
     "tags": [
-      "Iniciante"
+      "Iniciante",
+      "Online"
     ],
     "processedSessions": [
       "2025.08.08-23.27.02_login",
@@ -911,7 +935,8 @@
       "2025.08.09-15.18.19_login",
       "2025.08.09-16.04.46_login",
       "2025.08.09-20.09.30_login",
-      "2025.08.11-06.00.43_login"
+      "2025.08.11-06.00.43_login",
+      "2025.08.11-16.05.30_login"
     ]
   },
   "76561199152319088": {
@@ -953,15 +978,17 @@
     "playerName": "Rafa_Hated",
     "steamId": "76561197998321750",
     "totalPlayTime": 0,
-    "lastLogin": "2025-08-09T04:03:00.000Z",
+    "lastLogin": "2025-08-11T17:11:27.000Z",
     "lastLogout": "2025-08-09T04:28:51.000Z",
-    "isOnline": false,
+    "isOnline": true,
     "tags": [
-      "Iniciante"
+      "Iniciante",
+      "Online"
     ],
     "processedSessions": [
       "2025.08.09-04.03.00_login",
-      "2025.08.09-04.28.51_logout"
+      "2025.08.09-04.28.51_logout",
+      "2025.08.11-17.11.27_login"
     ]
   },
   "76561199426931374": {
@@ -1051,15 +1078,19 @@
   "76561198035995505": {
     "playerName": "Devil601",
     "steamId": "76561198035995505",
-    "totalPlayTime": 23868955,
-    "lastLogin": "2025-08-09T21:56:36.000Z",
-    "lastLogout": "2025-08-10T04:34:24.955Z",
+    "totalPlayTime": 25217955,
+    "lastLogin": "2025-08-11T17:44:18.000Z",
+    "lastLogout": "2025-08-11T18:01:36.000Z",
     "isOnline": false,
     "tags": [
       "Novato"
     ],
     "processedSessions": [
-      "2025.08.09-21.56.36_login"
+      "2025.08.09-21.56.36_login",
+      "2025.08.11-17.38.33_login",
+      "2025.08.11-17.43.44_logout",
+      "2025.08.11-17.44.18_login",
+      "2025.08.11-18.01.36_logout"
     ]
   },
   "76561198140683162": {
@@ -1083,32 +1114,66 @@
   "76561198055770683": {
     "playerName": "Fujhiru  Nakombi",
     "steamId": "76561198055770683",
-    "totalPlayTime": 23574955,
-    "lastLogin": "2025-08-09T22:01:30.000Z",
-    "lastLogout": "2025-08-10T04:34:24.955Z",
+    "totalPlayTime": 27570955,
+    "lastLogin": "2025-08-11T17:35:23.000Z",
+    "lastLogout": "2025-08-11T18:41:59.000Z",
     "isOnline": false,
     "tags": [
       "Novato"
     ],
     "processedSessions": [
-      "2025.08.09-22.01.30_login"
+      "2025.08.09-22.01.30_login",
+      "2025.08.11-17.35.23_login",
+      "2025.08.11-18.41.59_logout"
     ]
   },
   "76561199572456227": {
     "playerName": "Fabrício",
     "steamId": "76561199572456227",
-    "totalPlayTime": 8592000,
-    "lastLogin": "2025-08-11T13:23:30.000Z",
-    "lastLogout": "2025-08-11T14:40:07.000Z",
+    "totalPlayTime": 19033000,
+    "lastLogin": "2025-08-11T16:03:14.000Z",
+    "lastLogout": "2025-08-11T18:57:15.000Z",
     "isOnline": false,
     "tags": [
-      "Iniciante"
+      "Novato"
     ],
     "processedSessions": [
       "2025.08.11-12.16.03_login",
       "2025.08.11-13.22.38_logout",
       "2025.08.11-13.23.30_login",
-      "2025.08.11-14.40.07_logout"
+      "2025.08.11-14.40.07_logout",
+      "2025.08.11-16.03.14_login",
+      "2025.08.11-18.57.15_logout"
+    ]
+  },
+  "76561198362820110": {
+    "playerName": "Neo",
+    "steamId": "76561198362820110",
+    "totalPlayTime": 4445000,
+    "lastLogin": "2025-08-11T17:10:37.000Z",
+    "lastLogout": "2025-08-11T18:24:42.000Z",
+    "isOnline": false,
+    "tags": [
+      "Iniciante"
+    ],
+    "processedSessions": [
+      "2025.08.11-17.10.37_login",
+      "2025.08.11-18.24.42_logout"
+    ]
+  },
+  "76561198163883230": {
+    "playerName": "Skullmungado",
+    "steamId": "76561198163883230",
+    "totalPlayTime": 0,
+    "lastLogin": "2025-08-11T17:45:20.000Z",
+    "lastLogout": null,
+    "isOnline": true,
+    "tags": [
+      "Iniciante",
+      "Online"
+    ],
+    "processedSessions": [
+      "2025.08.11-17.45.20_login"
     ]
   }
 }

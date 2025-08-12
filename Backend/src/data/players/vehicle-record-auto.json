@@ -65,7 +65,7 @@
         "registeredAt": "2025-08-09T19:39:09.374Z"
       }
     ],
-    "lastUpdated": "2025-08-09T19:39:09.374Z"
+    "lastUpdated": "2025-08-11T19:07:35.953Z"
   },
   "76561197963358180": {
     "playerName": "Reav",
@@ -126,5 +126,41 @@
       }
     ],
     "lastUpdated": "2025-08-09T23:24:13.669Z"
+  },
+  "76561199572456227": {
+    "playerName": "Fabrício",
+    "steamId": "76561199572456227",
+    "activeVehicles": [
+      {
+        "vehicleId": "4585123",
+        "vehicleType": "Rager",
+        "registeredAt": "2025-08-11T19:07:36.711Z"
+      }
+    ],
+    "lastUpdated": "2025-08-11T19:07:36.711Z"
+  },
+  "76561198361354506": {
+    "playerName": "BGodaki",
+    "steamId": "76561198361354506",
+    "activeVehicles": [
+      {
+        "vehicleId": "270479",
+        "vehicleType": "Laika",
+        "registeredAt": "2025-08-12T01:01:16.780Z"
+      }
+    ],
+    "lastUpdated": "2025-08-12T01:01:16.780Z"
+  },
+  "76561198329297470": {
+    "playerName": "MCGAMBR",
+    "steamId": "76561198329297470",
+    "activeVehicles": [
+      {
+        "vehicleId": "1093399",
+        "vehicleType": "Dirtbike",
+        "registeredAt": "2025-08-12T01:01:17.689Z"
+      }
+    ],
+    "lastUpdated": "2025-08-12T01:01:17.689Z"
   }
 }

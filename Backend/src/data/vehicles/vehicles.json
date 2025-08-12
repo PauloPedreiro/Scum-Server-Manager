@@ -1573,5 +1573,80 @@
       "z": 42682.07
     },
     "processedAt": "2025-08-11T05:57:32.877Z"
+  },
+  {
+    "timestamp": "2025.08.11-16.01.09",
+    "event": "VehicleInactiveTimerReached",
+    "vehicleType": "WolfsWagen_ES",
+    "vehicleId": "4224048",
+    "ownerSteamId": "N/A",
+    "ownerPlayerId": "N/A",
+    "ownerName": "Sem Proprietário",
+    "location": {
+      "x": -789344.25,
+      "y": 119761.422,
+      "z": 42549.082
+    },
+    "processedAt": "2025-08-11T19:08:13.202Z"
+  },
+  {
+    "timestamp": "2025.08.11-16.01.09",
+    "event": "Disappeared",
+    "vehicleType": "WolfsWagen_ES",
+    "vehicleId": "4224048",
+    "ownerSteamId": "N/A",
+    "ownerPlayerId": "N/A",
+    "ownerName": "Sem Proprietário",
+    "location": {
+      "x": -789344.25,
+      "y": 119761.422,
+      "z": 42549.082
+    },
+    "processedAt": "2025-08-11T19:08:13.202Z"
+  },
+  {
+    "timestamp": "2025.08.11-17.50.38",
+    "event": "VehicleInactiveTimerReached",
+    "vehicleType": "RIS_ES",
+    "vehicleId": "4200004",
+    "ownerSteamId": "N/A",
+    "ownerPlayerId": "N/A",
+    "ownerName": "Sem Proprietário",
+    "location": {
+      "x": 413507.156,
+      "y": -57717.586,
+      "z": 10350.484
+    },
+    "processedAt": "2025-08-11T19:08:13.202Z"
+  },
+  {
+    "timestamp": "2025.08.11-17.50.38",
+    "event": "Disappeared",
+    "vehicleType": "RIS_ES",
+    "vehicleId": "4200004",
+    "ownerSteamId": "N/A",
+    "ownerPlayerId": "N/A",
+    "ownerName": "Sem Proprietário",
+    "location": {
+      "x": 413507.156,
+      "y": -57717.586,
+      "z": 10350.484
+    },
+    "processedAt": "2025-08-11T19:08:13.202Z"
+  },
+  {
+    "timestamp": "2025.08.11-18.41.44",
+    "event": "Disappeared",
+    "vehicleType": "WolfsWagen_ES",
+    "vehicleId": "4581702",
+    "ownerSteamId": "76561199486993078",
+    "ownerPlayerId": "96",
+    "ownerName": "Ruiva",
+    "location": {
+      "x": 573142.688,
+      "y": -223545.312,
+      "z": 360.862
+    },
+    "processedAt": "2025-08-11T19:08:13.202Z"
   }
 ]
