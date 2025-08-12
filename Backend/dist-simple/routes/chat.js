@@ -10,6 +10,34 @@ const CHAT_LOG_PATH = process.env.SCUM_LOG_PATH;
 const TEMP_PATH = 'src/data/temp';
 const LAST_CHAT_READ_PATH = 'src/data/players/lastChatRead.json';
 const WEBHOOKS_PATH = path.join('src/data/webhooks.json');
+const STEAM_IDS_PATH = 'src/data/bot/steam_ids_mapping.json';
+
+// Função para registrar Steam ID automaticamente
+function registerSteamIdFromChat(playerName, steamId) {
+    try {
+        // Carregar mapeamento existente
+        let steamIdsMap = {};
+        if (fs.existsSync(STEAM_IDS_PATH)) {
+            steamIdsMap = JSON.parse(fs.readFileSync(STEAM_IDS_PATH, 'utf8'));
+        }
+        
+        // Verificar se já existe
+        if (steamIdsMap[playerName] === steamId) {
+            return; // Já registrado
+        }
+        
+        // Registrar novo Steam ID
+        steamIdsMap[playerName] = steamId;
+        
+        // Salvar arquivo
+        fs.writeFileSync(STEAM_IDS_PATH, JSON.stringify(steamIdsMap, null, 2));
+        
+        console.log(`✅ Steam ID registrado automaticamente: ${playerName} -> ${steamId.substring(0, 8)}...`);
+        
+    } catch (error) {
+        console.error('Erro ao registrar Steam ID:', error.message);
+    }
+}
 
 // Função para ler o último timestamp lido
 function getLastChatTimestamp() {
@@ -166,6 +194,11 @@ router.get('/chat_in_game', async (req, res) => {
                 if (msg.chatType === 'Squad') {
                     console.log(`⏭️ Mensagem Squad ignorada: ${msg.playerName}: ${msg.message}`);
                     continue;
+                }
+                
+                // Registrar Steam ID automaticamente se disponível
+                if (msg.steamId) {
+                    registerSteamIdFromChat(msg.playerName, msg.steamId);
                 }
                 
                 const chatTypeEmoji = getChatTypeEmoji(msg.chatType);

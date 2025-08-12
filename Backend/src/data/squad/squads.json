@@ -1,657 +1,258 @@
 {
   "squads": {
-    "3": {
-      "id": 3,
-      "name": "Nomad",
+    "1": {
+      "id": 1,
+      "name": "Caveiras",
       "message": "A newly created squad. This text is visible to all squad members and can be edited by those with a sufficiently high rank.",
-      "emblem": 649955528583151600,
+      "emblem": 216172782348664860,
       "information": "",
-      "score": 4054.6396484375,
-      "member_limit": 10,
-      "last_member_login_time": "2025-08-11T15:32:25.840Z",
-      "last_member_logout_time": "2025-08-11T15:50:46.935Z",
+      "score": 43.48080062866211,
+      "member_limit": 3,
+      "last_member_login_time": "2025-08-02T21:17:38.274Z",
+      "last_member_logout_time": "2025-08-02T17:48:54.580Z",
       "members": [
         {
-          "id": 9428,
-          "user_profile_id": 84,
-          "name": "ARKANJO",
-          "steam_id": "76561198094354554",
+          "id": 41,
+          "user_profile_id": 4,
+          "name": "FUSION",
+          "steam_id": "76561198164356604",
           "rank": 4
         },
         {
-          "id": 9427,
-          "user_profile_id": 12,
-          "name": "mariocs10",
-          "steam_id": "76561198140545020",
-          "rank": 3
+          "id": 42,
+          "user_profile_id": 3,
+          "name": "NEGÃO",
+          "steam_id": "76561199823582746",
+          "rank": 1
         }
       ],
-      "embed_message_id": null,
-      "last_updated": "2025-08-11T16:07:26.236-03:00"
+      "embed_message_id": "1404633300944818247",
+      "last_updated": "2025-08-12T01:11:16.454Z"
+    },
+    "2": {
+      "id": 2,
+      "name": "BRABOS",
+      "message": "A newly created squad. This text is visible to all squad members and can be edited by those with a sufficiently high rank.",
+      "emblem": 360287971112912900,
+      "information": "",
+      "score": 9.159915924072266,
+      "member_limit": 4,
+      "last_member_login_time": "2025-08-01T17:55:26.947Z",
+      "last_member_logout_time": "2025-08-01T18:07:24.306Z",
+      "members": [
+        {
+          "id": 2,
+          "user_profile_id": 7,
+          "name": "DIM",
+          "steam_id": "76561198875802029",
+          "rank": 4
+        },
+        {
+          "id": 3,
+          "user_profile_id": 5,
+          "name": "coyot",
+          "steam_id": "76561198191127093",
+          "rank": 1
+        }
+      ],
+      "embed_message_id": "1404633302392115301",
+      "last_updated": "2025-08-12T01:11:16.859Z"
+    },
+    "4": {
+      "id": 4,
+      "name": "Calangos",
+      "message": "Pessoas são pessoas.",
+      "emblem": 148071282738074900,
+      "information": "O importante é que importa.",
+      "score": 566.7103271484375,
+      "member_limit": 6,
+      "last_member_login_time": "2025-08-12T00:51:23.010Z",
+      "last_member_logout_time": "2025-08-11T21:40:11.559Z",
+      "members": [
+        {
+          "id": 663,
+          "user_profile_id": 12,
+          "name": "Glaz",
+          "steam_id": "76561198194747231",
+          "rank": 4
+        },
+        {
+          "id": 664,
+          "user_profile_id": 14,
+          "name": "ScorpionN_BR",
+          "steam_id": "76561198286724016",
+          "rank": 2
+        },
+        {
+          "id": 666,
+          "user_profile_id": 1,
+          "name": "MCGAMBR",
+          "steam_id": "76561198329297470",
+          "rank": 1
+        },
+        {
+          "id": 667,
+          "user_profile_id": 20,
+          "name": "Xilobâo",
+          "steam_id": "76561198878548348",
+          "rank": 1
+        },
+        {
+          "id": 665,
+          "user_profile_id": 17,
+          "name": "danilo58335",
+          "steam_id": "76561199569722396",
+          "rank": 1
+        }
+      ],
+      "embed_message_id": "1404633304208117811",
+      "last_updated": "2025-08-12T01:11:17.245Z"
     },
     "5": {
       "id": 5,
-      "name": "Fazendinha GVT",
-      "message": "\r\n\r\n",
-      "emblem": 864691129378408400,
+      "name": "Debonair Zebras",
+      "message": "A newly created squad. This text is visible to all squad members and can be edited by those with a sufficiently high rank.",
+      "emblem": 581825312535610600,
       "information": "",
-      "score": 7530.6640625,
+      "score": 1062.6741943359375,
       "member_limit": 6,
-      "last_member_login_time": "2025-08-11T06:02:10.869Z",
-      "last_member_logout_time": "2025-08-11T06:04:17.071Z",
+      "last_member_login_time": "2025-08-07T22:53:23.557Z",
+      "last_member_logout_time": "2025-08-07T22:54:56.123Z",
       "members": [
         {
-          "id": 9368,
-          "user_profile_id": 15,
-          "name": "BlueArcher_BR",
-          "steam_id": "76561198398160339",
+          "id": 654,
+          "user_profile_id": 38,
+          "name": "0xIx0",
+          "steam_id": "76561198122680010",
           "rank": 4
         },
         {
-          "id": 9366,
-          "user_profile_id": 17,
-          "name": "GUTO",
-          "steam_id": "76561198826688229",
+          "id": 655,
+          "user_profile_id": 30,
+          "name": "Gordão da XJ",
+          "steam_id": "76561198092357867",
           "rank": 3
         },
         {
-          "id": 9365,
-          "user_profile_id": 16,
-          "name": "KamyKaazy",
-          "steam_id": "76561198134357757",
-          "rank": 3
-        },
-        {
-          "id": 9367,
-          "user_profile_id": 1,
-          "name": "Pedreiro",
-          "steam_id": "76561198040636105",
-          "rank": 3
-        },
-        {
-          "id": 9369,
-          "user_profile_id": 19,
-          "name": "Reav",
-          "steam_id": "76561197963358180",
-          "rank": 3
-        },
-        {
-          "id": 9364,
-          "user_profile_id": 18,
-          "name": "TutiCats",
-          "steam_id": "76561199617993331",
+          "id": 653,
+          "user_profile_id": 29,
+          "name": "ThaisKarla",
+          "steam_id": "76561198115760316",
           "rank": 3
         }
       ],
-      "last_updated": "2025-08-11T15:02:47.664Z"
+      "embed_message_id": "1404633305344774196",
+      "last_updated": "2025-08-12T01:11:17.501Z"
     },
     "6": {
       "id": 6,
-      "name": "WHISPERS",
-      "message": "Somos os fantasmas das sombras. Movemo-nos sem sermos vistos, atacamos sem aviso. No mundo implacável de SCUM, Whispers é um esquadrão de sobreviventes que confiam na furtividade, na inteligência e na coordenação impecável para dominar. Não buscamos a fama, mas sim a sobrevivência e a anarquia silenciosa. Junte-se a nós e aprenda a sussurrar sua vitória.",
-      "emblem": 720857415590879000,
+      "name": "Robust Weasels",
+      "message": "A newly created squad. This text is visible to all squad members and can be edited by those with a sufficiently high rank.",
+      "emblem": 76285229434013470,
       "information": "",
-      "score": 3629.33349609375,
-      "member_limit": 6,
-      "last_member_login_time": "2025-08-11T18:02:54.420Z",
-      "last_member_logout_time": "2025-08-11T17:34:30.622Z",
+      "score": 56.982322692871094,
+      "member_limit": 4,
+      "last_member_login_time": "2025-08-07T19:43:39.378Z",
+      "last_member_logout_time": "2025-08-07T21:15:28.384Z",
       "members": [
         {
-          "id": 9478,
-          "user_profile_id": 22,
-          "name": "Til4toxico",
-          "steam_id": "76561198129911132",
+          "id": 328,
+          "user_profile_id": 47,
+          "name": "aitormenta",
+          "steam_id": "76561198047552001",
           "rank": 4
-        },
-        {
-          "id": 9482,
-          "user_profile_id": 106,
-          "name": "Aqu1n0",
-          "steam_id": "76561197995901898",
-          "rank": 3
-        },
-        {
-          "id": 9479,
-          "user_profile_id": 25,
-          "name": "BokaLoka",
-          "steam_id": "76561197998670896",
-          "rank": 2
-        },
-        {
-          "id": 9480,
-          "user_profile_id": 58,
-          "name": "Takashi",
-          "steam_id": "76561198861633490",
-          "rank": 2
-        },
-        {
-          "id": 9481,
-          "user_profile_id": 105,
-          "name": "WPS_Segatti1",
-          "steam_id": "76561198105942523",
-          "rank": 2
         }
       ],
-      "embed_message_id": null,
-      "last_updated": "2025-08-11T16:07:26.236-03:00"
+      "embed_message_id": "1404633306326368307",
+      "last_updated": "2025-08-12T01:11:17.781Z"
     },
     "7": {
       "id": 7,
-      "name": "ALONE BOY",
+      "name": "Kenga conKa",
       "message": "A newly created squad. This text is visible to all squad members and can be edited by those with a sufficiently high rank.",
-      "emblem": 720599120938534700,
+      "emblem": 221270182462949380,
       "information": "",
-      "score": 361.2821960449219,
+      "score": 171.78848266601562,
       "member_limit": 4,
-      "last_member_login_time": "2025-08-10T16:02:53.470Z",
-      "last_member_logout_time": "2025-08-10T16:28:19.982Z",
+      "last_member_login_time": "2025-08-11T03:03:37.899Z",
+      "last_member_logout_time": "2025-08-11T03:56:31.158Z",
       "members": [
         {
-          "id": 9363,
-          "user_profile_id": 36,
-          "name": "MathiasXx",
-          "steam_id": "76561198168637593",
+          "id": 646,
+          "user_profile_id": 44,
+          "name": "KcK Dionezeira",
+          "steam_id": "76561199536217261",
           "rank": 4
+        },
+        {
+          "id": 647,
+          "user_profile_id": 68,
+          "name": "KcK Pedroza",
+          "steam_id": "76561198127385550",
+          "rank": 3
         }
       ],
-      "last_updated": "2025-08-11T15:02:54.179Z"
+      "embed_message_id": "1404633307987054702",
+      "last_updated": "2025-08-12T01:11:18.619Z"
     },
     "8": {
       "id": 8,
-      "name": "Ingenious Porcupines",
+      "name": "Successful Crows",
       "message": "A newly created squad. This text is visible to all squad members and can be edited by those with a sufficiently high rank.",
-      "emblem": 870343838815223800,
+      "emblem": 504403158466829060,
       "information": "",
-      "score": 3.770852565765381,
+      "score": 131.7465362548828,
       "member_limit": 4,
-      "last_member_login_time": null,
-      "last_member_logout_time": "2025-07-08T01:11:39.253Z",
+      "last_member_login_time": "2025-08-11T21:28:47.786Z",
+      "last_member_logout_time": "2025-08-11T21:45:05.563Z",
       "members": [
         {
-          "id": 463,
-          "user_profile_id": 38,
-          "name": "MathzHZ",
-          "steam_id": "76561198965963587",
+          "id": 656,
+          "user_profile_id": 56,
+          "name": "Cloren",
+          "steam_id": "76561199003740340",
           "rank": 4
         },
         {
-          "id": 464,
-          "user_profile_id": 37,
-          "name": "GDRReaper",
-          "steam_id": "76561198239999764",
+          "id": 657,
+          "user_profile_id": 51,
+          "name": "BGodaki",
+          "steam_id": "76561198361354506",
           "rank": 3
         }
       ],
-      "last_updated": "2025-08-11T15:02:59.785Z"
+      "embed_message_id": "1404633330065870991",
+      "last_updated": "2025-08-12T01:11:23.405Z"
     },
     "9": {
       "id": 9,
-      "name": "Raider´s",
+      "name": "GMXE",
       "message": "A newly created squad. This text is visible to all squad members and can be edited by those with a sufficiently high rank.",
-      "emblem": 864714218434272000,
+      "emblem": 219563792593649660,
       "information": "",
-      "score": 4.513568878173828,
-      "member_limit": 8,
-      "last_member_login_time": null,
-      "last_member_logout_time": "2025-07-09T00:56:22.891Z",
-      "members": [
-        {
-          "id": 554,
-          "user_profile_id": 44,
-          "name": "Takashy96",
-          "steam_id": "76561199201609494",
-          "rank": 4
-        }
-      ],
-      "last_updated": "2025-08-11T15:03:06.498Z"
-    },
-    "10": {
-      "id": 10,
-      "name": "LSD",
-      "message": "A newly created squad. This text is visible to all squad members and can be edited by those with a sufficiently high rank.",
-      "emblem": 936778409979478000,
-      "information": "",
-      "score": 786.4656372070312,
+      "score": 94.57767486572266,
       "member_limit": 6,
-      "last_member_login_time": "2025-07-22T00:09:34.316Z",
-      "last_member_logout_time": "2025-07-22T01:09:48.370Z",
+      "last_member_login_time": "2025-08-12T00:51:51.138Z",
+      "last_member_logout_time": "2025-08-12T00:44:39.554Z",
       "members": [
         {
-          "id": 9378,
-          "user_profile_id": 47,
-          "name": "Wolf",
-          "steam_id": "76561198151877600",
+          "id": 674,
+          "user_profile_id": 58,
+          "name": "walk3r",
+          "steam_id": "76561199812992900",
           "rank": 4
         },
         {
-          "id": 9379,
-          "user_profile_id": 48,
-          "name": "ze",
-          "steam_id": "76561199680509725",
-          "rank": 3
-        }
-      ],
-      "last_updated": "2025-08-11T15:03:12.327Z"
-    },
-    "12": {
-      "id": 12,
-      "name": "77 Team",
-      "message": "A newly created squad. This text is visible to all squad members and can be edited by those with a sufficiently high rank.",
-      "emblem": 222102530179727900,
-      "information": "",
-      "score": 287.0466003417969,
-      "member_limit": 4,
-      "last_member_login_time": "2025-07-14T16:28:27.079Z",
-      "last_member_logout_time": "2025-07-14T16:56:05.369Z",
-      "members": [
-        {
-          "id": 9370,
-          "user_profile_id": 50,
-          "name": "Maskaradus",
-          "steam_id": "76561198802168302",
-          "rank": 4
-        }
-      ],
-      "last_updated": "2025-08-11T15:03:17.836Z"
-    },
-    "13": {
-      "id": 13,
-      "name": "ferrados por zumbis ",
-      "message": "A newly created squad. This text is visible to all squad members and can be edited by those with a sufficiently high rank.",
-      "emblem": 792657844217912000,
-      "information": "",
-      "score": 440.35980224609375,
-      "member_limit": 4,
-      "last_member_login_time": "2025-08-11T16:09:41.593Z",
-      "last_member_logout_time": "2025-08-11T17:01:37.803Z",
-      "members": [
-        {
-          "id": 9455,
-          "user_profile_id": 68,
-          "name": "Romulo",
-          "steam_id": "76561198108944382",
-          "rank": 4
-        },
-        {
-          "id": 9456,
-          "user_profile_id": 71,
-          "name": "Beto sobrevivente",
-          "steam_id": "76561198121708807",
-          "rank": 3
-        }
-      ],
-      "embed_message_id": "1404480294584713348",
-      "last_updated": "2025-08-11T16:07:26.236-03:00"
-    },
-    "14": {
-      "id": 14,
-      "name": "C4",
-      "message": "A newly created squad. This text is visible to all squad members and can be edited by those with a sufficiently high rank.",
-      "emblem": 288243618259272200,
-      "information": "",
-      "score": 907.4185180664062,
-      "member_limit": 10,
-      "last_member_login_time": "2025-08-05T00:39:57.274Z",
-      "last_member_logout_time": "2025-08-05T00:41:49.065Z",
-      "members": [
-        {
-          "id": 9386,
-          "user_profile_id": 74,
-          "name": "v4r3t4",
-          "steam_id": "76561197995098356",
-          "rank": 4
-        },
-        {
-          "id": 9388,
-          "user_profile_id": 102,
-          "name": "Azkadlia",
-          "steam_id": "76561197991928194",
-          "rank": 1
-        },
-        {
-          "id": 9387,
-          "user_profile_id": 76,
-          "name": "ChOOp",
-          "steam_id": "76561198077491021",
+          "id": 675,
+          "user_profile_id": 57,
+          "name": "SALASBR",
+          "steam_id": "76561199115399763",
           "rank": 1
         }
       ],
-      "last_updated": "2025-08-11T15:03:23.764Z"
-    },
-    "15": {
-      "id": 15,
-      "name": "A alcateia",
-      "message": "",
-      "emblem": 576483932443252000,
-      "information": "",
-      "score": 3288.5029296875,
-      "member_limit": 8,
-      "last_member_login_time": "2025-08-11T16:15:09.000Z",
-      "last_member_logout_time": "2025-08-11T18:56:13.328Z",
-      "members": [
-        {
-          "id": 9436,
-          "user_profile_id": 115,
-          "name": "LOBO 47",
-          "steam_id": "76561198422507274",
-          "rank": 4
-        },
-        {
-          "id": 9435,
-          "user_profile_id": 66,
-          "name": "Dennis",
-          "steam_id": "76561199806413687",
-          "rank": 3
-        },
-        {
-          "id": 9433,
-          "user_profile_id": 77,
-          "name": "Pite Munhoz",
-          "steam_id": "76561198056594028",
-          "rank": 3
-        },
-        {
-          "id": 9434,
-          "user_profile_id": 80,
-          "name": "VitaGamer",
-          "steam_id": "76561198930859085",
-          "rank": 3
-        }
-      ],
-      "embed_message_id": null,
-      "last_updated": "2025-08-11T16:07:26.236-03:00"
-    },
-    "16": {
-      "id": 16,
-      "name": "GNOMOS",
-      "message": "A newly created squad. This text is visible to all squad members and can be edited by those with a sufficiently high rank.",
-      "emblem": 869780845359338000,
-      "information": "",
-      "score": 719.3970336914062,
-      "member_limit": 10,
-      "last_member_login_time": "2025-08-11T17:44:18.814Z",
-      "last_member_logout_time": "2025-08-11T18:01:36.197Z",
-      "members": [
-        {
-          "id": 9475,
-          "user_profile_id": 87,
-          "name": "Gnoma",
-          "steam_id": "76561199015889569",
-          "rank": 4
-        },
-        {
-          "id": 9477,
-          "user_profile_id": 90,
-          "name": "Devil601",
-          "steam_id": "76561198035995505",
-          "rank": 3
-        },
-        {
-          "id": 9476,
-          "user_profile_id": 89,
-          "name": "R4GE",
-          "steam_id": "76561198996550601",
-          "rank": 3
-        }
-      ],
-      "embed_message_id": null,
-      "last_updated": "2025-08-11T16:07:26.236-03:00"
-    },
-    "17": {
-      "id": 17,
-      "name": "RPD",
-      "message": "A newly created squad. This text is visible to all squad members and can be edited by those with a sufficiently high rank.",
-      "emblem": 74895468445833470,
-      "information": "",
-      "score": 461.8226623535156,
-      "member_limit": 6,
-      "last_member_login_time": "2025-08-11T00:03:04.999Z",
-      "last_member_logout_time": "2025-08-11T01:38:37.100Z",
-      "members": [
-        {
-          "id": 9246,
-          "user_profile_id": 70,
-          "name": "Rocha",
-          "steam_id": "76561199086720901",
-          "rank": 4
-        },
-        {
-          "id": 9247,
-          "user_profile_id": 92,
-          "name": "concurseiro",
-          "steam_id": "76561199638913843",
-          "rank": 3
-        }
-      ],
-      "last_updated": "2025-08-11T15:03:42.621Z"
-    },
-    "18": {
-      "id": 18,
-      "name": "Fazueli",
-      "message": "A newly created squad. This text is visible to all squad members and can be edited by those with a sufficiently high rank.",
-      "emblem": 144115300652751650,
-      "information": "",
-      "score": 473.29486083984375,
-      "member_limit": 4,
-      "last_member_login_time": "2025-08-11T00:07:24.552Z",
-      "last_member_logout_time": "2025-08-11T02:41:47.039Z",
-      "members": [
-        {
-          "id": 9393,
-          "user_profile_id": 93,
-          "name": "Capeto",
-          "steam_id": "76561198065198587",
-          "rank": 4
-        },
-        {
-          "id": 9392,
-          "user_profile_id": 94,
-          "name": "Beto",
-          "steam_id": "76561198418275361",
-          "rank": 3
-        }
-      ],
-      "last_updated": "2025-08-11T15:03:47.948Z"
-    },
-    "19": {
-      "id": 19,
-      "name": "Red Dragon",
-      "message": "",
-      "emblem": 725088439884848100,
-      "information": "",
-      "score": 16.979299545288086,
-      "member_limit": 10,
-      "last_member_login_time": "2025-08-03T18:07:28.599Z",
-      "last_member_logout_time": "2025-08-03T18:14:55.239Z",
-      "members": [
-        {
-          "id": 6616,
-          "user_profile_id": 99,
-          "name": "Lea M",
-          "steam_id": "76561198036490968",
-          "rank": 4
-        }
-      ],
-      "last_updated": "2025-08-11T15:03:53.378Z"
-    },
-    "20": {
-      "id": 20,
-      "name": "Brazukas",
-      "message": "A newly created squad. This text is visible to all squad members and can be edited by those with a sufficiently high rank.",
-      "emblem": 218435667340103970,
-      "information": "",
-      "score": 1025.99853515625,
-      "member_limit": 10,
-      "last_member_login_time": "2025-08-11T16:34:04.551Z",
-      "last_member_logout_time": "2025-08-11T08:12:14.641Z",
-      "members": [
-        {
-          "id": 9451,
-          "user_profile_id": 96,
-          "name": "Ruiva",
-          "steam_id": "76561199486993078",
-          "rank": 4
-        },
-        {
-          "id": 9452,
-          "user_profile_id": 129,
-          "name": "Miranda",
-          "steam_id": "76561199129734191",
-          "rank": 3
-        }
-      ],
-      "embed_message_id": null,
-      "last_updated": "2025-08-11T16:07:26.236-03:00"
-    },
-    "21": {
-      "id": 21,
-      "name": "Ascensão",
-      "message": "A newly created squad. This text is visible to all squad members and can be edited by those with a sufficiently high rank.",
-      "emblem": 252189468,
-      "information": "",
-      "score": 1234.805908203125,
-      "member_limit": 4,
-      "last_member_login_time": "2025-08-11T16:04:07.378Z",
-      "last_member_logout_time": "2025-08-11T17:12:47.462Z",
-      "members": [
-        {
-          "id": 9446,
-          "user_profile_id": 118,
-          "name": "P4rzival",
-          "steam_id": "76561198051862991",
-          "rank": 4
-        },
-        {
-          "id": 9445,
-          "user_profile_id": 116,
-          "name": "Heyoon",
-          "steam_id": "76561198082406872",
-          "rank": 3
-        },
-        {
-          "id": 9447,
-          "user_profile_id": 111,
-          "name": "Welaska",
-          "steam_id": "76561198073447119",
-          "rank": 3
-        },
-        {
-          "id": 9448,
-          "user_profile_id": 114,
-          "name": "cafu23",
-          "steam_id": "76561198443970424",
-          "rank": 1
-        }
-      ],
-      "embed_message_id": null,
-      "last_updated": "2025-08-11T16:07:26.236-03:00"
-    },
-    "22": {
-      "id": 22,
-      "name": "COROINHAS DO MAL",
-      "message": "A newly created squad. This text is visible to all squad members and can be edited by those with a sufficiently high rank.",
-      "emblem": 72057594811454740,
-      "information": "",
-      "score": 1068.90234375,
-      "member_limit": 6,
-      "last_member_login_time": "2025-08-11T00:44:49.905Z",
-      "last_member_logout_time": "2025-08-11T01:18:47.913Z",
-      "members": [
-        {
-          "id": 9398,
-          "user_profile_id": 117,
-          "name": "Patron",
-          "steam_id": "76561199075141761",
-          "rank": 4
-        },
-        {
-          "id": 9399,
-          "user_profile_id": 119,
-          "name": "Vassili Kikov",
-          "steam_id": "76561198240075378",
-          "rank": 1
-        }
-      ],
-      "last_updated": "2025-08-11T15:04:12.594Z"
-    },
-    "23": {
-      "id": 23,
-      "name": "Apocalyptics",
-      "message": "A newly created squad. This text is visible to all squad members and can be edited by those with a sufficiently high rank.",
-      "emblem": 150048153643188220,
-      "information": "",
-      "score": 193.94366455078125,
-      "member_limit": 4,
-      "last_member_login_time": "2025-08-09T04:03:00.953Z",
-      "last_member_logout_time": "2025-08-09T04:28:51.612Z",
-      "members": [
-        {
-          "id": 9402,
-          "user_profile_id": 124,
-          "name": "Rafa_Hated",
-          "steam_id": "76561197998321750",
-          "rank": 4
-        },
-        {
-          "id": 9403,
-          "user_profile_id": 125,
-          "name": "Skullmungado",
-          "steam_id": "76561198163883230",
-          "rank": 1
-        }
-      ],
-      "last_updated": "2025-08-11T15:04:17.979Z"
-    },
-    "24": {
-      "id": 24,
-      "name": "Clube do Marea",
-      "message": "A newly created squad. This text is visible to all squad members and can be edited by those with a sufficiently high rank.",
-      "emblem": 288230432288283650,
-      "information": "",
-      "score": 127.77204132080078,
-      "member_limit": 10,
-      "last_member_login_time": "2025-08-11T17:35:23.948Z",
-      "last_member_logout_time": "2025-08-11T18:41:59.517Z",
-      "members": [
-        {
-          "id": 9470,
-          "user_profile_id": 139,
-          "name": "Jovigono",
-          "steam_id": "76561198140683162",
-          "rank": 4
-        },
-        {
-          "id": 9471,
-          "user_profile_id": 140,
-          "name": "Fujhiru  Nakombi",
-          "steam_id": "76561198055770683",
-          "rank": 3
-        }
-      ],
-      "embed_message_id": null,
-      "last_updated": "2025-08-11T16:07:26.236-03:00"
-    },
-    "25": {
-      "id": 25,
-      "name": "Mercenario",
-      "message": "A newly created squad. This text is visible to all squad members and can be edited by those with a sufficiently high rank.",
-      "emblem": 648548149354299400,
-      "information": "",
-      "score": 2.7116541862487793,
-      "member_limit": 6,
-      "last_member_login_time": null,
-      "last_member_logout_time": "2025-08-10T20:35:13.551Z",
-      "members": [
-        {
-          "id": 9193,
-          "user_profile_id": 142,
-          "name": "Barbatan",
-          "steam_id": "76561198309922213",
-          "rank": 4
-        }
-      ],
-      "last_updated": "2025-08-11T15:04:30.227Z"
+      "embed_message_id": "1404633331613569055",
+      "last_updated": "2025-08-12T01:11:23.758Z"
     }
   },
-  "last_check": "2025-08-11T16:07:26.236-03:00"
+  "last_check": "2025-08-11T22:09:59.983-03:00"
 }
