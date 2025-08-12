@@ -100,6 +100,11 @@ class DiscordBot {
             const rgStartMatch = messageContent.match(/(?:🎯|🌐|👥)\s*([^:]+):\s*\/rg\s*$/i);
             const rgCodeMatch = messageContent.match(/(?:🎯|🌐|👥)\s*([^:]+):\s*\/rg\s+(\d{4,8})/i);
             
+            // Tentar extrair Steam ID da mensagem original (se disponível)
+            // Padrão: 🎯 Pedreiro (76561198040636105): /rv 110050
+            const steamIdMatch = messageContent.match(/\((\d{17})\)/);
+            const extractedSteamId = steamIdMatch ? steamIdMatch[1] : null;
+            
             console.log('🔍 Matches encontrados:');
             console.log('  rvMatch:', rvMatch);
             console.log('  rmMatch:', rmMatch);
@@ -137,7 +142,14 @@ class DiscordBot {
             }
             
             // Obter Steam ID através do mapeamento de nomes
-            const steamId = this.getSteamIdFromPlayerName(playerName);
+            let steamId = this.getSteamIdFromPlayerName(playerName);
+            
+            // Se não encontrou no mapeamento mas extraiu da mensagem, registrar automaticamente
+            if (!steamId && extractedSteamId) {
+                this.registerSteamId(playerName, extractedSteamId);
+                steamId = extractedSteamId;
+                console.log(`✅ Steam ID registrado automaticamente: ${playerName} -> ${this.maskSteamIdForLogs(extractedSteamId)}`);
+            }
         
             logger.command(commandType, playerName, steamId, vehicleId, { vehicleType });
             
@@ -203,44 +215,77 @@ class DiscordBot {
     }
 
     getSteamIdFromPlayerName(playerName) {
-        // Por enquanto, vamos usar um mapeamento simples
-        // Em produção, isso deveria ser baseado em dados reais do servidor
-        const playerMap = {
-            'Pedreiro': '76561198040636105',
-            'RAFA': '76561199076909393',
-            'LOBO 47': '76561198422507274',
-            'KamyKaazy': '76561198134357757',
-            'BlueArcher_BR': '76561198398160339',
-            'Reav': '76561197963358180',
-            'ARKANJO': '76561198094354554',
-            'TutiCats': '76561199617993331',
-            'Til4toxico': '76561198129911132',
-            'Rocha': '76561199086720901',
-            'MCGAMBR': '76561198329297470'
-        };
+        // Sistema de registro automático de Steam IDs
+        const steamIdsPath = path.join(this.dataPath, 'steam_ids_mapping.json');
         
-        // Tentar encontrar o nome exato primeiro
-        if (playerMap[playerName]) {
-            return playerMap[playerName];
+        try {
+            // Carregar mapeamento existente
+            let steamIdsMap = {};
+            if (fs.existsSync(steamIdsPath)) {
+                steamIdsMap = JSON.parse(fs.readFileSync(steamIdsPath, 'utf8'));
+            }
+            
+            // Tentar encontrar o nome exato primeiro
+            if (steamIdsMap[playerName]) {
+                return steamIdsMap[playerName];
+            }
+            
+            // Se não encontrar, tentar remover tags como [ADM], [VIP], etc.
+            const cleanName = playerName.replace(/\[.*?\]/g, '').trim();
+            if (cleanName && steamIdsMap[cleanName]) {
+                return steamIdsMap[cleanName];
+            }
+            
+            // Se ainda não encontrar, tentar buscar por nomes que contenham o nome limpo
+            const matchingPlayer = Object.keys(steamIdsMap).find(name => 
+                name.toLowerCase().includes(cleanName.toLowerCase()) ||
+                cleanName.toLowerCase().includes(name.toLowerCase())
+            );
+            
+            if (matchingPlayer) {
+                return steamIdsMap[matchingPlayer];
+            }
+            
+            // Se não encontrou, retornar null (será registrado quando aparecer no chat)
+            return null;
+            
+        } catch (error) {
+            logger.error('Erro ao buscar Steam ID', { error: error.message, playerName });
+            return null;
         }
+    }
+
+    registerSteamId(playerName, steamId) {
+        // Registrar novo Steam ID automaticamente
+        const steamIdsPath = path.join(this.dataPath, 'steam_ids_mapping.json');
         
-        // Se não encontrar, tentar remover tags como [ADM], [VIP], etc.
-        const cleanName = playerName.replace(/\[.*?\]/g, '').trim();
-        if (cleanName && playerMap[cleanName]) {
-            return playerMap[cleanName];
+        try {
+            // Carregar mapeamento existente
+            let steamIdsMap = {};
+            if (fs.existsSync(steamIdsPath)) {
+                steamIdsMap = JSON.parse(fs.readFileSync(steamIdsPath, 'utf8'));
+            }
+            
+            // Verificar se já existe
+            if (steamIdsMap[playerName] === steamId) {
+                return; // Já registrado
+            }
+            
+            // Registrar novo Steam ID
+            steamIdsMap[playerName] = steamId;
+            
+            // Salvar arquivo
+            fs.writeFileSync(steamIdsPath, JSON.stringify(steamIdsMap, null, 2));
+            
+            logger.info('Novo Steam ID registrado', { 
+                playerName, 
+                steamId: this.maskSteamIdForLogs(steamId),
+                totalPlayers: Object.keys(steamIdsMap).length 
+            });
+            
+        } catch (error) {
+            logger.error('Erro ao registrar Steam ID', { error: error.message, playerName, steamId });
         }
-        
-        // Se ainda não encontrar, tentar buscar por nomes que contenham o nome limpo
-        const matchingPlayer = Object.keys(playerMap).find(name => 
-            name.toLowerCase().includes(cleanName.toLowerCase()) ||
-            cleanName.toLowerCase().includes(name.toLowerCase())
-        );
-        
-        if (matchingPlayer) {
-            return playerMap[matchingPlayer];
-        }
-        
-        return null;
     }
 
     // Função processLogLine removida - não é mais necessária
