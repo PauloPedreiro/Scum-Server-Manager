@@ -125,6 +125,7 @@ config.json
 secrets.json
 src/data/server/config.json
 src/data/server/config.local.json
+src/data/server/Titan_config.json
 
 # Build outputs
 dist/
