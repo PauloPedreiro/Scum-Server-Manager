@@ -101,7 +101,11 @@
       "/api/chat_in_game",
       "/api/LogVeiculos",
       "/api/famepoints",
-      "/api/bunkers/status",
+      {
+        "path": "/api/bunkers/status",
+        "interval": 1800000,
+        "enabled": true
+      },
       "/api/players/painelplayers",
       "/api/squads"
     ],

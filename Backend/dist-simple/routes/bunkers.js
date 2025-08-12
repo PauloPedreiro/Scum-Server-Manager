@@ -190,14 +190,15 @@ function extractBunkerInfo(logContent) {
             }
             
             // Bunker bloqueado
-            const lockedMatch = line.match(/([A-Z]\d+)\s+Bunker\s+is\s+Locked\.?\s+Locked\s+initially,\s+next\s+Activation\s+in\s+(\d{2}h\s+\d{2}m\s+\d{2}s)\.?\s+X=([\-\d.]+)\s+Y=([\-\d.]+)\s+Z=([\-\d.]+)/i);
+            const lockedMatch = line.match(/([A-Z]\d+)\s+Bunker\s+is\s+Locked\.?\s+Locked\s+(\d{2}h\s+\d{2}m\s+\d{2}s)\s+ago,\s+next\s+Activation\s+in\s+(\d{2}h\s+\d{2}m\s+\d{2}s)\.?\s+X=([\-\d.]+)\s+Y=([\-\d.]+)\s+Z=([\-\d.]+)/i);
             if (lockedMatch) {
                 const name = lockedMatch[1];
-                const nextActivation = lockedMatch[2];
+                const lockedTime = lockedMatch[2];
+                const nextActivation = lockedMatch[3];
                 const coordinates = {
-                    x: parseFloat(lockedMatch[3]),
-                    y: parseFloat(lockedMatch[4]),
-                    z: parseFloat(lockedMatch[5])
+                    x: parseFloat(lockedMatch[4]),
+                    y: parseFloat(lockedMatch[5]),
+                    z: parseFloat(lockedMatch[6])
                 };
                 
                 bunkersDb[name] = {

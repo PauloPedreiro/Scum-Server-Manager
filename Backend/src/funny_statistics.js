@@ -318,6 +318,14 @@ class FunnyStatistics {
     }
 
     async execute() {
+        // Verificar se já está executando
+        if (this.isExecuting) {
+            console.log('⏰ Execução já em andamento, pulando...');
+            return;
+        }
+        
+        this.isExecuting = true;
+        
         try {
             console.log('🎭 Iniciando sistema de estatísticas divertidas...');
 
@@ -372,6 +380,8 @@ class FunnyStatistics {
         } catch (error) {
             console.error('❌ Erro no sistema de estatísticas divertidas:', error);
             await this.cleanup();
+        } finally {
+            this.isExecuting = false;
         }
     }
 
@@ -382,16 +392,18 @@ class FunnyStatistics {
         }
 
         console.log('⏰ Iniciando agendador de estatísticas divertidas...');
+        console.log(`📅 Horários configurados: ${this.config.funny_statistics.schedule.times.join(', ')}`);
+        console.log(`🌍 Timezone: ${this.config.funny_statistics.schedule.timezone}`);
         
-        // Executar imediatamente para teste
-        this.execute();
-
         // Agendar execuções
         setInterval(() => {
             const now = DateTime.now().setZone(this.config.funny_statistics.schedule.timezone);
             const currentTime = now.toFormat('HH:mm');
             
+            console.log(`🕐 Verificando horário: ${currentTime} (${now.toFormat('dd/MM/yyyy HH:mm:ss')})`);
+            
             if (this.config.funny_statistics.schedule.times.includes(currentTime)) {
+                console.log(`✅ Horário de execução atingido: ${currentTime}`);
                 this.execute();
             }
         }, 60000); // Verificar a cada minuto

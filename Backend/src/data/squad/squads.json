@@ -26,8 +26,7 @@
           "rank": 1
         }
       ],
-      "embed_message_id": "1404633300944818247",
-      "last_updated": "2025-08-12T01:11:16.454Z"
+      "last_updated": "2025-08-12T05:54:15.737Z"
     },
     "2": {
       "id": 2,
@@ -55,8 +54,7 @@
           "rank": 1
         }
       ],
-      "embed_message_id": "1404633302392115301",
-      "last_updated": "2025-08-12T01:11:16.859Z"
+      "last_updated": "2025-08-12T05:54:16.317Z"
     },
     "4": {
       "id": 4,
@@ -64,49 +62,48 @@
       "message": "Pessoas são pessoas.",
       "emblem": 148071282738074900,
       "information": "O importante é que importa.",
-      "score": 566.7103271484375,
+      "score": 575.8978881835938,
       "member_limit": 6,
       "last_member_login_time": "2025-08-12T00:51:23.010Z",
       "last_member_logout_time": "2025-08-11T21:40:11.559Z",
       "members": [
         {
-          "id": 663,
+          "id": 698,
           "user_profile_id": 12,
           "name": "Glaz",
           "steam_id": "76561198194747231",
           "rank": 4
         },
         {
-          "id": 664,
+          "id": 699,
           "user_profile_id": 14,
           "name": "ScorpionN_BR",
           "steam_id": "76561198286724016",
           "rank": 2
         },
         {
-          "id": 666,
+          "id": 701,
           "user_profile_id": 1,
           "name": "MCGAMBR",
           "steam_id": "76561198329297470",
           "rank": 1
         },
         {
-          "id": 667,
+          "id": 702,
           "user_profile_id": 20,
           "name": "Xilobâo",
           "steam_id": "76561198878548348",
           "rank": 1
         },
         {
-          "id": 665,
+          "id": 700,
           "user_profile_id": 17,
           "name": "danilo58335",
           "steam_id": "76561199569722396",
           "rank": 1
         }
       ],
-      "embed_message_id": "1404633304208117811",
-      "last_updated": "2025-08-12T01:11:17.245Z"
+      "last_updated": "2025-08-12T05:54:16.545Z"
     },
     "5": {
       "id": 5,
@@ -120,29 +117,28 @@
       "last_member_logout_time": "2025-08-07T22:54:56.123Z",
       "members": [
         {
-          "id": 654,
+          "id": 704,
           "user_profile_id": 38,
           "name": "0xIx0",
           "steam_id": "76561198122680010",
           "rank": 4
         },
         {
-          "id": 655,
+          "id": 705,
           "user_profile_id": 30,
           "name": "Gordão da XJ",
           "steam_id": "76561198092357867",
           "rank": 3
         },
         {
-          "id": 653,
+          "id": 703,
           "user_profile_id": 29,
           "name": "ThaisKarla",
           "steam_id": "76561198115760316",
           "rank": 3
         }
       ],
-      "embed_message_id": "1404633305344774196",
-      "last_updated": "2025-08-12T01:11:17.501Z"
+      "last_updated": "2025-08-12T05:54:22.768Z"
     },
     "6": {
       "id": 6,
@@ -163,8 +159,7 @@
           "rank": 4
         }
       ],
-      "embed_message_id": "1404633306326368307",
-      "last_updated": "2025-08-12T01:11:17.781Z"
+      "last_updated": "2025-08-12T05:54:27.944Z"
     },
     "7": {
       "id": 7,
@@ -178,22 +173,21 @@
       "last_member_logout_time": "2025-08-11T03:56:31.158Z",
       "members": [
         {
-          "id": 646,
+          "id": 696,
           "user_profile_id": 44,
           "name": "KcK Dionezeira",
           "steam_id": "76561199536217261",
           "rank": 4
         },
         {
-          "id": 647,
+          "id": 697,
           "user_profile_id": 68,
           "name": "KcK Pedroza",
           "steam_id": "76561198127385550",
           "rank": 3
         }
       ],
-      "embed_message_id": "1404633307987054702",
-      "last_updated": "2025-08-12T01:11:18.619Z"
+      "last_updated": "2025-08-12T05:54:34.544Z"
     },
     "8": {
       "id": 8,
@@ -221,8 +215,7 @@
           "rank": 3
         }
       ],
-      "embed_message_id": "1404633330065870991",
-      "last_updated": "2025-08-12T01:11:23.405Z"
+      "last_updated": "2025-08-12T05:54:39.811Z"
     },
     "9": {
       "id": 9,
@@ -232,7 +225,7 @@
       "information": "",
       "score": 94.57767486572266,
       "member_limit": 6,
-      "last_member_login_time": "2025-08-12T00:51:51.138Z",
+      "last_member_login_time": "2025-08-12T01:01:44.408Z",
       "last_member_logout_time": "2025-08-12T00:44:39.554Z",
       "members": [
         {
@@ -250,9 +243,8 @@
           "rank": 1
         }
       ],
-      "embed_message_id": "1404633331613569055",
-      "last_updated": "2025-08-12T01:11:23.758Z"
+      "last_updated": "2025-08-12T05:54:46.479Z"
     }
   },
-  "last_check": "2025-08-11T22:09:59.983-03:00"
+  "last_check": "2025-08-12T00:08:25.731-03:00"
 }

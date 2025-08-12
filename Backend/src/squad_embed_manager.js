@@ -244,6 +244,12 @@ class SquadEmbedManager {
     // Função para buscar veículos dos jogadores do squad
     getSquadVehicles(squad) {
         try {
+            // Verificar se o squad é válido
+            if (!squad || !squad.name || !Array.isArray(squad.members)) {
+                console.log('❌ Squad inválido ou sem membros');
+                return {};
+            }
+            
             const playerVehiclesPath = path.join(__dirname, 'data', 'players', 'vehicle-record-auto.json');
             if (!fs.existsSync(playerVehiclesPath)) {
                 console.log('❌ Arquivo vehicle-record-auto.json não encontrado');
@@ -258,14 +264,24 @@ class SquadEmbedManager {
             
             // Para cada membro do squad
             squad.members.forEach(member => {
+                if (!member || !member.steam_id || !member.name) {
+                    console.log('❌ Membro do squad inválido:', member);
+                    return;
+                }
+                
                 const steamId = member.steam_id;
                 console.log(`🔍 Verificando membro: ${member.name} (${steamId})`);
                 
                 // Buscar veículos do jogador
-                if (playerVehicles[steamId] && playerVehicles[steamId].activeVehicles) {
+                if (playerVehicles[steamId] && playerVehicles[steamId].activeVehicles && Array.isArray(playerVehicles[steamId].activeVehicles)) {
                     console.log(`✅ Jogador ${member.name} tem ${playerVehicles[steamId].activeVehicles.length} veículos`);
                     
                     playerVehicles[steamId].activeVehicles.forEach(vehicle => {
+                        if (!vehicle || !vehicle.vehicleType) {
+                            console.log('❌ Veículo inválido:', vehicle);
+                            return;
+                        }
+                        
                         const prettyType = this.normalizeVehicleDisplayName(vehicle.vehicleType);
                         console.log(`🚗 Veículo encontrado: ${prettyType} (ID: ${vehicle.vehicleId})`);
                         if (!squadVehicles[prettyType]) {
@@ -459,45 +475,87 @@ class SquadEmbedManager {
     }
 
     async initializeSquads(squads) {
-        console.log('🏆 Inicializando embeds dos squads...');
-        
-        // Primeiro, tentar buscar mensagens existentes no canal
-        const existingMessages = await this.getExistingSquadMessages();
-        
-        console.log(`📋 Total de squads para inicializar: ${Object.keys(squads).length}`);
-        
-        for (const [squadId, squad] of Object.entries(squads)) {
-            try {
-                console.log(`🔄 Inicializando squad: ${squad.name} (ID: ${squadId})`);
-                
-                // Tentar encontrar mensagem existente para este squad
-                const existingMessageId = this.findExistingMessageForSquad(squad, existingMessages);
-                console.log(`📝 MessageId existente para ${squad.name}: ${existingMessageId || 'NENHUM'}`);
-                
-                const messageId = await this.updateSquadEmbed(squad, existingMessageId);
-                
-                // Salvar ID da mensagem
-                this.squadsData.squads[squadId] = {
-                    ...squad,
-                    embed_message_id: messageId,
-                    last_updated: new Date().toISOString()
-                };
-                
-                console.log(`✅ Squad ${squad.name} ${existingMessageId ? 'atualizado' : 'inicializado'} com ID: ${messageId}`);
-            } catch (error) {
-                console.error(`❌ Erro ao inicializar squad ${squad.name}:`, error.message);
+        try {
+            console.log('🏆 Inicializando embeds dos squads...');
+            
+            // Verificar se squads é válido
+            if (!squads || typeof squads !== 'object') {
+                console.error('❌ Dados dos squads inválidos:', squads);
+                return;
             }
+            
+            // Verificar se this.squadsData.squads existe
+            if (!this.squadsData) {
+                this.squadsData = { squads: {} };
+            }
+            if (!this.squadsData.squads) {
+                this.squadsData.squads = {};
+            }
+            
+            // Primeiro, tentar buscar mensagens existentes no canal
+            const existingMessages = await this.getExistingSquadMessages();
+            
+            console.log(`📋 Total de squads para inicializar: ${Object.keys(squads).length}`);
+            
+            for (const [squadId, squad] of Object.entries(squads)) {
+                try {
+                    // Verificar se squad é válido
+                    if (!squad || !squad.name) {
+                        console.error(`❌ Squad inválido para ID ${squadId}:`, squad);
+                        continue;
+                    }
+                    
+                    console.log(`🔄 Inicializando squad: ${squad.name} (ID: ${squadId})`);
+                    
+                    // Tentar encontrar mensagem existente para este squad
+                    const existingMessageId = this.findExistingMessageForSquad(squad, existingMessages);
+                    console.log(`📝 MessageId existente para ${squad.name}: ${existingMessageId || 'NENHUM'}`);
+                    
+                    const messageId = await this.updateSquadEmbed(squad, existingMessageId);
+                    
+                    // Salvar ID da mensagem com verificação de segurança
+                    if (squadId && typeof squadId === 'string') {
+                        this.squadsData.squads[squadId] = {
+                            ...squad,
+                            embed_message_id: messageId,
+                            last_updated: new Date().toISOString()
+                        };
+                        console.log(`✅ Squad ${squad.name} ${existingMessageId ? 'atualizado' : 'inicializado'} com ID: ${messageId}`);
+                    } else {
+                        console.error(`❌ SquadId inválido: ${squadId} (tipo: ${typeof squadId})`);
+                    }
+                } catch (error) {
+                    console.error(`❌ Erro ao inicializar squad ${squad?.name || 'DESCONHECIDO'}:`, error.message);
+                }
+            }
+            
+            this.saveSquadsData();
+            console.log('✅ Todos os squads inicializados!');
+        } catch (error) {
+            console.error('❌ Erro geral ao inicializar squads:', error.message);
         }
-        
-        this.saveSquadsData();
-        console.log('✅ Todos os squads inicializados!');
     }
 
     async updateSquads(squads) {
-        console.log('🔄 Atualizando embeds dos squads...');
-        
-        const oldSquads = this.squadsData.squads;
-        let hasChanges = false;
+        try {
+            console.log('🔄 Atualizando embeds dos squads...');
+            
+            // Verificar se squads é válido
+            if (!squads || typeof squads !== 'object') {
+                console.error('❌ Dados dos squads inválidos:', squads);
+                return;
+            }
+            
+            // Verificar se this.squadsData.squads existe
+            if (!this.squadsData) {
+                this.squadsData = { squads: {} };
+            }
+            if (!this.squadsData.squads) {
+                this.squadsData.squads = {};
+            }
+            
+            const oldSquads = this.squadsData.squads;
+            let hasChanges = false;
 
         // SEMPRE verificar mudanças no vehicle-record-auto.json antes de atualizar
         console.log('🔍 Verificando mudanças no vehicle-record-auto.json...');
@@ -533,65 +591,91 @@ class SquadEmbedManager {
 
         // Verificar squads modificados ou novos
         for (const [squadId, newSquad] of Object.entries(squads)) {
-            const oldSquad = oldSquads[squadId];
-            
-            console.log(`🔍 Verificando squad: ${newSquad.name} (ID: ${squadId})`);
-            console.log(`📊 Squad antigo existe: ${!!oldSquad}`);
-            
-            // SEMPRE atualizar se houve mudanças no vehicle-record-auto.json
-            let shouldUpdate = this.hasSquadChanged(oldSquad, newSquad) || playerVehiclesChanged;
-            
-            // FORÇAR atualização se houve mudanças nos veículos
-            if (playerVehiclesChanged) {
-                console.log(`🚗 FORÇANDO atualização do embed devido a mudanças nos veículos`);
-                shouldUpdate = true;
-            }
-            
-            // SEMPRE atualizar se é um squad novo ou se houve mudanças nos veículos
-            if (!oldSquad || playerVehiclesChanged) {
-                shouldUpdate = true;
-            }
-            
-            if (shouldUpdate) {
-                console.log(`🔄 Squad ${newSquad.name} ${playerVehiclesChanged ? 'atualizando devido a mudanças nos veículos' : 'modificado'}, atualizando...`);
-
-                // Preferir EDITAR o embed existente mesmo quando veículos mudaram; recriar só se falhar
-                let messageId = oldSquad?.embed_message_id;
-                if (!messageId) {
-                    messageId = this.findExistingMessageForSquad(newSquad, existingMessages);
+            try {
+                // Verificar se squadId e newSquad são válidos
+                if (!squadId || typeof squadId !== 'string') {
+                    console.error(`❌ SquadId inválido: ${squadId} (tipo: ${typeof squadId})`);
+                    continue;
                 }
+                
+                if (!newSquad || !newSquad.name) {
+                    console.error(`❌ Squad inválido para ID ${squadId}:`, newSquad);
+                    continue;
+                }
+                
+                const oldSquad = oldSquads[squadId];
+                
+                console.log(`🔍 Verificando squad: ${newSquad.name} (ID: ${squadId})`);
+                console.log(`📊 Squad antigo existe: ${!!oldSquad}`);
+                
+                // SEMPRE atualizar se houve mudanças no vehicle-record-auto.json
+                let shouldUpdate = this.hasSquadChanged(oldSquad, newSquad) || playerVehiclesChanged;
+                
+                // FORÇAR atualização se houve mudanças nos veículos
+                if (playerVehiclesChanged) {
+                    console.log(`🚗 FORÇANDO atualização do embed devido a mudanças nos veículos`);
+                    shouldUpdate = true;
+                }
+                
+                // SEMPRE atualizar se é um squad novo ou se houve mudanças nos veículos
+                if (!oldSquad || playerVehiclesChanged) {
+                    shouldUpdate = true;
+                }
+                
+                if (shouldUpdate) {
+                    console.log(`🔄 Squad ${newSquad.name} ${playerVehiclesChanged ? 'atualizando devido a mudanças nos veículos' : 'modificado'}, atualizando...`);
 
-                try {
-                    console.log(`📝 ${messageId ? 'Editando' : 'Criando'} embed para ${newSquad.name}`);
-                    const maybeNewId = await this.updateSquadEmbed(newSquad, messageId);
-                    const effectiveId = messageId || maybeNewId || null;
-
-                    this.squadsData.squads[squadId] = {
-                        ...newSquad,
-                        embed_message_id: effectiveId,
-                        last_updated: new Date().toISOString()
-                    };
-                    hasChanges = true;
-                } catch (editError) {
-                    console.log(`⚠️ Falha ao editar embed (${editError.message}). Tentando recriar...`);
-                    try {
-                        // Tentar deletar antigo se existir
-                        if (messageId) {
-                            try { await this.deleteSquadEmbed(messageId); } catch (_) {}
-                        }
-                        const newMessageId = await this.updateSquadEmbed(newSquad, null);
-                        this.squadsData.squads[squadId] = {
-                            ...newSquad,
-                            embed_message_id: newMessageId,
-                            last_updated: new Date().toISOString()
-                        };
-                        hasChanges = true;
-                    } catch (createError) {
-                        console.log(`❌ Falha ao recriar embed: ${createError.message}`);
+                    // Preferir EDITAR o embed existente mesmo quando veículos mudaram; recriar só se falhar
+                    let messageId = oldSquad?.embed_message_id;
+                    if (!messageId) {
+                        messageId = this.findExistingMessageForSquad(newSquad, existingMessages);
                     }
+
+                    try {
+                        console.log(`📝 ${messageId ? 'Editando' : 'Criando'} embed para ${newSquad.name}`);
+                        const maybeNewId = await this.updateSquadEmbed(newSquad, messageId);
+                        const effectiveId = messageId || maybeNewId || null;
+
+                        // Verificação de segurança antes de salvar
+                        if (squadId && typeof squadId === 'string') {
+                            this.squadsData.squads[squadId] = {
+                                ...newSquad,
+                                embed_message_id: effectiveId,
+                                last_updated: new Date().toISOString()
+                            };
+                            hasChanges = true;
+                        } else {
+                            console.error(`❌ SquadId inválido para salvar: ${squadId}`);
+                        }
+                    } catch (editError) {
+                        console.log(`⚠️ Falha ao editar embed (${editError.message}). Tentando recriar...`);
+                        try {
+                            // Tentar deletar antigo se existir
+                            if (messageId) {
+                                try { await this.deleteSquadEmbed(messageId); } catch (_) {}
+                            }
+                            const newMessageId = await this.updateSquadEmbed(newSquad, null);
+                            
+                            // Verificação de segurança antes de salvar
+                            if (squadId && typeof squadId === 'string') {
+                                this.squadsData.squads[squadId] = {
+                                    ...newSquad,
+                                    embed_message_id: newMessageId,
+                                    last_updated: new Date().toISOString()
+                                };
+                                hasChanges = true;
+                            } else {
+                                console.error(`❌ SquadId inválido para salvar: ${squadId}`);
+                            }
+                        } catch (createError) {
+                            console.log(`❌ Falha ao recriar embed: ${createError.message}`);
+                        }
+                    }
+                } else {
+                    console.log(`✅ Squad ${newSquad.name} não modificado, pulando...`);
                 }
-            } else {
-                console.log(`✅ Squad ${newSquad.name} não modificado, pulando...`);
+            } catch (error) {
+                console.error(`❌ Erro ao processar squad ${squadId}:`, error.message);
             }
         }
 
@@ -614,6 +698,9 @@ class SquadEmbedManager {
         }
 
         console.log('✅ Atualização dos squads concluída!');
+        } catch (error) {
+            console.error('❌ Erro geral ao atualizar squads:', error.message);
+        }
     }
 
     async getExistingSquadMessages() {
@@ -638,51 +725,76 @@ class SquadEmbedManager {
     }
     
     findExistingMessageForSquad(squad, existingMessages) {
-        for (const [messageId, message] of existingMessages) {
-            const embed = message.embeds[0];
-            if (embed && embed.title && embed.title.includes(`Squad: ${squad.name}`)) {
-                console.log(`🔍 Encontrada mensagem existente para ${squad.name}: ${messageId}`);
-                return messageId;
+        try {
+            for (const [messageId, message] of existingMessages) {
+                if (!message || !message.embeds || !message.embeds[0]) {
+                    continue;
+                }
+                const embed = message.embeds[0];
+                if (embed && embed.title && embed.title.includes(`Squad: ${squad.name}`)) {
+                    console.log(`🔍 Encontrada mensagem existente para ${squad.name}: ${messageId}`);
+                    return messageId;
+                }
             }
+            console.log(`🆕 Nenhuma mensagem existente encontrada para ${squad.name}`);
+            return null;
+        } catch (error) {
+            console.error(`❌ Erro ao buscar mensagem existente para ${squad.name}:`, error.message);
+            return null;
         }
-        console.log(`🆕 Nenhuma mensagem existente encontrada para ${squad.name}`);
-        return null;
     }
     
     hasSquadChanged(oldSquad, newSquad) {
-        if (!oldSquad) return true;
-        
-        // Comparar nome
-        if (oldSquad.name !== newSquad.name) return true;
-        
-        // Comparar informações básicas
-        if (oldSquad.message !== newSquad.message) return true;
-        if (oldSquad.emblem !== newSquad.emblem) return true;
-        if (oldSquad.information !== newSquad.information) return true;
-        if (oldSquad.score !== newSquad.score) return true;
-        if (oldSquad.member_limit !== newSquad.member_limit) return true;
-        
-        // Comparar membros
-        if (oldSquad.members.length !== newSquad.members.length) return true;
-        
-        const oldMemberIds = oldSquad.members.map(m => m.user_profile_id).sort();
-        const newMemberIds = newSquad.members.map(m => m.user_profile_id).sort();
-        
-        if (JSON.stringify(oldMemberIds) !== JSON.stringify(newMemberIds)) return true;
-        
-        // Comparar veículos do squad
-        const oldVehicles = this.getSquadVehicles(oldSquad);
-        const newVehicles = this.getSquadVehicles(newSquad);
-        
-        console.log(`🔍 Comparando veículos para ${newSquad.name}:`);
-        console.log(`   Antigo:`, oldVehicles);
-        console.log(`   Novo:`, newVehicles);
-        console.log(`   Mudou:`, JSON.stringify(oldVehicles) !== JSON.stringify(newVehicles));
-        
-        const vehiclesChanged = JSON.stringify(oldVehicles) !== JSON.stringify(newVehicles);
-        console.log(`   Resultado final: ${vehiclesChanged}`);
-        
-        return vehiclesChanged;
+        try {
+            if (!oldSquad) return true;
+            
+            // Verificar se newSquad é válido
+            if (!newSquad || !newSquad.name) {
+                console.log('❌ NewSquad inválido');
+                return true;
+            }
+            
+            // Comparar nome
+            if (oldSquad.name !== newSquad.name) return true;
+            
+            // Comparar informações básicas
+            if (oldSquad.message !== newSquad.message) return true;
+            if (oldSquad.emblem !== newSquad.emblem) return true;
+            if (oldSquad.information !== newSquad.information) return true;
+            if (oldSquad.score !== newSquad.score) return true;
+            if (oldSquad.member_limit !== newSquad.member_limit) return true;
+            
+            // Verificar se membros são arrays válidos
+            if (!Array.isArray(oldSquad.members) || !Array.isArray(newSquad.members)) {
+                console.log('❌ Membros não são arrays válidos');
+                return true;
+            }
+            
+            // Comparar membros
+            if (oldSquad.members.length !== newSquad.members.length) return true;
+            
+            const oldMemberIds = oldSquad.members.map(m => m.user_profile_id).sort();
+            const newMemberIds = newSquad.members.map(m => m.user_profile_id).sort();
+            
+            if (JSON.stringify(oldMemberIds) !== JSON.stringify(newMemberIds)) return true;
+            
+            // Comparar veículos do squad
+            const oldVehicles = this.getSquadVehicles(oldSquad);
+            const newVehicles = this.getSquadVehicles(newSquad);
+            
+            console.log(`🔍 Comparando veículos para ${newSquad.name}:`);
+            console.log(`   Antigo:`, oldVehicles);
+            console.log(`   Novo:`, newVehicles);
+            console.log(`   Mudou:`, JSON.stringify(oldVehicles) !== JSON.stringify(newVehicles));
+            
+            const vehiclesChanged = JSON.stringify(oldVehicles) !== JSON.stringify(newVehicles);
+            console.log(`   Resultado final: ${vehiclesChanged}`);
+            
+            return vehiclesChanged;
+        } catch (error) {
+            console.error('❌ Erro ao comparar squads:', error.message);
+            return true; // Em caso de erro, considerar como mudança
+        }
     }
 }
 

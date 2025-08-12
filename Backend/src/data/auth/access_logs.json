@@ -4697,6 +4697,69 @@
       "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
       "timestamp": "2025-08-10T00:15:37.973Z",
       "success": true
+    },
+    {
+      "id": "1754965392080",
+      "username": "unknown",
+      "action": "auth_error",
+      "ip": "192.168.100.3",
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+      "timestamp": "2025-08-12T02:23:12.080Z",
+      "success": false
+    },
+    {
+      "id": "1754965392106",
+      "username": "unknown",
+      "action": "auth_error",
+      "ip": "192.168.100.3",
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+      "timestamp": "2025-08-12T02:23:12.106Z",
+      "success": false
+    },
+    {
+      "id": "1754965398798",
+      "username": "admin",
+      "action": "login_success",
+      "ip": "192.168.100.3",
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+      "timestamp": "2025-08-12T02:23:18.798Z",
+      "success": true
+    },
+    {
+      "id": "1754965539805",
+      "username": "admin",
+      "action": "auth_success",
+      "ip": "192.168.100.3",
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+      "timestamp": "2025-08-12T02:25:39.805Z",
+      "success": true
+    },
+    {
+      "id": "1754965539837",
+      "username": "admin",
+      "action": "auth_success",
+      "ip": "192.168.100.3",
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+      "timestamp": "2025-08-12T02:25:39.837Z",
+      "success": true
+    },
+    {
+      "id": "1754968054643",
+      "username": "admin",
+      "action": "auth_success",
+      "ip": "192.168.100.3",
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+      "timestamp": "2025-08-12T03:07:34.643Z",
+      "success": true
+    },
+    {
+      "id": "1754968054661",
+      "username": "admin",
+      "action": "auth_success",
+      "ip": "192.168.100.3",
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+      "timestamp": "2025-08-12T03:07:34.661Z",
+      "success": true
     }
   ]
 }

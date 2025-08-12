@@ -144,22 +144,43 @@ class SquadsManager {
     }
 
     async copyDatabase() {
-        const sourcePath = this.config.funny_statistics.database_path;
-        
-        // Criar pasta temp se não existir
-        const tempDir = path.dirname(this.tempDbPath);
-        if (!fs.existsSync(tempDir)) {
-            fs.mkdirSync(tempDir, { recursive: true });
-        }
+        try {
+            const sourcePath = this.config.funny_statistics.database_path;
+            
+            // Verificar se o caminho está definido
+            if (!sourcePath) {
+                throw new Error('Caminho do banco de dados não está definido na configuração');
+            }
+            
+            console.log(`🔍 Verificando banco de dados: ${sourcePath}`);
+            
+            // Criar pasta temp se não existir
+            const tempDir = path.dirname(this.tempDbPath);
+            if (!fs.existsSync(tempDir)) {
+                fs.mkdirSync(tempDir, { recursive: true });
+                console.log(`📁 Pasta temp criada: ${tempDir}`);
+            }
 
-        // Verificar se arquivo fonte existe
-        if (!fs.existsSync(sourcePath)) {
-            throw new Error(`Arquivo de banco não encontrado: ${sourcePath}`);
-        }
+            // Verificar se arquivo fonte existe
+            if (!fs.existsSync(sourcePath)) {
+                throw new Error(`Arquivo de banco não encontrado: ${sourcePath}`);
+            }
 
-        // Copiar arquivo
-        fs.copyFileSync(sourcePath, this.tempDbPath);
-        console.log('✅ Banco de dados copiado para pasta temp');
+            // Verificar se o arquivo é acessível
+            try {
+                fs.accessSync(sourcePath, fs.constants.R_OK);
+            } catch (accessError) {
+                throw new Error(`Arquivo de banco não é acessível: ${sourcePath} - ${accessError.message}`);
+            }
+
+            // Copiar arquivo
+            fs.copyFileSync(sourcePath, this.tempDbPath);
+            console.log('✅ Banco de dados copiado para pasta temp');
+            
+        } catch (error) {
+            console.error('❌ Erro ao copiar banco de dados:', error.message);
+            throw error;
+        }
     }
 
     async readSquadsFromDatabase() {

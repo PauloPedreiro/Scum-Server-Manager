@@ -664,12 +664,20 @@ router.post('/restart', async (req, res) => {
             // Usar arquivo PowerShell para reiniciar
             const restartPsPath = path.join('src/data/temp', 'restart-server.ps1');
             
+            // Verificar se o arquivo existe
+            if (!fs.existsSync(restartPsPath)) {
+                console.log(`[RESTART] Arquivo PowerShell não encontrado: ${restartPsPath}`);
+                throw new Error(`Arquivo PowerShell não encontrado: ${restartPsPath}`);
+            }
+            
             try {
                 console.log(`[RESTART] Executando PowerShell: ${restartPsPath}`);
-                await executeCommand('powershell', [
+                const result = await executeCommand('powershell', [
                     '-ExecutionPolicy', 'Bypass',
                     '-File', restartPsPath
                 ]);
+                
+                console.log(`[RESTART] PowerShell executado com sucesso:`, result);
                 
                 // Aguardar um pouco e verificar se reiniciou
                 await new Promise(resolve => setTimeout(resolve, 5000));
@@ -922,10 +930,19 @@ setInterval(async () => {
                     // Usar arquivo PowerShell para reiniciar
                     const restartPsPath = path.join('src/data/temp', 'restart-server.ps1');
                     
-                    await executeCommand('powershell', [
+                    // Verificar se o arquivo existe
+                    if (!fs.existsSync(restartPsPath)) {
+                        console.log(`[SCHEDULED_RESTART] Arquivo PowerShell não encontrado: ${restartPsPath}`);
+                        throw new Error(`Arquivo PowerShell não encontrado: ${restartPsPath}`);
+                    }
+                    
+                    console.log(`[SCHEDULED_RESTART] Executando PowerShell: ${restartPsPath}`);
+                    const result = await executeCommand('powershell', [
                         '-ExecutionPolicy', 'Bypass',
                         '-File', restartPsPath
                     ]);
+                    
+                    console.log(`[SCHEDULED_RESTART] PowerShell executado com sucesso:`, result);
                     
                     // Aguardar um pouco e verificar se reiniciou
                     await new Promise(resolve => setTimeout(resolve, 5000));
@@ -971,5 +988,59 @@ createDirectories();
 
 // Atualizar status periodicamente
 setInterval(updateStatus, 30000); // A cada 30 segundos
+
+// Rota para verificar status da migração do config
+router.get('/config/migration-status', (req, res) => {
+    try {
+        const configMigrator = require('../src/config_migrator');
+        const status = configMigrator.getMigrationStatus();
+        
+        res.json({
+            success: true,
+            status: status
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            error: error.message
+        });
+    }
+});
+
+// Rota para executar migração manualmente
+router.post('/config/migrate', (req, res) => {
+    try {
+        const configMigrator = require('../src/config_migrator');
+        const result = configMigrator.migrate();
+        
+        res.json({
+            success: result,
+            message: result ? 'Migração executada com sucesso' : 'Falha na migração'
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            error: error.message
+        });
+    }
+});
+
+// Rota para restaurar backup
+router.post('/config/restore-backup', (req, res) => {
+    try {
+        const configMigrator = require('../src/config_migrator');
+        const result = configMigrator.restoreBackup();
+        
+        res.json({
+            success: result,
+            message: result ? 'Backup restaurado com sucesso' : 'Falha ao restaurar backup'
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            error: error.message
+        });
+    }
+});
 
 module.exports = router; 
