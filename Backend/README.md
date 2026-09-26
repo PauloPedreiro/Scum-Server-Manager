@@ -8,9 +8,10 @@
 [![Python Version](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
 [![React / Vite](https://img.shields.io/badge/Frontend-React%20%7C%20Vite%20%7C%20Tailwind-61DAFB?logo=react&logoColor=black)](Frontend/)
 [![Discord Community](https://img.shields.io/badge/Discord-Join%20Community-5865F2?logo=discord&logoColor=white)](https://discord.gg/EHwQTKWAtv)
+[![YouTube Tutorials](https://img.shields.io/badge/YouTube-Video%20Tutorials-FF0000?logo=youtube&logoColor=white)](https://www.youtube.com/playlist?list=PLqCDQyorrHOI3_RW1sDcc3NWppW4Y98T6)
 [![Contributing](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
-[Overview](#-overview) • [Screenshots](#-screenshots--showcase) • [Key Features](#-key-features) • [Quick Start](#-quick-start) • [Contributing](#-contributing) • [License](#-license)
+[Overview](#-overview) • [Screenshots](#-screenshots--showcase) • [Key Features](#-key-features) • [Video Tutorials](#-video-tutorials--guides) • [Quick Start](#-quick-start) • [Contributing](#-contributing) • [License](#-license)
 
 </div>
 
@@ -165,6 +166,16 @@ Scum-Server-Manager/
 
 ---
 
+## 📺 Video Tutorials & Guides
+
+Prefer step-by-step video walkthroughs? Check out our official YouTube tutorial playlist covering setup, Discord Bot configuration, RCON automation, and Web Dashboard features:
+
+[![Watch YouTube Tutorials](https://img.shields.io/badge/YouTube-Watch%20Tutorial%20Playlist-red?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/playlist?list=PLqCDQyorrHOI3_RW1sDcc3NWppW4Y98T6)
+
+> 🔗 **Direct Playlist Link**: [Scum Server Manager Official YouTube Tutorials](https://www.youtube.com/playlist?list=PLqCDQyorrHOI3_RW1sDcc3NWppW4Y98T6)
+
+---
+
 ## 🚀 Quick Start
 
 ### Prerequisites
@@ -236,5 +247,8 @@ Distributed under the **GNU General Public License v3.0 (GPL-3.0)**. See **[LICE
 ---
 
 <div align="center">
-Developed with ❤️ by <b>Paulo Pedreiro</b> & Community • Join our <a href="https://discord.gg/EHwQTKWAtv">Discord Community</a>
+  Developed with ❤️ by <b>Paulo Pedreiro</b> & Community<br /><br />
+  <a href="https://discord.gg/EHwQTKWAtv"><img src="https://img.shields.io/badge/Discord-Join%20Community-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Discord Community" /></a>
+  &nbsp;
+  <a href="https://www.youtube.com/playlist?list=PLqCDQyorrHOI3_RW1sDcc3NWppW4Y98T6"><img src="https://img.shields.io/badge/YouTube-Video%20Tutorials-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="YouTube Tutorials" /></a>
 </div>

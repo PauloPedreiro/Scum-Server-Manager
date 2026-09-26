@@ -102,8 +102,8 @@ We encourage using [Conventional Commits](https://www.conventionalcommits.org/):
 
 ## 💬 Community & Questions
 
-Need help or want to discuss ideas before coding?
-* Join our official [Discord Community](https://discord.gg/EHwQTKWAtv).
-* Ask questions in the `#development` or `#support` channels.
+Need help, want to discuss ideas before coding, or looking for guides?
+* Join our official [Discord Community](https://discord.gg/EHwQTKWAtv) (`#development` and `#support` channels).
+* Watch our official [YouTube Video Tutorials Playlist](https://www.youtube.com/playlist?list=PLqCDQyorrHOI3_RW1sDcc3NWppW4Y98T6).
 
 Thank you for contributing to **Scum Server Manager**! 🎮
