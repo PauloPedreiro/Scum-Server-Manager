@@ -617,10 +617,28 @@ Alinhar o licenciamento do **Scum Server Manager** com o modelo copyleft forte u
 
 ### 3. Arquivos Criados e Modificados
 * `LICENSE` & `Backend/LICENSE`: Termos oficiais da GNU GPL v3.
-* `CODE_OF_CONDUCT.md` & `Backend/CODE_OF_CONDUCT.md`: Código de Conduta Contributor Covenant 2.1.
-* `CONTRIBUTING.md` & `Backend/CONTRIBUTING.md`: Guia de contribuição para a comunidade.
-* `README.md` & `Backend/README.md`: Documentação com galeria categorizada de imagens e badges.
 * `Backend/docs/images/`: 18 capturas de tela organizadas e normalizadas.
+
+---
+
+## 📺 30. Integração do Canal Oficial do YouTube e Comunidade Discord
+
+### 1. Objetivo
+Disponibilizar os links oficiais dos canais de suporte e aprendizado do projeto para a comunidade global de administradores de servidores SCUM:
+* **Canal/Playlist Oficial do YouTube**: `https://www.youtube.com/playlist?list=PLqCDQyorrHOI3_RW1sDcc3NWppW4Y98T6` (tutoriais em vídeo passo a passo).
+* **Discord da Comunidade Oficial**: `https://discord.gg/EHwQTKWAtv` (suporte, novidades e desenvolvimento).
+
+### 2. Solução Implementada
+* **`README.md`**:
+  * Adicionado badge temático oficial do YouTube no cabeçalho superior.
+  * Inclusa a seção dedicada **"📺 Video Tutorials & Guides"** antes do *Quick Start* com botão de chamada para ação e link direto para a playlist.
+  * Atualizado o rodapé com botões de acesso direto ao Discord e YouTube.
+* **`CONTRIBUTING.md`**:
+  * Incluídos os links da playlist do YouTube e do Discord oficial na seção de comunicação comunitária para apoiar novos desenvolvedores.
+
+### 3. Arquivos Modificados
+* `README.md` & `Backend/README.md`
+* `CONTRIBUTING.md` & `Backend/CONTRIBUTING.md`
 
 
 
