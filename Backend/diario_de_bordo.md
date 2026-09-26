@@ -592,6 +592,37 @@ Unificar o ecossistema do **SSM 3.0** (Backend Python e Frontend React/Vite) em 
 * `Backend/.gitignore`: Inclusão de `default.ini` e regras estritas de banco de dados.
 * `Backend/tools/setup_monorepo.ps1`: Script automatizado de criação e setup de ambientes monorepo.
 
+---
+
+## 📜 29. Transição para Licença GNU GPL v3, Código de Conduta, Guia de Contribuição e Showcase Visual
+
+### 1. Objetivo
+Alinhar o licenciamento do **Scum Server Manager** com o modelo copyleft forte utilizado nos projetos abertos do autor (como o *humanize*), adotando a licença **GNU General Public License v3 (GPL-3.0)** para garantir que o código permaneça sempre livre e comunitário. Adicionar também os padrões oficiais de governança aberta (**Código de Conduta** e **Guia de Contribuição**) e enriquecer o `README.md` com uma galeria completa de capturas de tela do Web Dashboard e Desktop GUI.
+
+### 2. Solução Implementada
+* **Licenciamento GNU GPL v3**:
+  * Substituição do texto da licença `LICENSE` pela versão integral e oficial da **GNU General Public License v3, 29 June 2007** (Free Software Foundation).
+* **Governança Comunitária**:
+  * **`CODE_OF_CONDUCT.md`**: Implementado o padrão internacional *Contributor Covenant versão 2.1*, estabelecendo normas de respeito, acolhimento e diretrizes de moderação para a comunidade e Discord oficial.
+  * **`CONTRIBUTING.md`**: Guia detalhado para desenvolvedores externos contendo fluxo de bugs, sugestões, configuração local de ambiente (Backend Python + Frontend Vite), padrões de segurança RCON/SQLite, formato de commits convencionais (`feat:`, `fix:`) e ciclo de vida de Pull Requests.
+* **Galeria Visual no `README.md`**:
+  * Normalização e renomeação semântica das 18 capturas de tela em `Backend/docs/images/` cobrindo:
+    * **Web Dashboard**: Login, Visão Geral de telemetria e seletor de plano de fundo.
+    * **Mapa Interativo**: Grade cartográfica do SCUM com localização de baús e bandeiras.
+    * **Gestão de Jogadores**: Permissões granulares, rastreamento de veículos, estatísticas de sobrevivência/combate, economia/bancos e relatórios gráficos de picos de jogadores online.
+    * **Loja & Economia**: Catálogo de itens, preços customizados de atributos com rollback automático por expiração, sistema Wanted (Bounty PvP) e notificações RCON.
+    * **Automação & Anti-Abuso**: Agendador de reinicializações e comandos RCON, proteção de bandeiras contra minas ilegais, prisão Squad TK Jail e Kill Feed com trash-talk.
+    * **Desktop GUI**: Painéis nativos em Tkinter de logs, RCON e configurações.
+  * Atualização dos badges para GPL-3.0 e inclusão de links diretos de navegação para a documentação de governança.
+
+### 3. Arquivos Criados e Modificados
+* `LICENSE` & `Backend/LICENSE`: Termos oficiais da GNU GPL v3.
+* `CODE_OF_CONDUCT.md` & `Backend/CODE_OF_CONDUCT.md`: Código de Conduta Contributor Covenant 2.1.
+* `CONTRIBUTING.md` & `Backend/CONTRIBUTING.md`: Guia de contribuição para a comunidade.
+* `README.md` & `Backend/README.md`: Documentação com galeria categorizada de imagens e badges.
+* `Backend/docs/images/`: 18 capturas de tela organizadas e normalizadas.
+
+
 
 
 
