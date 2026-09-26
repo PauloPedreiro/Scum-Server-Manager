@@ -1,0 +1,28 @@
+# Configurações do usuário (contém senhas)
+config.ini
+
+# Backups locais
+Backups/
+*.bak
+
+# Arquivos temporários do Script
+SCUM_temp.db
+
+# Python
+__pycache__/
+*.pyc
+
+# Database Files (Prevent Large File Uploads)
+*.db
+SCUM_gui_temp.db
+*.db-shm
+*.db-wal
+
+# Build and Deploy Artifacts
+build/
+dist/
+Release/
+Temp/
+*.spec
+*.zip
+.venv/

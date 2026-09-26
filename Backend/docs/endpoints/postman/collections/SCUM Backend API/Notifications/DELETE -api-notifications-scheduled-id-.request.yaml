@@ -1,0 +1,8 @@
+$kind: http-request
+name: DELETE /api/notifications/scheduled/<id>
+description: DELETE /api/notifications/scheduled/<id>
+url: "{{baseUrl}}/api/notifications/scheduled/{{scheduledNotificationId}}"
+method: DELETE
+headers:
+  Authorization: Bearer {{token}}
+order: 8000

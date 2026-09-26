@@ -1,0 +1,64 @@
+# Regras de Versionamento Git
+
+## Quando usar:
+- Apenas quando o usuário solicitar explicitamente: "commit e suba conforme @versiomanto-git.mdc"
+- Nunca fazer commits automáticos sem permissão
+
+## Comandos obrigatórios:
+- Sempre usar Prompt de Comando "cmd" (não PowerShell)
+- Sequência: `git add .` → `git commit -m "mensagem"` → `git push`
+
+## Padrões de commit:
+- **feat**: nova funcionalidade
+- **fix**: correção de bug
+- **docs**: documentação
+- **style**: formatação
+- **refactor**: refatoração
+- **test**: testes
+- **chore**: manutenção
+
+## Codificação de caracteres:
+- **IMPORTANTE**: Usar apenas caracteres ASCII simples nas mensagens de commit
+- **Evitar**: acentos, cedilhas e caracteres especiais (ã, ç, é, í, ó, ú, etc.)
+- **Substituir por**: caracteres simples (a, c, e, i, o, u)
+- **Exemplo**: "configurável" → "configuravel", "flexível" → "flexivel"
+- **Motivo**: Evitar problemas de codificação no GitHub e outros repositórios
+
+## Validações antes do commit:
+1. Verificar se há arquivos modificados: `git status`
+2. Confirmar que não há erros de lint
+3. Testar se a aplicação funciona
+4. Verificar se a documentação está atualizada
+5. **Verificar codificação**: Garantir que a mensagem não contém caracteres especiais
+
+## Estrutura da mensagem de commit:
+```
+tipo: descrição breve
+
+- Detalhes das mudanças
+- Funcionalidades adicionadas
+- Correções implementadas
+```
+
+## Exemplos de mensagens corretas:
+- `feat: implementar sistema de relatorios`
+- `fix: corrigir filtros de data`
+- `docs: atualizar guia de uso`
+- `refactor: otimizar consultas SQL`
+
+## Exemplos de mensagens INCORRETAS:
+- `feat: implementar sistema de relatórios` (com acento)
+- `fix: corrigir filtros de data` (com acento)
+- `feat: implementar sistema flexível` (com acento)
+
+## Pós-commit:
+- Verificar se o push foi bem-sucedido
+- Confirmar que o repositório remoto está atualizado
+- Informar ao usuário o hash do commit e status
+- **Verificar no GitHub**: Se a mensagem aparece corretamente sem caracteres estranhos
+
+## Correção de commits com problemas de codificação:
+Se um commit foi feito com caracteres especiais e aparece mal no GitHub:
+1. `git commit --amend -m "nova mensagem sem acentos"`
+2. `git push --force-with-lease`
+3. Verificar se a correção foi aplicada no GitHub

@@ -1,0 +1,12 @@
+{
+  "cooldowns": {
+    "restart": 600,
+    "custom": 30,
+    "events": 120
+  },
+  "last_sent": {
+    "restart": null,
+    "custom": null,
+    "events": null
+  }
+}

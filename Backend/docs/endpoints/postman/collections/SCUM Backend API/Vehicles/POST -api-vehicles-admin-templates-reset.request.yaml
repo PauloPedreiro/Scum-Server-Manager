@@ -1,0 +1,18 @@
+$kind: http-request
+name: POST /api/vehicles/admin/templates/reset
+description: POST /api/vehicles/admin/templates/reset (admin) - Limpa o data/templates/SCUM_TEMPLATES.db (DELETE nas tabelas base) e opcionalmente limpa vehicle_catalog e vehicle_order no SSM.db. Requer servidor parado por padrao; force=true ignora o bloqueio SERVER_RUNNING.
+url: "{{baseUrl}}/api/vehicles/admin/templates/reset"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+body:
+  type: json
+  content: |-
+    {
+      "make_backup": true,
+      "force": false,
+      "reset_catalog": true,
+      "reset_orders": true
+    }
+order: 5000

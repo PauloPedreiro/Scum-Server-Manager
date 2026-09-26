@@ -1,0 +1,4 @@
+$kind: http-request
+url: "{{baseUrl}}/api/nfe/process-directory"
+method: POST
+order: 2000

@@ -1,0 +1,9 @@
+$kind: http-request
+name: PUT /api/server/settings/<section>
+description: PUT /api/server/settings/<section>
+url: "{{baseUrl}}/api/server/settings/<section>"
+method: PUT
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+order: 9000

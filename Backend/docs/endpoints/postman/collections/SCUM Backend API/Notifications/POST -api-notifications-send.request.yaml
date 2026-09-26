@@ -1,0 +1,9 @@
+$kind: http-request
+name: POST /api/notifications/send
+description: POST /api/notifications/send
+url: "{{baseUrl}}/api/notifications/send"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+order: 17000

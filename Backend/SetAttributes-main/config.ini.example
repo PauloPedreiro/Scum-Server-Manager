@@ -1,0 +1,13 @@
+[LOCAL]
+# Caminho padrão para o arquivo DB no seu PC
+DbPath = C:\Servers\scum\SCUM\Saved\SaveFiles\SCUM.db
+
+[SFTP]
+# Configurações de conexão remota
+Host = 192.168.1.100
+Port = 22
+User = usuario_steam
+Password = senha_secreta
+
+# Caminho do arquivo DB no servidor remoto
+RemoteDbPath = /home/steam/SCUM/Saved/SaveFiles/SCUM.db

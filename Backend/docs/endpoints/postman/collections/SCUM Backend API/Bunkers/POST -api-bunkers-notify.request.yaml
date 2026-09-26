@@ -1,0 +1,15 @@
+$kind: http-request
+name: POST /api/bunkers/notify
+description: POST /api/bunkers/notify
+url: "{{baseUrl}}/api/bunkers/notify"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+body:
+  type: json
+  content: |-
+    {
+      "message": "Teste de notificação"
+    }
+order: 2000

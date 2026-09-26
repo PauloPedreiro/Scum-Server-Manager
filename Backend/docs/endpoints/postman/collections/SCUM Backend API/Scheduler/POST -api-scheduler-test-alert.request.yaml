@@ -1,0 +1,46 @@
+$kind: http-request
+name: POST /api/scheduler/test-alert
+description: |-
+  Test sending restart alert to Discord (webhook log-ssm)
+
+  **Parameters:**
+  - `alert_type` (string, optional): Alert type to test - 'failure' (failure) or 'timeout' (took too long). Default: 'failure'
+
+  **Body Example:**
+  ```json
+  {
+    "alert_type": "failure"
+  }
+  ```
+
+  **Success Response (200):**
+  ```json
+  {
+    "success": true,
+    "message": "Test alert (failure) sent to Discord",
+    "alert_type": "failure",
+    "test_result": {
+      "success": false,
+      "status": "test_failure",
+      "message": "This is a test alert for scheduled restart failure",
+      "elapsed_seconds": 150.5,
+      "retry_count": 3
+    }
+  }
+  ```
+
+  **Possible Errors:**
+  - 400: Invalid alert type (must be 'failure' or 'timeout')
+  - 500: Error sending test alert
+url: "{{baseUrl}}/api/scheduler/test-alert"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+body:
+  type: json
+  content: |-
+    {
+      "alert_type": "failure"
+    }
+order: 6000

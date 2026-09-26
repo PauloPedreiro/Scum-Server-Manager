@@ -1,0 +1,9 @@
+$kind: http-request
+name: POST /api/scheduler/stop
+description: POST /api/scheduler/stop
+url: "{{baseUrl}}/api/scheduler/stop"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+order: 9000

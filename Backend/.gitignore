@@ -1,0 +1,114 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+develop-eggs/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environment
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+temp/
+tmp/
+scratch/
+.venv/
+**/.git_old/
+
+
+# Node modules (if any)
+node_modules/
+
+# Test files
+test_*.py
+*_test.py
+
+# Backup files
+*.bak
+*.backup
+
+# Sensitive config files
+config.json
+webhooks.json
+data/config.json
+data/webhooks.json
+data/identity.json
+data/license.json
+data/config.backup.*
+data/server_settings_presets/default.ini
+**/server_settings_presets/default.ini
+
+# Runtime data (do not commit)
+data/backups/
+data/*.db
+data/*.db-*
+data/**/*.db
+data/**/*.db-*
+data/event_teleport_codes.json
+data/playtime_sessions.json
+data/chat_processed.json
+data/chat_state.json
+data/processed_commands.json
+data/mines_alerts_state.json
+data/cargo_drop_state.json
+data/fishing_ranking_last_run.json
+data/scum_installer_status.json
+
+# Archives / temp logs (do not commit)
+*.zip
+*.rar
+temp_logs/
+
+# Pak mod files (user content - large binary files)
+*.pak
+*.pak.disabled
+data/mods/paks/*
+!data/mods/paks/.gitkeep
+dist/data/mods/paks/
+
+# Dist executables and logs (large binary files)
+dist/*.exe
+*.log
+data/logs/*
+!data/logs/.gitkeep
+dist/data/logs/*
+
+

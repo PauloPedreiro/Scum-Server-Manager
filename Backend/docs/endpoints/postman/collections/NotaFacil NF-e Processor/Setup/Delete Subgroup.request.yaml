@@ -1,0 +1,6 @@
+$kind: http-request
+url: "{{baseUrl}}/api/setup/subgroups/{{subgroupId}}"
+method: DELETE
+headers:
+  Authorization: Bearer {{accessToken}}
+order: 6000

@@ -1,0 +1,23 @@
+$kind: http-request
+name: PUT /api/notifications/scheduled/<id>
+description: PUT /api/notifications/scheduled/<id>
+url: "{{baseUrl}}/api/notifications/scheduled/{{scheduledNotificationId}}"
+method: PUT
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+body:
+  type: text
+  content: |-
+    {
+      "enabled": true,
+      "title": "Updated title",
+      "message": "Updated scheduled message",
+      "duration": 15,
+      "color": "255-255-255",
+      "schedule": {
+        "type": "daily",
+        "time": "00:44"
+      }
+    }
+order: 7000

@@ -1,0 +1,8 @@
+$kind: http-request
+name: GET /api/player/vehicles/summary
+description: GET /api/player/vehicles/summary - Resumo de veiculos por status e tipo
+url: "{{baseProtocol}}://{{baseUrl}}:{{basePort}}/api/player/vehicles/summary"
+method: GET
+headers:
+  Authorization: Bearer {{playerToken}}
+order: 12000

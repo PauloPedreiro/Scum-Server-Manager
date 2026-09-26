@@ -1,0 +1,9 @@
+$kind: http-request
+name: POST /api/notifications/verify
+description: POST /api/notifications/verify
+url: "{{baseUrl}}/api/notifications/verify"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+order: 19000

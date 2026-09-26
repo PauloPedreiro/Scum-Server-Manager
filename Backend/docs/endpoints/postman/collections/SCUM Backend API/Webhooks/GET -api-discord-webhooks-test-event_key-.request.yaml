@@ -1,0 +1,8 @@
+$kind: http-request
+name: GET /api/discord/webhooks/test/<event_key>
+description: GET /api/discord/webhooks/test/<event_key> - Mesmo teste via GET
+url: "{{baseUrl}}/api/discord/webhooks/test/<event_key>"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+order: 11000

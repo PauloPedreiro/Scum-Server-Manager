@@ -1,0 +1,14 @@
+$kind: http-request
+url: "{{baseUrl}}/api/setup/groups/{{groupId}}"
+method: PATCH
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{accessToken}}
+body:
+  type: text
+  content: |-
+    {
+      "nome": "ALIMENTOS EDITADO",
+      "descricao": "Nova descrição do grupo"
+    }
+order: 2000

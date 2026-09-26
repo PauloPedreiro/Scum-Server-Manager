@@ -1,0 +1,6 @@
+$kind: http-request
+name: GET /api/server/status
+description: GET /api/server/status
+url: "{{baseUrl}}/api/server/status"
+method: GET
+order: 3000

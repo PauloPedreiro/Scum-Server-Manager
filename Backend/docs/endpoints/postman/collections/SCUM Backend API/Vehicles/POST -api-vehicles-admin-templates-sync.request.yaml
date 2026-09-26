@@ -1,0 +1,16 @@
+$kind: http-request
+name: POST /api/vehicles/admin/templates/sync
+description: POST /api/vehicles/admin/templates/sync (admin) - Faz merge de templates a partir de um SCUM.db para data/templates/SCUM_TEMPLATES.db. Se o SCUMServer estiver Running e force!=true, o backend cria automaticamente um snapshot temporario consistente do SCUM.db (SQLite backup API) para evitar lock/leitura inconsistente, e apaga o snapshot ao final. Tambem faz insert de templates faltantes no SSM.db em vehicle_catalog com defaults seguros (setup/display_name=template id, enabled=0, price=0) sem sobrescrever itens ja existentes. Resposta inclui diagnostics.service_running e diagnostics.used_snapshot.
+url: "{{baseUrl}}/api/vehicles/admin/templates/sync"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+body:
+  type: json
+  content: |-
+    {
+      "source_scum_db": "@config",
+      "ids": [640004]
+    }
+order: 4000

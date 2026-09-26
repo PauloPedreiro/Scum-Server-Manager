@@ -1,0 +1,9 @@
+$kind: http-request
+name: PUT /api/players/<steam_id>/permissao
+description: PUT /api/players/<steam_id>/permissao
+url: "{{baseUrl}}/api/players/<steam_id>/permissao"
+method: PUT
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+order: 13000

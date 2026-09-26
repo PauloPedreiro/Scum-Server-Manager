@@ -1,0 +1,20 @@
+$kind: http-request
+name: POST /api/integrations/wallet/debit
+description: Remove créditos da carteira via integração (X-Integration-Key).
+url: "{{baseUrl}}/api/integrations/wallet/debit"
+method: POST
+headers:
+  Content-Type: application/json
+  X-Integration-Key: "{{integrationKey}}"
+body:
+  type: json
+  content: |-
+    {
+      "external_id": "postman:debit:{{$randomUUID}}",
+      "steam_id": "{{steamId}}",
+      "amount": 50,
+      "meta": {
+        "source": "postman"
+      }
+    }
+order: 2000

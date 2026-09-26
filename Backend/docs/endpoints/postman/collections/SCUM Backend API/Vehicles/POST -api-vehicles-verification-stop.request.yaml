@@ -1,0 +1,9 @@
+$kind: http-request
+name: POST /api/vehicles/verification/stop
+description: POST /api/vehicles/verification/stop
+url: "{{baseUrl}}/api/vehicles/verification/stop"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+order: 14000

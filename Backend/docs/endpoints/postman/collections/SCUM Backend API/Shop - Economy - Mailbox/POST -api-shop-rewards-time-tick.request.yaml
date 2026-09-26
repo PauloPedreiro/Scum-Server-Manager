@@ -1,0 +1,15 @@
+$kind: http-request
+name: POST /api/shop/rewards/time-tick
+description: Executa tick de recompensa por tempo (se habilitado em app_config).
+url: "{{baseUrl}}/api/shop/rewards/time-tick"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+body:
+  type: json
+  content: |-
+    {
+      "steam_id": "{{steamId}}"
+    }
+order: 20000

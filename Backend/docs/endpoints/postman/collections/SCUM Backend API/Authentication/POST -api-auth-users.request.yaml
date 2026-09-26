@@ -1,0 +1,17 @@
+$kind: http-request
+name: POST /api/auth/users
+description: POST /api/auth/users
+url: "{{baseUrl}}/api/auth/users"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+body:
+  type: json
+  content: |-
+    {
+      "username": "usuario",
+      "password": "senha123",
+      "role": "moderator"
+    }
+order: 13000

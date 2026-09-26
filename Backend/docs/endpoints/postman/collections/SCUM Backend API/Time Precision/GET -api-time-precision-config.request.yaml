@@ -1,0 +1,8 @@
+$kind: http-request
+name: GET /api/time-precision/config
+description: GET /api/time-precision/config
+url: "{{baseUrl}}/api/time-precision/config"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+order: 1000

@@ -1,0 +1,57 @@
+{
+  "name": "time_notification",
+  "description": "Template para notificações de horário do servidor",
+  "version": "1.0",
+  "notifications": [
+    {
+      "day": "Everyday",
+      "time": [
+        "19:21"
+      ],
+      "duration": 15,
+      "color": "255-255-255",
+      "message": "{server_time}"
+    }
+  ],
+  "usage_instructions": {
+    "description": "Como usar este template para notificações de horário",
+    "steps": [
+      "1. Este template mostra apenas o horário no formato HH:MM",
+      "2. A mensagem '{server_time}' será substituída dinamicamente pela hora atual",
+      "3. O horário '19:21' é quando a notificação será exibida no jogo",
+      "4. Duração de 15 segundos com cor branca (255-255-255)",
+      "5. Aparece todos os dias (Everyday)"
+    ],
+    "api_example": {
+      "endpoint": "POST /api/notifications/send",
+      "body": {
+        "message": "{server_time}",
+        "duration": 15,
+        "color": "255-255-255"
+      }
+    }
+  },
+  "customization": {
+    "message_templates": [
+      "{server_time}",
+      "🕐 {server_time}",
+      "⏰ {server_time}",
+      "🕒 {server_time}",
+      "🕐 {server_time}"
+    ],
+    "color_options": {
+      "white": "255-255-255",
+      "green": "100-255-100",
+      "blue": "100-200-255",
+      "yellow": "255-255-100",
+      "orange": "255-180-50"
+    },
+    "duration_options": [10, 15, 20, 30, 45, 60]
+  },
+  "dynamic_placeholders": {
+    "server_time": "Será substituído pela hora atual do servidor (ex: 14:30)",
+    "player_count": "Número de jogadores online",
+    "server_name": "Nome do servidor",
+    "date": "Data atual"
+  }
+}

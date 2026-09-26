@@ -1,0 +1,16 @@
+$kind: http-request
+name: GET /api/player/vehicles
+description: GET /api/player/vehicles - Lista veiculos do jogador autenticado
+url: "{{baseProtocol}}://{{baseUrl}}:{{basePort}}/api/player/vehicles?status=0&limit=200&offset=0"
+method: GET
+headers:
+  Authorization: Bearer {{playerToken}}
+queryParams:
+  - key: status
+    value: "0"
+    description: "Filtro de status: 0=Ativo, 1=Inativo, 2=Desaparecido, 3=Destruido. Aceita multiplos separados por virgula."
+  - key: limit
+    value: "200"
+  - key: offset
+    value: "0"
+order: 11000

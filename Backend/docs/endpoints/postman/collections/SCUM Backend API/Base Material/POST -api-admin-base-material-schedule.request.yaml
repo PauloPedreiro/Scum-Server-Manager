@@ -1,0 +1,18 @@
+$kind: http-request
+name: POST /api/admin/base-material/schedule
+description: "POST /api/admin/base-material/schedule - Agenda para executar na proxima janela offline (restart). Se servidor ja estiver parado, pode executar imediato. Idempotente: nao cria job duplicado (retorna o mesmo job_id) quando ja existir job pending/processing com os mesmos parametros. Response inclui data.deduplicated."
+url: "{{baseUrl}}/api/admin/base-material/schedule"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+body:
+  type: json
+  content: |-
+    {
+      "flag_id": 343,
+      "target_level": 3,
+      "fallback_lowest": true,
+      "run_now_if_offline": true
+    }
+order: 2000

@@ -1,0 +1,19 @@
+$kind: http-request
+name: GET /api/reports/players/hourly-average
+description: |-
+  Obter média de jogadores por hora do dia (0-23) no período especificado.
+
+  **Parâmetros Query:**
+  - `days` (opcional, padrão: 7): Número de dias para analisar (1-365)
+
+  **Resposta:**
+  Retorna média, mínimo, máximo e estatísticas por hora do dia, incluindo horário de pico e baixa.
+url: "{{baseUrl}}/api/reports/players/hourly-average?days=7"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+queryParams:
+  - key: days
+    value: "7"
+    description: "Número de dias para analisar (1-365, padrão: 7)"
+order: 1000

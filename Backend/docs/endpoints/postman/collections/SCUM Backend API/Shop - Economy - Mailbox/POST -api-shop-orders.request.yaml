@@ -1,0 +1,18 @@
+$kind: http-request
+name: POST /api/shop/orders
+description: Cria pedido e debita saldo imediatamente.
+url: "{{baseUrl}}/api/shop/orders"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+body:
+  type: json
+  content: |-
+    {
+      "steam_id": "{{steamId}}",
+      "items": [
+        {"code": 1, "qty": 1}
+      ]
+    }
+order: 11000

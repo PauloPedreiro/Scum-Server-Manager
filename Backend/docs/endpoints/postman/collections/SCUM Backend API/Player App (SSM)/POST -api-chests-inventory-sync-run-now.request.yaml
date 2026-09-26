@@ -1,0 +1,8 @@
+$kind: http-request
+name: POST /api/chests/inventory/sync/run-now
+description: POST /api/chests/inventory/sync/run-now (admin)
+url: "{{baseProtocol}}://{{baseUrl}}:{{basePort}}/api/chests/inventory/sync/run-now"
+method: POST
+headers:
+  Authorization: Bearer {{token}}
+order: 10000

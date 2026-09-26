@@ -1,0 +1,5 @@
+; UE4SS mods.txt for SCUM-RCON bundle.
+; Format: <ModName> : <0|1>   (0 = disabled, 1 = enabled)
+; Lines starting with ';' are comments.
+
+scum_rcon : 1

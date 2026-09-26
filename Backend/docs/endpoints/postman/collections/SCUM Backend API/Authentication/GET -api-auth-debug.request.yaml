@@ -1,0 +1,8 @@
+$kind: http-request
+name: GET /api/auth/debug
+description: GET /api/auth/debug
+url: "{{baseUrl}}/api/auth/debug"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+order: 2000

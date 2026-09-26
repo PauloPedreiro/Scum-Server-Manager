@@ -1,0 +1,16 @@
+$kind: http-request
+name: GET /api/admin/base-material/jobs
+description: GET /api/admin/base-material/jobs - Lista jobs agendados e historico. Retorna tambem campos de lock/retry (locked_by, locked_at, next_attempt_at).
+url: "{{baseUrl}}/api/admin/base-material/jobs?status=pending&limit=50&offset=0"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+queryParams:
+  - key: status
+    value: pending
+    description: Filtro opcional (pending|processing|done|failed)
+  - key: limit
+    value: "50"
+  - key: offset
+    value: "0"
+order: 3000

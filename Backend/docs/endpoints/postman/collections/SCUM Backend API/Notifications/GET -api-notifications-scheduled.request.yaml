@@ -1,0 +1,8 @@
+$kind: http-request
+name: GET /api/notifications/scheduled
+description: GET /api/notifications/scheduled
+url: "{{baseUrl}}/api/notifications/scheduled"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+order: 3000

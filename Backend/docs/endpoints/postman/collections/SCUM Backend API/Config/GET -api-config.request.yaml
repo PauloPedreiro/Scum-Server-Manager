@@ -1,0 +1,8 @@
+$kind: http-request
+name: GET /api/config
+description: GET /api/config
+url: "{{baseUrl}}/api/config"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+order: 1000

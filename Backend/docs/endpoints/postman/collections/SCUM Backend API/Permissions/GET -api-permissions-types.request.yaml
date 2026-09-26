@@ -1,0 +1,8 @@
+$kind: http-request
+name: GET /api/permissions/types
+description: GET /api/permissions/types
+url: "{{baseUrl}}/api/permissions/types"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+order: 3000

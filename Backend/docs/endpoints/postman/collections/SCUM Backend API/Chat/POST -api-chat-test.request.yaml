@@ -1,0 +1,9 @@
+$kind: http-request
+name: POST /api/chat/test
+description: POST /api/chat/test
+url: "{{baseUrl}}/api/chat/test"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+order: 4000

@@ -1,0 +1,8 @@
+$kind: http-request
+name: GET /api/admin-logs/files-status
+description: GET /api/admin-logs/files-status
+url: "{{baseUrl}}/api/admin-logs/files-status"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+order: 1000

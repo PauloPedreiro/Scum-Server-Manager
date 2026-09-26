@@ -1,0 +1,38 @@
+$kind: http-request
+name: GET /api/admin-logs/recent
+description: |-
+  Obter ultimos comandos admin processados (ordenado por created_at DESC).
+
+  Query params:
+  - limit (1-200)
+  - include_total (boolean)
+  - category (repetivel): teleport, spawn, godmode, info, punishments, other
+  - steam_id
+  - player_name
+  - q
+
+  Resposta inclui category.key/name/emoji/color e event_type (quando disponivel).
+url: "{{baseProtocol}}://{{baseUrl}}:{{basePort}}/api/admin-logs/recent?limit=10&include_total=false&category=teleport&steam_id=&player_name=&q="
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+queryParams:
+  - key: limit
+    value: "10"
+    description: Numero maximo de comandos (1-200).
+  - key: include_total
+    value: "false"
+    description: Se true, inclui total (COUNT) na resposta.
+  - key: category
+    value: teleport
+    description: "Filtro por categoria (pode repetir). Valores: teleport, spawn, godmode, info, punishments, other."
+  - key: steam_id
+    value: ""
+    description: Filtro por SteamID do admin.
+  - key: player_name
+    value: ""
+    description: Filtro por nome do admin (contains).
+  - key: q
+    value: ""
+    description: Busca textual no campo action (contains).
+order: 3000

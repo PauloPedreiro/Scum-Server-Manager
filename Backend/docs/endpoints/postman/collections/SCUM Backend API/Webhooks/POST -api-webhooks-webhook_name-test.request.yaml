@@ -1,0 +1,9 @@
+$kind: http-request
+name: POST /api/webhooks/<webhook_name>/test
+description: POST /api/webhooks/<webhook_name>/test
+url: "{{baseUrl}}/api/webhooks/<webhook_name>/test"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+order: 6000

@@ -1,0 +1,8 @@
+$kind: http-request
+name: GET /api/bunkers/status
+description: GET /api/bunkers/status
+url: "{{baseUrl}}/api/bunkers/status"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+order: 1000

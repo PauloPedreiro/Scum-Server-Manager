@@ -1,0 +1,42 @@
+$kind: http-request
+name: PATCH /api/server/settings
+description: |-
+  Atualizar uma configuração específica do ServerSettings.ini
+
+  **Campos obrigatórios:**
+  - `section` (string): Nome da seção no ServerSettings.ini (ex: "General")
+  - `key` (string): Nome da chave (ex: "scum.MaxPlayers")
+  - `value` (qualquer tipo): Valor a ser definido
+
+  **Exemplo de resposta de sucesso:**
+  ```json
+  {
+    "success": true,
+    "message": "Configuração scum.MaxPlayers atualizada",
+    "data": {
+      "section": "General",
+      "key": "scum.MaxPlayers",
+      "value": "100",
+      "backup": "C:\\...\\ServerSettings.backup.20250115_120000.ini"
+    },
+    "timestamp": 1701504000
+  }
+  ```
+
+  **Possíveis erros:**
+  - 400: JSON inválido ou campos obrigatórios faltando
+  - 500: Erro ao processar configuração
+url: "{{baseUrl}}/api/server/settings"
+method: PATCH
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+body:
+  type: json
+  content: |-
+    {
+      "section": "General",
+      "key": "scum.MaxPlayers",
+      "value": 100
+    }
+order: 4000

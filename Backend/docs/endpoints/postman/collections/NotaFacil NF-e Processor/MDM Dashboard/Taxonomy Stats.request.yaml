@@ -1,0 +1,6 @@
+$kind: http-request
+url: "{{baseUrl}}/api/mdm/dashboard/stats/taxonomy"
+method: GET
+headers:
+  Authorization: Bearer {{accessToken}}
+order: 2000

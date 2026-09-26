@@ -1,0 +1,9 @@
+$kind: http-request
+name: POST /api/players/<steam_id>/elevated-user
+description: POST /api/players/<steam_id>/elevated-user
+url: "{{baseUrl}}/api/players/<steam_id>/elevated-user"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+order: 9000

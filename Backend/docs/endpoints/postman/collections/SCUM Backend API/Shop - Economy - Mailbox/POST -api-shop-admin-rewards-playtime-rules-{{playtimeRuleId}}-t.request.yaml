@@ -1,0 +1,15 @@
+$kind: http-request
+name: POST /api/shop/admin/rewards/playtime-rules/{{playtimeRuleId}}/targets
+description: Adiciona steam_id como alvo de uma regra (admin).
+url: "{{baseUrl}}/api/shop/admin/rewards/playtime-rules/{{playtimeRuleId}}/targets"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+body:
+  type: json
+  content: |-
+    {
+      "steam_id": "{{steamId}}"
+    }
+order: 4000

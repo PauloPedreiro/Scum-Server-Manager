@@ -1,0 +1,9 @@
+$kind: collection
+variables:
+  baseUrl: http://127.0.0.1:8000
+  identificacaoId: "1"
+  fornecedorId: "1"
+  codigoFornecedor: ABC123
+  produtoNormalizadoId: "1"
+  subgroupId: "1"
+  groupId: "1"

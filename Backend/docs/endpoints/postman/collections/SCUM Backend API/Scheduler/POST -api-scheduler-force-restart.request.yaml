@@ -1,0 +1,9 @@
+$kind: http-request
+name: POST /api/scheduler/force-restart
+description: POST /api/scheduler/force-restart
+url: "{{baseUrl}}/api/scheduler/force-restart"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+order: 5000

@@ -1,0 +1,2355 @@
+{
+  "app": {
+    "title": "SCUM Server Manager",
+    "nav": {
+      "overview": "Aperçu",
+      "map": "Carte",
+      "server": "Serveur"
+    },
+    "sidebar": {
+      "title": "Menu",
+      "players": "Joueurs",
+      "settings": "Paramètres"
+    }
+  },
+  "tools": {
+    "title": "Outils",
+    "subtitle": "Outils et routines d'administration.",
+    "search": {
+      "placeholder": "Rechercher des outils...",
+      "noResults": "Aucun résultat"
+    },
+    "favorites": {
+      "toggle": "Basculer favori"
+    },
+    "filters": {
+      "title": "Filtres",
+      "allCategories": "Toutes les catégories",
+      "allTypes": "Tous les types",
+      "modules": "Modules",
+      "actions": "Actions rapides"
+    },
+    "router": {
+      "notFoundTitle": "Outil introuvable",
+      "notFoundText": "L'outil demandé n'existe pas.",
+      "comingSoon": "Bientôt disponible",
+      "pageNotImplemented": "Page de l'outil non implémentée"
+    },
+    "categories": {
+      "Player": "Joueur",
+      "World": "Monde",
+      "Economy": "Économie",
+      "Server": "Serveur",
+      "RCON": "RCON",
+      "Mods": "Mods",
+      "Logs": "Logs",
+      "Other": "Autre"
+    },
+    "types": {
+      "module": "Module",
+      "action": "Action"
+    },
+    "status": {
+      "active": "actif",
+      "coming_soon": "bientôt",
+      "beta": "bêta"
+    },
+    "registry": {
+      "attributes": {
+        "title": "Attributs",
+        "description": "Modifier les attributs du joueur (Force/Constitution/Dextérité/Intelligence)."
+      },
+      "shop-deliveries": {
+        "title": "Boutique & livraisons",
+        "description": "Gestion du catalogue admin (scanner, activer/désactiver, prix, limites)."
+      },
+      "kits": {
+        "title": "Kits",
+        "description": "Gérer les kits pour les joueurs."
+      },
+      "integrations": {
+        "title": "Intégrations",
+        "description": "Gérer les intégrations publiques (API keys) pour des bots/systèmes externes."
+      }
+    },
+    "sections": {
+      "favorites": "Favoris",
+      "recents": "Récents",
+      "allTools": "Tous les outils"
+    },
+    "attributes": {
+      "title": "Attributs",
+      "subtitle": "Modifier les attributs du joueur (Force/Constitution/Dextérité/Intelligence).",
+      "fields": {
+        "strength": "Force",
+        "constitution": "Constitution",
+        "dexterity": "Dextérité",
+        "intelligence": "Intelligence"
+      },
+      "searchPlayers": "Rechercher un joueur (nom, steam id, prisoner id)...",
+      "resultsCount": "Résultats : {{count}}",
+      "noPlayers": "Aucun joueur trouvé.",
+      "selected": "Joueur sélectionné",
+      "noneSelected": "Aucun",
+      "selectPrompt": "Sélectionnez un joueur pour charger les attributs.",
+      "noAttributesYet": "Ce joueur n'a pas encore d'attributs disponibles (probablement jamais connecté au serveur).",
+      "original": "Original :",
+      "pending": "Vous avez des modifications non enregistrées.",
+      "validationError": "Veuillez corriger les erreurs de validation avant d'enregistrer.",
+      "saveSuccess": "Attributs mis à jour avec succès.",
+      "saveError": "Échec de la mise à jour des attributs.",
+      "playerOnlineTitle": "Joueur en ligne",
+      "playerOnlineText": "Le joueur est en ligne. Pour mettre à jour les attributs pendant que le serveur tourne, le joueur doit être hors ligne."
+    },
+    "kits": {
+      "title": "Gestion des Kits",
+      "subtitle": "Gérez des kits composés de plusieurs objets en jeu manuellement ou en scannant directement des coffres.",
+      "totalKits": "Total de Kits",
+      "scanChest": "Scanner le Coffre",
+      "createManual": "Créer un Kit Manuel",
+      "table": {
+        "kit": "Kit",
+        "name": "Nom du Kit",
+        "onlyOnce": "Achat Unique",
+        "items": "Objets",
+        "actions": "Actions",
+        "yes": "Oui",
+        "no": "Non",
+        "itemUnit": "objet",
+        "itemsUnit": "objets"
+      }
+    },
+    "shopDeliveries": {
+      "title": "Boutique & livraisons",
+      "subtitle": "Gestion du catalogue admin (scanner, activer/désactiver, prix, limites).",
+      "actions": {
+        "saveHelp": "Enregistrer les modifications",
+        "revertHelp": "Annuler les modifications"
+      },
+      "bulk": {
+        "scopeHint": "Les actions en masse s'appliquent aux éléments filtrés (recherche actuelle).",
+        "catalogEnableAll": "Tout activer",
+        "catalogDisableAll": "Tout désactiver",
+        "offerEnableAll": "Tout activer",
+        "offerDisableAll": "Tout désactiver",
+        "saveAll": "Enregistrer ({{count}})",
+        "savingProgress": "Enregistrement {{done}}/{{total}}",
+        "confirmTitle": "Enregistrer toutes les modifications ?",
+        "confirmText": "Cela enregistrera les modifications pour {{count}} élément(s).",
+        "savedAll": "Toutes les modifications ont été enregistrées.",
+        "partialTitle": "Certains éléments ont échoué",
+        "partialText": "Enregistrés : {{ok}} | Échecs : {{fail}}",
+        "toggleAllCatalog": "Basculer tout (filtré) - catalogue activé",
+        "toggleAllOffer": "Basculer tout (filtré) - offre activée"
+      },
+      "export": {
+        "title": "Exporter le catalogue",
+        "button": "Exporter"
+      },
+      "import": {
+        "title": "Importer le catalogue",
+        "button": "Importer",
+        "confirm": "Importer",
+        "loadFirst": "Chargez d'abord le catalogue (Actualiser) pour prévisualiser et appliquer les modifications.",
+        "loadingCatalog": "Chargement du catalogue actuel pour appliquer l'import...",
+        "emptyCatalog": "Aucun élément de catalogue n'a été trouvé sur ce serveur. Exécutez le scanner (ou chargez un catalogue de base) avant d'importer, car l'import met à jour les codes existants.",
+        "loadTimeout": "Délai dépassé lors du chargement du catalogue. Veuillez essayer Actualiser.",
+        "loadError": "Échec du chargement du catalogue pour l'import.",
+        "backendSummary": "Créés : {{created}} | Mis à jour : {{updated}} | Ignorés : {{ignored}}",
+        "backendErrors": "Erreurs : {{errors}}",
+        "pickFile": "Choisissez un fichier .json à importer.",
+        "invalidSchema": "Schéma invalide. Attendu : shop_catalog_snapshot_v1.",
+        "previewTitle": "Aperçu de l'import",
+        "previewText": "Modifications : {{changed}} | Ignorés (codes manquants) : {{ignored}}",
+        "previewList": "Exemple de codes modifiés : {{codes}}",
+        "apply": "Appliquer au brouillon",
+        "applyAndSave": "Appliquer & enregistrer",
+        "applied": "Modifications importées appliquées au brouillon. Vérifiez et cliquez sur Enregistrer."
+      },
+      "sections": {
+        "catalog": "Catalogue",
+        "vehicles": "Véhicules",
+        "wallet": "Portefeuille",
+        "rewards": "Récompenses",
+        "baseUpgrades": "Améliorations de base",
+        "kits": "Kits",
+        "shopNotifications": "Notifications RCON",
+        "attributes": "Attributs",
+        "raidWebhooks": "Webhook de Raid (/rd)",
+        "wantedBounty": "Système de Primes"
+      },
+      "baseUpgrades": {
+        "search": "Rechercher des drapeaux (propriétaire, id)...",
+        "pageSize": "Éléments par page",
+        "flagsTitle": "Drapeaux / Bases",
+        "configTitle": "Config d'amélioration",
+        "selectedFlag": "Drapeau sélectionné",
+        "targetLevel": "Niveau cible (1..5)",
+        "fallbackLowest": "Utiliser le mapping le plus bas disponible si le niveau exact manque",
+        "runNowIfOffline": "Exécuter maintenant si le serveur est hors ligne",
+        "dryRun": "Simulation",
+        "scheduleBtn": "Planifier",
+        "previewTitle": "Aperçu",
+        "sample": "Exemple de modifications",
+        "noSample": "Aucun exemple retourné.",
+        "empty": "Aucun drapeau trouvé.",
+        "pagination": "Page {{p}} / {{tp}} (total {{total}})",
+        "columns": {
+          "flagId": "ID du drapeau",
+          "owner": "Propriétaire",
+          "type": "Type",
+          "elements": "Éléments",
+          "lastSeen": "Dernière vue"
+        },
+        "validation": {
+          "level": "Le niveau cible doit être compris entre 1 et 5.",
+          "previewFirst": "Exécutez l'aperçu (simulation) avant de planifier."
+        },
+        "schedule": {
+          "confirmTitle": "Planifier l'amélioration de base ?",
+          "confirmText": "Cela NE redémarrera PAS le serveur. Cela s'appliquera au prochain redémarrage automatique. À modifier : {{toChange}} | Déjà cible : {{already}} | Aucun mapping : {{noMapping}}",
+          "confirmBtn": "Planifier",
+          "scheduled": "Planifié. S'appliquera au prochain redémarrage automatique. Job : {{job}}",
+          "executedNow": "Exécuté maintenant (serveur hors ligne). Mis à jour : {{u}} | Échecs : {{f}} | Aucun changement : {{n}}"
+        }
+      },
+      "vehicles": {
+        "search": "Rechercher des véhicules (nom, setup, code)...",
+        "saveAll": "Enregistrer ({{count}})",
+        "savingProgress": "Enregistrement {{done}}/{{total}}",
+        "invalidPrice": "Le prix doit être >= 0.",
+        "saveConfirmTitle": "Enregistrer les modifications des véhicules ?",
+        "saveConfirmText": "Cela enregistrera les modifications pour {{count}} véhicule(s).",
+        "table": {
+          "image": "Image",
+          "code": "Code",
+          "setup": "Setup",
+          "display": "Affichage",
+          "enabled": "Activé",
+          "price": "Prix"
+        }
+      },
+      "vehicleTemplates": {
+        "templateIds": "IDs d'entités de véhicules (templates)",
+        "sync": "Synchroniser",
+        "reset": "Réinitialiser",
+        "resetConfirm": "Cela réinitialisera SCUM_TEMPLATES.db et peut optionnellement vider le catalogue/commandes de véhicules. Continuer ?",
+        "resetDone": "Réinitialisation des templates terminée.",
+        "idsRequired": "Saisissez au moins un ID d'entité de véhicule template.",
+        "syncConfirm": "Cela fusionnera les templates d'un SCUM.db hors ligne vers SCUM_TEMPLATES.db et fera un upsert dans le catalogue véhicules. Continuer ?",
+        "syncDone": "Synchronisation terminée. Synchronisés : {{synced}} | Manquants : {{missing}}",
+        "synced": "Synchronisés",
+        "missing": "Manquants"
+      },
+      "resultsCount": "Résultats : {{count}}",
+      "search": "Rechercher dans le catalogue (nom, setup, code)...",
+      "empty": "Aucun élément.",
+      "scanner": {
+        "chestId": "ID du coffre scanner",
+        "set": "Définir",
+        "sync": "Scanner"
+      },
+      "invalidChestId": "ID de coffre invalide.",
+      "scannerSet": "Coffre scanner mis à jour.",
+      "scannerSetError": "Échec de la mise à jour du coffre scanner.",
+      "scannerSyncResult": "Découverts : {{d}} | Créés : {{c}}",
+      "scannerSyncError": "Échec de la synchronisation du scanner.",
+      "clear": {
+        "section": "Zone dangereuse",
+        "hint": "Actions destructrices. Utilisez avec prudence.",
+        "title": "Vider le catalogue",
+        "desc": "Cela va vider totalement le catalogue (shop_offer + shop_catalog). L'historique des commandes restera. Pour confirmer, tapez :",
+        "confirm": "Vider",
+        "validation": "Le texte de confirmation ne correspond pas.",
+        "success": "Vidé. Offres : {{offers}} | Catalogue : {{catalog}}",
+        "error": "Échec du nettoyage du catalogue.",
+        "button": "Vider le catalogue"
+      },
+      "wallet": {
+        "playersTitle": "Joueurs",
+        "searchPlayers": "Rechercher des joueurs (nom ou Steam ID)...",
+        "playersCount": "Joueurs : {{count}}",
+        "selectPlayerHint": "Sélectionnez un joueur à gauche.",
+        "fetchBalances": "Récupérer les soldes",
+        "fetchBalance": "Récupérer le solde",
+        "balance": "Solde",
+        "operation": "Opération",
+        "amount": "Montant",
+        "note": "Note (optionnel)",
+        "apply": "Appliquer",
+        "statement": "Relevé",
+        "openStatement": "Ouvrir le relevé",
+        "balanceError": "Échec de la récupération du solde.",
+        "validationSteamId": "L'ID Steam est requis.",
+        "validationAmount": "Le montant doit être supérieur à zéro.",
+        "balanceRequired": "Veuillez récupérer le solde actuel avant d'appliquer un ajustement.",
+        "removeConfirmTitle": "Confirmer le retrait",
+        "removeConfirmText": "Retirer {{amount}} crédits de {{steam_id}} ?",
+        "confirm": "Confirmer",
+        "insufficientFunds": "Fonds insuffisants.",
+        "alreadyApplied": "Déjà appliqué (idempotent).",
+        "adjusted": "Ajusté. Nouveau solde : {{balance}}",
+        "adjustMissingData": "La requête a réussi mais aucune donnée n'a été retournée.",
+        "adjustError": "Échec de l'ajustement du portefeuille.",
+        "errors": {
+          "loadFailed": "Échec du chargement du portefeuille",
+          "applyFailed": "Échec de l'opération",
+          "noPlayer": "Sélectionnez un joueur à gauche."
+        },
+        "rewards": {
+          "title": "Récompenses",
+          "save": "Enregistrer",
+          "saved": "Enregistré.",
+          "vip": "VIP",
+          "default": "Par défaut"
+        }
+      },
+      "walletTabs": {
+        "wallet": "Portefeuille",
+        "rewards": "Récompenses"
+      },
+      "transactions": {
+        "title": "Relevé du portefeuille",
+        "steamId": "ID Steam : {{steam_id}}",
+        "missingSteamId": "ID Steam manquant.",
+        "empty": "Aucune transaction.",
+        "errors": {
+          "requestFailed": "Échec de la requête"
+        },
+        "loadMore": "Charger plus",
+        "count": "Affichage de {{shown}} sur {{count}}",
+        "countUnknown": "Affichage de {{shown}}",
+        "meta": {
+          "more": "+{{count}} de plus"
+        },
+        "metaKeys": {
+          "order_id": "Commande",
+          "code": "Code",
+          "template_vehicle_entity_id": "Template véhicule",
+          "hours_to_pay": "Heures à payer",
+          "hours_total": "Heures totales",
+          "last_paid_hours": "Dernières heures payées",
+          "points_per_hour": "Points/heure",
+          "rule_id": "Règle"
+        },
+        "refTypes": {
+          "order": "Commande",
+          "playtime_rule": "Règle de temps de jeu",
+          "vehicle": "Véhicule",
+          "admin": "Admin"
+        },
+        "reasons": {
+          "playtime_reward": "Récompense de temps de jeu",
+          "shop_purchase": "Achat en boutique",
+          "vehicle_purchase": "Achat de véhicule",
+          "admin_adjust": "Ajustement admin"
+        },
+        "table": {
+          "createdAt": "Date",
+          "delta": "Delta",
+          "reason": "Motif",
+          "ref": "Référence",
+          "meta": "Meta"
+        }
+      },
+      "playtime": {
+        "title": "Récompenses (temps de jeu)",
+        "help": "Configuration des points/heure et règles VIP.",
+        "enabled": "Activé",
+        "interval": "Intervalle (min)",
+        "maxHoursPerRun": "Heures max/exécution",
+        "baseline": "Baseline",
+        "pointsPerHour": "Points/heure",
+        "loading": "Chargement de la configuration...",
+        "hint": "La configuration se chargera automatiquement lorsque vous ouvrirez cet onglet.",
+        "saved": "Enregistré."
+      },
+      "playtimeRules": {
+        "saveVips": "Enregistrer VIPs",
+        "savedVips": "VIPs enregistrés.",
+        "vipSelectHint": "Sélectionnez des VIPs via la liste des joueurs à droite, puis cliquez sur Enregistrer VIPs."
+      },
+      "attributes": {
+        "level": "Niveau {{level}}",
+        "noChanges": "Aucun changement.",
+        "invalidDays": "La durée de validité doit être un nombre entier d'au moins 1 jour.",
+        "saveSuccess": "Configurations enregistrées avec succès !",
+        "help": {
+          "title": "Comment fonctionne la configuration des prix ?",
+          "description": "Les joueurs achètent des niveaux d'attributs directement dans le chat du jeu à l'aide de commandes RCON (comme /f5, /c3).",
+          "fieldsTitle": "📌 Que signifie chaque champ ?",
+          "fieldsDesc": "La valeur configurée dans chaque Niveau est le coût en crédits pour que le joueur atteigne ce niveau exact d'attribut.",
+          "exampleTitle": "💡 Exemple pratique :",
+          "exampleDesc": "Si le champ Niveau 5 de Force est configuré sur 500, le joueur paie 500 crédits en tapant /f5 pour obtenir Force 5."
+        },
+        "expiration": {
+          "title": "Règles de Validité des Attributs",
+          "description": "En activant la validité temporaire, les niveaux d'attributs acquis par les joueurs reviendront aux valeurs de base avant l'achat après l'expiration de la période sélectionnée.",
+          "enableLabel": "Activer l'expiration temporaire des attributs",
+          "durationLabel": "Durée de validité :"
+        }
+      },
+      "raidWebhooks": {
+        "title": "Webhook de Raid (/rd)",
+        "infoTitle": "Webhook de Raid Personnel (/rd)",
+        "infoDesc": "Cette fonctionnalité permet aux joueurs d'enregistrer leurs propres webhooks Discord dans le chat du jeu pour recevoir des alertes de raid en temps réel. Pour utiliser la commande /rd, les joueurs ont besoin de la permission raid_webhook_manage et de suffisamment de points dans le portefeuille.",
+        "generalConfig": "Configurations Générales",
+        "enableFeature": "Activer la fonctionnalité",
+        "costLabel": "Coût d'activation / renouvellement",
+        "costSuffix": "points",
+        "durationLabel": "Durée de l'abonnement",
+        "durationSuffix": "jours",
+        "accessControlTitle": "Contrôle d'Accès (/rd)",
+        "accessControlDesc": "Autoriser ou interdire l'accès à la commande /rd pour des joueurs spécifiques :",
+        "searchPlaceholder": "Rechercher un joueur (nom ou Steam ID)...",
+        "loadingPlayers": "Chargement des joueurs...",
+        "noPlayersFound": "Aucun joueur trouvé.",
+        "allowed": "Autorisé",
+        "blocked": "Bloqué",
+        "allowBtn": "Autoriser",
+        "blockBtn": "Bloquer",
+        "prevPage": "Précédent",
+        "nextPage": "Suivant",
+        "pageIndicator": "Page {{page}} / {{totalPages}}",
+        "chatMessagesTitle": "Messages de Chat RCON",
+        "chatMessagesDesc": "Personnalisez les réponses envoyées aux joueurs dans le chat du jeu lorsqu'ils interagissent avec la commande /rd. Utilisez les indicateurs pour insérer des variables dynamiques.",
+        "unsavedChanges": "Vous avez des modifications non enregistrées dans ce panneau.",
+        "noChanges": "Aucun changement en attente.",
+        "revertBtn": "Rétablir",
+        "saveBtn": "Enregistrer",
+        "savingBtn": "Enregistrement...",
+        "validationPriceError": "Le prix de l'abonnement doit être un nombre entier supérieur ou égal à 0.",
+        "validationDurationError": "La durée de l'abonnement doit être un nombre entier supérieur ou égal à 0.",
+        "saveSuccess": "Configurations du Webhook de Raid enregistrées avec succès !",
+        "saveError": "Échec de l'enregistrement des paramètres.",
+        "groups": {
+          "commandUsage": "Commandes et Statut",
+          "registration": "Enregistrement Manuel et Renouvellement",
+          "autoRenewal": "Renouvellement Automatique et Avertissements",
+          "errors": "Erreurs et Restrictions"
+        },
+        "labels": {
+          "system_disabled": "Système Désactivé",
+          "usage_help": "Aide à l'utilisation",
+          "no_permission": "Pas de Permission",
+          "insufficient_funds": "Fonds Insuffisants",
+          "disabled_success": "Abonnement Désactivé (Avec solde restant)",
+          "disabled_success_lifetime": "Webhook personnel désactivé avec succès.",
+          "registered_success": "Abonnement enregistré pour {{days}} jours ! Validité : {{expires_at}}. Débit de {{price}} points.",
+          "registered_success_lifetime": "Webhook personnel enregistré avec succès (Plan À Vie) !",
+          "updated_success": "Webhook mis à jour avec succès ! Validité : {{expires_at}}.",
+          "updated_success_lifetime": "Webhook personnel mis à jour avec succès !",
+          "renewed_success": "Abonnement prolongé de {{days}} jours ! Nouvelle validité : {{expires_at}}. Débit de {{price}} points.",
+          "status_info": "Webhook : {{url}} | Validité de l'abonnement : {{expires_at}} {{remaining}}.",
+          "status_expired": "Webhook : {{url}} | Abonnement EXPIRÉ le : {{expires_at}}.",
+          "status_no_subscription": "Vous n'avez pas d'abonnement actif à un webhook personnel.",
+          "invalid_webhook": "URL de webhook invalide. Utilisez une URL Discord valide.",
+          "database_error": "Erreur interne lors de l'enregistrement des paramètres du webhook.",
+          "auto_renew_success": "🔄 Votre abonnement au webhook de raid a été renouvelé automatiquement pour {{days}} jours de plus ! Validité : {{expires_at}}. Débit de {{price}} points.",
+          "auto_renew_failed": "⚠️ Votre abonnement au webhook de raid a expiré et n'a pas pu être renouvelé automatiquement par manque de solde (Prix : {{price}} points | Votre solde : {{balance}}). Veuillez ajouter des points pour réactiver.",
+          "expiry_warning_3_days": "📅 Rappel : Votre abonnement au webhook de raid expire dans 3 jours ({{expires_at}}). S'il y a assez de points, il sera renouvelé automatiquement.",
+          "expiry_warning_1_day": "🚨 Attention : Votre abonnement au webhook de raid expire demain ({{expires_at}}). Veuillez vérifier que vous disposez d'un solde suffisant pour le renouvellement automatique."
+        },
+        "lifetimePlan": {
+          "title": "Plan À Vie (Pas d'expiration)",
+          "desc": "Réglez sur 0 pour activer le mode à vie. La date d'expiration du joueur sera enregistrée comme vide (NULL), le webhook n'expirera jamais et le planificateur en arrière-plan ne tentera aucun débit ni désactivation."
+        }
+      },
+      "wantedBounty": {
+        "tabs": {
+          "variables": "Variables du Système",
+          "alerts": "Alertes & Intégration Discord"
+        },
+        "fields": {
+          "enabled": "Activer le Système",
+          "enabledDesc": "Active ou désactive le système de récompense par killstreak",
+          "killstreakTrigger": "Déclencheur de Série (Min. Kills)",
+          "baseBounty": "Prime de Base",
+          "incrementBounty": "Incrément par Élimination",
+          "cooldown": "Temps de recharge (Heures)",
+          "squadCooldown": "Temps de recharge sortie de Squad (Heures)",
+          "chatColor": "Couleur du chat en jeu",
+          "activationTemplate": "Modèle d'activation",
+          "incrementTemplate": "Modèle d'incrément (Nouveau Kill)",
+          "claimedTemplate": "Modèle de réclamation (Prime Payée)",
+          "placeholdersTitle": "Variables dynamiques:",
+          "topKillersMsgId": "ID du Message Top Tueurs",
+          "shameRankMsgId": "ID du Message Shame Rank"
+        },
+        "placeholders": {
+          "player": "Nom du recherché",
+          "killer": "Nom du chasseur",
+          "victim": "Nom de la victime",
+          "streak": "Série d'éliminations actuelle",
+          "points": "Valeur de la prime"
+        },
+        "tooltips": {
+          "msgId": "Rempli automatiquement par le serveur. Effacez-le pour forcer le bot à publier un nouveau message."
+        },
+        "validation": {
+          "triggerMin": "Le déclencheur de série d'éliminations doit être d'au moins 1."
+        },
+        "saveSuccess": "Configuration des primes mise à jour avec succès.",
+        "resetAll": {
+          "confirmTitle": "Êtes-vous sûr ?",
+          "confirmText": "Cela effacera le statut RECHERCHÉ de tous les joueurs actifs !",
+          "confirmButton": "Oui, réinitialiser tout !",
+          "successText": "Tous les joueurs recherchés ont été réinitialisés."
+        },
+        "resetPlayer": {
+          "confirmTitle": "Réinitialiser Recherché ?",
+          "confirmText": "Voulez-vous retirer le statut recherché de {{name}} ?",
+          "confirmButton": "Oui, réinitialiser",
+          "successText": "Statut recherché réinitialisé pour {{name}}."
+        },
+        "monitoring": {
+          "title": "Recherchés Actifs",
+          "desc": "Liste en tempo réel des joueurs recherchés",
+          "empty": "Aucun joueur recherché pour le moment."
+        },
+        "actions": {
+          "resetAll": "Réinitialiser Tout",
+          "triggerManual": "Définir Recherché Manuel",
+          "resetPlayer": "Réinitialiser la prime de ce joueur",
+          "resetBtn": "Réinitialiser"
+        },
+        "table": {
+          "status": "Statut",
+          "player": "Joueur",
+          "steamId": "Steam ID",
+          "streak": "Série d'éliminations",
+          "bounty": "Valeur de la Prime",
+          "actions": "Actions"
+        },
+        "manualTrigger": {
+          "title": "Définir un Recherché Manuellement",
+          "searchLabel": "Rechercher un Joueur",
+          "searchPlaceholder": "Nom ou Steam ID...",
+          "noPlayers": "Aucun joueur trouvé.",
+          "startSearch": "Saisissez pour rechercher...",
+          "select": "Sélectionner",
+          "selectedPlayer": "Joueur Sélectionné",
+          "valueLabel": "Valeur de la Prime (Points)",
+          "submit": "Rendre Recherché",
+          "successText": "Joueur {{name}} marqué comme recherché manuellement."
+        }
+      }
+    },
+    "integrations": {
+      "title": "Intégrations",
+      "subtitle": "Gérer les intégrations publiques (API keys) pour des bots/systèmes externes.",
+      "tabs": {
+        "publicApi": "API publique"
+      },
+      "status": {
+        "title": "Statut",
+        "active": "Clé active :",
+        "createdAt": "Créée le :",
+        "lastUsedAt": "Dernière utilisation :"
+      },
+      "actions": {
+        "title": "Actions"
+      },
+      "discord": {
+        "title": "Bot Discord",
+        "newKey": "Nouvelle clé",
+        "rotate": "Générer un nouveau mot de passe (rotation)",
+        "disable": "Désactiver la clé actuelle",
+        "history": "Historique",
+        "copy": "Copier",
+        "copied": "Copié",
+        "toggleVisibility": "Afficher/Masquer",
+        "clearSecret": "Effacer",
+        "secretNotice": "Le mot de passe ne sera affiché qu'une seule fois. Sauvegardez-le dans un endroit sûr.",
+        "rotateConfirmTitle": "Générer un nouveau mot de passe ?",
+        "rotateConfirmText": "Cela va invalider la clé actuelle. Continuer ?",
+        "rotateConfirmYes": "Générer",
+        "rotateSuccessTitle": "Mot de passe généré",
+        "rotateSuccessText": "Nouveau mot de passe généré avec succès.",
+        "rotateFailedTitle": "Échec",
+        "rotateErrorTitle": "Erreur",
+        "rotateErrorText": "Échec de la génération du mot de passe.",
+        "disableConfirmTitle": "Désactiver la clé ?",
+        "disableConfirmText": "Cela désactivera la clé actuelle. Continuer ?",
+        "disableConfirmYes": "Désactiver",
+        "disableFailedTitle": "Échec",
+        "copyFailedTitle": "Échec de la copie",
+        "copyFailedText": "Impossible de copier dans le presse-papiers."
+      },
+      "publicApi": {
+        "title": "API publique",
+        "help": "Ces endpoints sont utilisés par des bots/systèmes externes. Ils nécessitent le header X-Integration-Key (le mot de passe généré).",
+        "examples": "Exemples",
+        "baseUrl": "URL de base",
+        "botPrompt": {
+          "title": "Bot Discord (Python)",
+          "copyTitle": "Copier",
+          "copyButton": "Copier le prompt (Discord / Python)",
+          "copied": "Copié",
+          "view": "Voir le prompt",
+          "step1": "1) Vous avez besoin d'un token Discord Bot (Discord Developer Portal)",
+          "step2": "2) Vous avez besoin de X-Integration-Key (générée ici dans le panel)",
+          "step3": "3) Configurez .env et lancez le bot"
+        },
+        "endpoints": {
+          "walletCredit": "Crédit portefeuille",
+          "walletDebit": "Débit portefeuille",
+          "walletBalance": "Solde portefeuille (lecture)",
+          "walletBalanceRateLimit": "Rate limit",
+          "walletBalanceResponseIncludes": "La réponse inclut",
+          "vipActivate": "Activer VIP",
+          "vipDeactivate": "Désactiver VIP"
+        }
+      }
+    },
+    "events": {
+      "title": "Planificateur d'Événements & Homologation",
+      "subtitle": "Gérez les événements personnalisés avec exécution multiple de commandes et file d'attente RCON sécurisée.",
+      "homologationTitle": "Homologation des Commandes RCON",
+      "showPanel": "Afficher le panneau",
+      "hidePanel": "Masquer le panneau",
+      "customEvents": "Événements Personnalisés",
+      "newEvent": "Nouvel Événement",
+      "eventName": "Nom de l'Événement",
+      "eventNamePlaceholder": "Ex : Ravitaillement Aérien",
+      "description": "Description",
+      "descriptionPlaceholder": "Description facultative de l'événement...",
+      "startTime": "Heure de Début",
+      "endTime": "Heure de Fin",
+      "duration": "Durée",
+      "repeatEvent": "Répéter l'Événement ?",
+      "activate": "Activer",
+      "coordinatesLabel": "Coordonnées de Téléportation (Spawn)",
+      "coordinatesPlaceholder": "Collez les coordonnées du jeu (ex : {X=... Y=... Z=...})",
+      "add": "Ajouter",
+      "cancel": "Annuler",
+      "saveEvent": "Enregistrer l'Événement",
+      "noEvents": "Aucun événement enregistré. Cliquez sur \"Nouvel Événement\" pour commencer.",
+      "initialCommands": "Commandes Initiales",
+      "searchCommandPlaceholder": "Rechercher une commande homologuée...",
+      "repeatCommand": "Répéter la commande ?",
+      "every": "toutes les",
+      "minutesUnit": "min",
+      "spawnCoordinates": "Coordonnées de Téléportation (Spawn)",
+      "pointName": "Nom du Point",
+      "pointNamePlaceholder": "Ex : Point de Spawn 1",
+      "telemetryCoordinate": "Coordonnée de Télémétrie",
+      "telemetryPlaceholder": "Collez la télémétrie du spawn...",
+      "pointLabel": "Point {{num}}",
+      "allSaved": "Toutes les commandes et coordonnées sont enregistrées",
+      "unsavedChanges": "Vous avez des modifications non enregistrées dans les commandes ou coordonnées",
+      "saveChanges": "Enregistrer les Modifications",
+      "saving": "Enregistrement...",
+      "successTitle": "Succès",
+      "successCreated": "Événement créé avec succès !",
+      "invalidCoords": "Veuillez coller des coordonnées valides au format du jeu (ex : contenant X, Y et Z).",
+      "invalidFormat": "Format Invalide",
+      "loadDetailsError": "Erreur lors du chargement des détails",
+      "chooseDays": "Choisir les Jours",
+      "start": "Démarrer",
+      "stop": "Arrêter",
+      "confirmDeleteTitle": "Supprimer l'événement ?",
+      "confirmDeleteText": "Êtes-vous sûr de vouloir supprimer l'événement \"{{name}}\" ?",
+      "confirmDeleteBtn": "Supprimer",
+      "deletedSuccess": "Événement supprimé avec succès !",
+      "dayLetter_0": "D",
+      "dayLetter_1": "L",
+      "dayLetter_2": "M",
+      "dayLetter_3": "M",
+      "dayLetter_4": "J",
+      "dayLetter_5": "V",
+      "dayLetter_6": "S",
+      "day_0": "Dim",
+      "day_1": "Lun",
+      "day_2": "Mar",
+      "day_3": "Mer",
+      "day_4": "Jeu",
+      "day_5": "Ven",
+      "day_6": "Sam",
+      "dayLong_0": "Dimanche",
+      "dayLong_1": "Lundi",
+      "dayLong_2": "Mardi",
+      "dayLong_3": "Mercredi",
+      "dayLong_4": "Jeudi",
+      "dayLong_5": "Vendredi",
+      "dayLong_6": "Samedi"
+    }
+  },
+  "players": {
+    "title": "Joueurs",
+    "description": "Sera utilisé pour lister tout sur les joueurs.",
+    "loading": "Chargement des données des joueurs...",
+    "refresh": "Actualiser",
+    "stats": {
+      "onlineNow": "En ligne maintenant",
+      "activePlayers": "Joueurs actifs",
+      "totalPlayers": "Total des joueurs",
+      "newPlayers": "Nouveaux joueurs"
+    },
+    "activeSessions": "Sessions actives",
+    "topPlayers": "Meilleurs joueurs",
+    "noActiveSessions": "Aucune session active pour le moment",
+    "noTopPlayers": "Aucun joueur classé",
+    "noPlayers": "Aucun joueur trouvé",
+    "status": {
+      "online": "En ligne",
+      "offline": "Hors ligne"
+    },
+    "table": {
+      "playerName": "Nom du joueur",
+      "playerId": "ID",
+      "steamId": "ID Steam",
+      "status": "Statut",
+      "timer": "Timer",
+      "vehicles": "Véhicules",
+      "sortByVehicles": "Cliquer pour trier par nombre de véhicules",
+      "loginTime": "Heure de connexion",
+      "duration": "Durée",
+      "totalPlaytime": "Temps total de jeu",
+      "totalSessions": "Total des sessions"
+    },
+    "timer": {
+      "enable": "Activer la permission de la commande /tm",
+      "disable": "Désactiver la permission de la commande /tm",
+      "updated": "Permission mise à jour",
+      "updateSuccess": "Permission mise à jour avec succès",
+      "updateError": "Erreur lors de la mise à jour de la permission",
+      "error": "Erreur"
+    },
+    "elevatedUser": {
+      "enable": "Activer l'utilisateur élevé",
+      "disable": "Désactiver l'utilisateur élevé",
+      "updated": "Utilisateur élevé mis à jour avec succès !",
+      "scheduled": "Utilisateur élevé programmé. Il sera synchronisé lorsque le serveur s'arrêtera.",
+      "success": "Succès",
+      "info": "Information",
+      "error": "Erreur",
+      "updateError": "Erreur lors de la mise à jour de l'utilisateur élevé"
+    },
+    "permissions": {
+      "admin": "Admin",
+      "banned": "Banni",
+      "exclusive": "Exclusif",
+      "server_admin": "Config",
+      "silenced": "Réduit au silence",
+      "whitelisted": "Liste blanche",
+      "raid_webhook_manage": "Webhook Raid",
+      "elevatedUser": "Utilisateur élevé",
+      "enable": "Activer la permission {{type}}",
+      "disable": "Désactiver la permission {{type}}",
+      "updated": "Permission mise à jour",
+      "updateSuccess": "Permission mise à jour avec succès",
+      "updateError": "Erreur lors de la mise à jour de la permission",
+      "error": "Erreur",
+      "alreadyActive": "Permission déjà active",
+      "alreadyInactive": "Permission déjà inactive",
+      "alreadyInState": "Permission déjà dans l'état demandé",
+      "synchronized": "Permission synchronisée",
+      "messages": {
+        "adminActivated": "Permission admin activée avec succès",
+        "adminDeactivated": "Permission admin désactivée avec succès",
+        "bannedActivated": "Joueur banni avec succès",
+        "bannedDeactivated": "Bannissement supprimé avec succès",
+        "configActivated": "Permission config activée avec succès",
+        "configDeactivated": "Permission config désactivée avec succès",
+        "silencedActivated": "Joueur réduit au silence avec succès",
+        "silencedDeactivated": "Silence supprimé avec succès",
+        "whitelistedActivated": "Joueur ajouté à la liste blanche avec succès",
+        "whitelistedDeactivated": "Joueur retiré de la liste blanche avec succès",
+        "raid_webhook_manageActivated": "Permission webhook raid activée avec succès",
+        "raid_webhook_manageDeactivated": "Permission webhook raid désactivée avec succès",
+        "elevatedUserActivated": "Utilisateur élevé activé avec succès",
+        "elevatedUserDeactivated": "Utilisateur élevé désactivé avec succès",
+        "timerActivated": "Permission timer activée avec succès",
+        "timerDeactivated": "Permission timer désactivée avec succès"
+      }
+    },
+    "search": {
+      "placeholder": "Rechercher par nom du joueur ou ID Steam...",
+      "noResults": "Aucun joueur trouvé"
+    },
+    "filters": {
+      "title": "Filtrer par permissions :",
+      "active": "(Actif)",
+      "inactive": "(Inactif)",
+      "clear": "Effacer les filtres"
+    },
+    "pagination": {
+      "showing": "Affichage de {{start}}-{{end}} sur {{total}} joueurs",
+      "prev": "Précédent",
+      "next": "Suivant",
+      "page": "Page {{page}}",
+      "perPage": "{{count}} par page",
+      "limit": "Limite"
+    },
+    "tabs": {
+      "permissions": "Permissions",
+      "vehicles": "Véhicules",
+      "players": "Joueurs",
+      "squads": "Squads",
+      "adminLog": "Admin Log",
+      "chests": "Coffres",
+      "survival": "Survie",
+      "ranking": "Classement",
+      "analyses": "Analyses",
+      "bank": "Banque"
+    },
+    "bank": {
+      "refresh": "Actualiser la banque",
+      "loading": "Chargement...",
+      "empty": "Aucun joueur.",
+      "searchPlaceholder": "Rechercher par nom du joueur ou ID Steam...",
+      "showing": "Affichage de {{start}}-{{end}} sur {{total}} joueurs",
+      "columns": {
+        "playerName": "Nom",
+        "steamId": "ID Steam",
+        "accountNumber": "Compte",
+        "money": "Argent",
+        "gold": "Or"
+      },
+      "errors": {
+        "loadFailed": "Échec du chargement des comptes bancaires"
+      }
+    },
+    "squads": {
+      "refresh": "Actualiser les squads",
+      "total": "{{count}} squads",
+      "syncedAt": "Données synchronisées à {{date}}",
+      "syncedUnknown": "Heure de synchronisation indisponible",
+      "loading": "Chargement des squads...",
+      "empty": "Aucun squad trouvé.",
+      "tryAgain": "Réessayer",
+      "errors": {
+        "loadFailed": "Impossible de charger les squads."
+      },
+      "columns": {
+        "rank": "Rang",
+        "squad": "Squad",
+        "score": "Score",
+        "members": "Membres",
+        "vehicles": "Véhicules",
+        "flags": "Drapeaux",
+        "activity": "Activité",
+        "message": "Message",
+        "information": "Information"
+      },
+      "placeholders": {
+        "noMessage": "Aucun message"
+      },
+      "memberCountLimited": "{{count}} / {{limit}} membres",
+      "memberCount": "{{count}} membres",
+      "activity": {
+        "lastLogin": "Dernière connexion {{date}}",
+        "lastLogout": "Dernière déconnexion {{date}}",
+        "noActivity": "Aucune activité récente"
+      },
+      "members": {
+        "title": "Membres",
+        "summary": "{{count}} membres",
+        "summaryZero": "Aucun membre synchronisé",
+        "loading": "Chargement des membres...",
+        "empty": "Aucun membre trouvé.",
+        "loadMore": "Charger plus",
+        "errorLoad": "Impossible de charger les membres du squad.",
+        "notFound": "Squad introuvable.",
+        "rank": "Rang",
+        "rankUnknown": "Aucun rang",
+        "fame": "Fame",
+        "playtime": "Temps de jeu",
+        "lastLogin": "Dernière connexion",
+        "lastLogout": "Dernière déconnexion",
+        "steamUnknown": "ID Steam indisponible",
+        "nameUnknown": "Nom indisponible"
+      },
+      "flags": {
+        "title": "ID des drapeaux :",
+        "total": "Total : {{count}} drapeau(x)"
+      }
+    },
+    "rankings": {
+      "refresh": "Actualiser les classements",
+      "loading": "Chargement des classements...",
+      "empty": "Aucun classement trouvé",
+      "tryAgain": "Réessayer",
+      "searchPlaceholder": "Rechercher par nom du joueur...",
+      "itemsPerPage": "Éléments par page",
+      "showing": "Affichage de {{start}}-{{end}} sur {{total}} joueurs",
+      "columnsLabel": "Colonnes",
+      "columnsShort": "Col.",
+      "selectColumns": "Sélectionner les colonnes",
+      "selectAll": "Tout sélectionner",
+      "reset": "Réinitialiser",
+      "toggleAll": "Tous",
+      "sortBy": "Trier par",
+      "sortDesc": "Tri décroissant",
+      "sortAsc": "Tri croissant",
+      "categories": {
+        "fixed": "Fixe",
+        "main": "Principal",
+        "combat": "Combat",
+        "survival": "Survie",
+        "lockpicking": "Crochetage"
+      },
+      "columns": {
+        "rank": "Rang",
+        "player": "Joueur",
+        "kills": "Éliminations",
+        "deaths": "Morts",
+        "kdr": "KDR",
+        "fame": "Fame",
+        "minutesSurvived": "Minutes",
+        "topSniper": "Top Sniper",
+        "headshots": "Headshots",
+        "suicides": "Suicides",
+        "vehiclesDestroyed": "Véhicules détruits",
+        "animalsKilled": "Animaux tués",
+        "playersKnockedOut": "K.O.",
+        "overdoses": "Overdoses",
+        "highestWeight": "Poids max",
+        "highestDefecation": "Défécation max",
+        "lockpickBasic": "Crochetage basique",
+        "lockpickMedium": "Crochetage moyen",
+        "lockpickAdvanced": "Crochetage avancé",
+        "lockpickVeryEasy": "Crochetage très facile",
+        "lockpickDiallock": "Cadenas à code"
+      }
+    },
+    "vehicles": {
+      "loading": "Chargement des véhicules...",
+      "noVehicles": "Aucun véhicule trouvé",
+      "total": "Total : {{count}} véhicule(s)",
+      "summary": {
+        "title": "Résumé",
+        "active": "Actif",
+        "inactive": "Inactif",
+        "disappeared": "Disparu",
+        "destroyed": "Détruit"
+      },
+      "filters": {
+        "all": "Tous",
+        "active": "Actif",
+        "inactive": "Inactif",
+        "disappeared": "Disparu",
+        "destroyed": "Détruit"
+      },
+      "details": {
+        "entityId": "ID du conteneur",
+        "vehicleEntityId": "ID du véhicule",
+        "vehicleClass": "Classe",
+        "location": "Emplacement",
+        "lastChange": "Dernier changement",
+        "functional": "Fonctionnel",
+        "nonFunctional": "Non fonctionnel",
+        "status": "Statut",
+        "openMap": "Ouvrir dans SCUM Map"
+      },
+      "status": {
+        "active": "Actif",
+        "inactive": "Inactif",
+        "disappeared": "Disparu",
+        "destroyed": "Détruit"
+      },
+      "error": {
+        "loadError": "Erreur lors du chargement des véhicules",
+        "notFound": "Joueur introuvable ou aucun véhicule"
+      }
+    },
+    "chests": {
+      "loading": "Chargement des coffres...",
+      "refresh": "Actualiser les coffres",
+      "retry": "Réessayer",
+      "loadError": "Échec du chargement des coffres du joueur",
+      "empty": "Aucun coffre trouvé pour ce joueur.",
+      "noCoordinates": "Aucune coordonnée",
+      "unknownName": "Coffre",
+      "unknownType": "Type inconnu",
+      "unknownVehicle": "Véhicule inconnu",
+      "summary": {
+        "total": "{{count}} coffre(s) synchronisé(s)",
+        "visible": "{{count}} chargé(s) dans cette liste",
+        "limitWarning": "Affichage uniquement des {{limit}} premiers enregistrements",
+        "withCoords": "Avec coordonnées",
+        "withoutCoords": "Dans des véhicules",
+        "types": "Types"
+      },
+      "fields": {
+        "steamId": "ID Steam",
+        "location": "Emplacement",
+        "lastSeen": "Dernière vue",
+        "vehicle": "Véhicule",
+        "openMap": "Ouvrir dans SCUM Map"
+      }
+    },
+    "survival": {
+      "loading": "Chargement des stats de survie...",
+      "error": "Échec du chargement des stats de survie.",
+      "retry": "Réessayer",
+      "noData": "Aucune donnée de survie disponible pour ce joueur.",
+      "snapshot": "Instantané à {{date}}",
+      "sections": {
+        "combat": "Combat",
+        "survival": "Survie",
+        "mobility": "Mobilité",
+        "crafting": "Craft & Loot",
+        "hunting": "Chasse & menaces",
+        "progress": "Progression & records",
+        "misc": "Temps forts"
+      },
+      "fields": {
+        "kills": "Éliminations",
+        "deaths": "Morts",
+        "deaths_by_prisoners": "Morts par prisonniers",
+        "players_knocked_out": "Joueurs mis K.O.",
+        "prisoner_kills": "Prisonniers tués",
+        "kdr": "KDR",
+        "shots_fired": "Tirs effectués",
+        "shots_hit": "Tirs touchés",
+        "accuracy_percent": "Précision (%)",
+        "headshots": "Headshots",
+        "firearm_kills": "Kills à l'arme à feu",
+        "bare_handed_kills": "Kills à mains nues",
+        "archery_kills": "Kills à l'arc",
+        "melee_kills": "Kills au corps à corps",
+        "melee_weapon_hits": "Coups d'arme de mêlée",
+        "melee_weapon_swings": "Balancements d'arme de mêlée",
+        "drone_kills": "Kills drone",
+        "sentry_kills": "Kills sentry",
+        "longest_kill_distance": "Distance du kill le plus long (m)",
+        "longest_animal_kill_distance": "Distance du kill animal le plus long (m)",
+        "highest_damage_taken": "Dégâts max subis",
+        "minutes_survived": "Minutes survécues",
+        "food_eaten": "Nourriture mangée",
+        "liquid_drank": "Liquide bu",
+        "alcohol_drank": "Alcool bu",
+        "total_calories_intake": "Calories totales",
+        "mushrooms_eaten": "Champignons mangés",
+        "wounds_patched": "Plaies pansées",
+        "heart_attacks": "Crises cardiaques",
+        "overdose": "Overdoses",
+        "teeth_lost": "Dents perdues",
+        "diarrheas": "Diarrhées",
+        "starvation": "Famine",
+        "vomits": "Vomissements",
+        "total_defecations": "Défécations",
+        "total_urinations": "Mictions",
+        "times_mauled_by_bear": "Attaques d'ours",
+        "times_caught_by_shark": "Capturé par requin",
+        "times_escaped_shark_bite": "Morsures de requin évitées",
+        "animals_killed": "Animaux tués",
+        "animals_skinned": "Animaux dépecés",
+        "puppets_killed": "Puppets tués",
+        "puppets_knocked_out": "Puppets mis K.O.",
+        "bears_killed": "Ours tués",
+        "wolves_killed": "Loups tués",
+        "boars_killed": "Sangliers tués",
+        "goats_killed": "Chèvres tuées",
+        "horses_killed": "Chevaux tués",
+        "donkeys_killed": "Ânes tués",
+        "rabbits_killed": "Lapins tués",
+        "chickens_killed": "Poulets tués",
+        "crows_killed": "Corbeaux tués",
+        "seagulls_killed": "Mouettes tuées",
+        "deers_killed": "Cerfs tués",
+        "distance_travelled_by_foot": "Distance à pied (m)",
+        "distance_travelled_in_vehicle": "Distance en véhicule (m)",
+        "distance_travelled_swimming": "Distance à la nage (m)",
+        "distance_travel_by_boat": "Distance en bateau (m)",
+        "distance_sailed": "Distance naviguée (m)",
+        "locks_picked": "Serrures crochetées",
+        "arrows_crafted": "Flèches fabriquées",
+        "bullets_crafted": "Balles fabriquées",
+        "guns_crafted": "Armes fabriquées",
+        "melee_weapons_crafted": "Armes de mêlée fabriquées",
+        "clothing_crafted": "Vêtements fabriqués",
+        "foliage_cut": "Végétation coupée",
+        "containers_looted": "Conteneurs fouillés",
+        "items_picked_up": "Objets ramassés",
+        "items_put_into_containers": "Objets placés dans des conteneurs",
+        "doors_claimed": "Portes revendiquées",
+        "lights_fired": "Fusées tirées",
+        "highest_positive_fame_points": "Fame positive max",
+        "lowest_negative_fame_points": "Fame négative min",
+        "highest_weight_carried": "Poids transporté max",
+        "highest_fat": "Graisse max",
+        "highest_muscle_mass": "Masse musculaire max",
+        "last_fame_point_award_consecutive_days": "Jours de fame consécutifs",
+        "value": "Valeur"
+      }
+    },
+    "analyses": {
+      "title": "Rapport des joueurs en ligne",
+      "average": "Moyenne",
+      "peak": "Pic",
+      "lowest": "Plus bas",
+      "players": "joueurs",
+      "loading": "Chargement des données...",
+      "error": "Erreur lors du chargement des données",
+      "noData": "Aucune donnée disponible pour la période sélectionnée",
+      "period": {
+        "7days": "7 jours",
+        "30days": "30 jours",
+        "90days": "90 jours"
+      },
+      "granularity": {
+        "hour": "Par heure",
+        "day": "Par jour"
+      },
+      "absolutePeak": {
+        "title": "Pic absolu",
+        "date": "Date/Heure",
+        "players": "joueurs en ligne",
+        "loading": "Chargement du pic absolu...",
+        "noData": "Aucun pic enregistré sur la période"
+      }
+    }
+  },
+  "i18nMenu": {
+    "language": "Langue"
+  },
+  "menu": {
+    "title": "Menu"
+  },
+  "common": {
+    "ok": "OK",
+    "cancel": "Annuler",
+    "confirm": "Confirmer",
+    "yes": "Oui",
+    "no": "Non",
+    "loading": "Chargement...",
+    "success": "Succès",
+    "error": "Erreur",
+    "info": "Info"
+  },
+  "auth": {
+    "logout": {
+      "button": "Se déconnecter",
+      "confirmTitle": "Confirmer la déconnexion",
+      "confirmMessage": "Voulez-vous vraiment vous déconnecter ?",
+      "success": "Déconnexion réussie"
+    },
+    "login": {
+      "title": "Se connecter",
+      "subtitle": "Connectez-vous pour continuer",
+      "username": "Nom d'utilisateur",
+      "password": "Mot de passe",
+      "usernamePlaceholder": "Saisissez votre nom d'utilisateur",
+      "passwordPlaceholder": "Saisissez votre mot de passe",
+      "submit": "Se connecter",
+      "loading": "Connexion...",
+      "rememberMe": "Se souvenir de moi",
+      "errors": {
+        "invalidCredentials": "Identifiants invalides",
+        "networkError": "Erreur de connexion au serveur. Vérifiez votre connexion.",
+        "required": "Veuillez remplir tous les champs"
+      }
+    },
+    "changePassword": {
+      "title": "Changement de mot de passe requis",
+      "subtitle": "Veuillez changer votre mot de passe par défaut",
+      "currentPassword": "Mot de passe actuel",
+      "newPassword": "Nouveau mot de passe",
+      "confirmPassword": "Confirmer le nouveau mot de passe",
+      "currentPasswordPlaceholder": "Saisissez votre mot de passe actuel",
+      "newPasswordPlaceholder": "Saisissez un nouveau mot de passe (min. 8 caractères)",
+      "confirmPasswordPlaceholder": "Confirmez le nouveau mot de passe",
+      "submit": "Changer le mot de passe",
+      "loading": "Modification...",
+      "errors": {
+        "currentIncorrect": "Le mot de passe actuel est incorrect",
+        "minLength": "Le mot de passe doit comporter au moins 8 caractères",
+        "mismatch": "Les mots de passe ne correspondent pas",
+        "networkError": "Erreur lors du changement de mot de passe. Veuillez réessayer.",
+        "required": "Veuillez remplir tous les champs"
+      },
+      "success": "Mot de passe modifié avec succès !"
+    },
+    "passwordReset": {
+      "title": "Réinitialiser le mot de passe",
+      "subtitle": "Saisissez votre nom d'utilisateur pour réinitialiser votre mot de passe",
+      "username": "Nom d'utilisateur",
+      "usernamePlaceholder": "Saisissez votre nom d'utilisateur",
+      "submit": "Réinitialiser",
+      "loading": "Réinitialisation...",
+      "backToLogin": "Retour à la connexion",
+      "success": "Mot de passe réinitialisé avec succès. Vérifiez le nouveau mot de passe.",
+      "errors": {
+        "notFound": "Utilisateur introuvable",
+        "networkError": "Erreur de réinitialisation du mot de passe. Veuillez réessayer.",
+        "required": "Veuillez saisir votre nom d'utilisateur"
+      }
+    }
+  },
+  "home": {
+    "time": "Heure",
+    "weatherMoon": "Météo/Lune",
+    "players": "Joueurs",
+    "status": "Statut",
+    "temperatures": "Températures",
+    "weatherConditions": "Conditions météo",
+    "astronomy": "Astronomie",
+    "astronomyAndClimate": "Astronomie | Climat",
+    "temp": {
+      "air": "Air",
+      "water": "Eau"
+    },
+    "fog": {
+      "none": "Pas de brouillard",
+      "light": "Brouillard léger",
+      "moderate": "Brouillard modéré",
+      "heavy": "Brouillard dense",
+      "cumulonimbus": "Brouillard de cumulonimbus"
+    },
+    "moon": {
+      "rotation": "Rotation",
+      "new": "Nouvelle lune",
+      "waxingCrescent": "Premier croissant",
+      "firstQuarter": "Premier quartier",
+      "waxingGibbous": "Gibbeuse croissante",
+      "full": "Pleine lune",
+      "waningGibbous": "Gibbeuse décroissante",
+      "lastQuarter": "Dernier quartier",
+      "waningCrescent": "Dernier croissant"
+    },
+    "playerStats": {
+      "title": "Statistiques des joueurs",
+      "totalPlayers": "Joueurs au total",
+      "onlineNow": "En ligne",
+      "activePlayers": "Joueurs actifs",
+      "newPlayers": "Nouveaux joueurs",
+      "activeSessions": "Sessions actives",
+      "topPlayers": "Meilleurs joueurs",
+      "sessions": "Sessions",
+      "playtime": "Temps de jeu"
+    },
+    "peakHours": {
+      "title": "Heures de pointe",
+      "avgPlayers": "moy. joueurs",
+      "peak": "Pic",
+      "collecting": "Collecte des données... Les heures de pointe apparaîtront bientôt."
+    },
+    "map": {
+      "title": "Carte (Canvas)",
+      "soon": "Bientôt : bunkers, joueurs, événements",
+      "placeholder": "Canvas de la carte (placeholder)",
+      "controls": {
+        "scrollToggleLabel": "Zoom molette",
+        "scrollToggleOnTitle": "Zoom molette activé",
+        "scrollToggleOffTitle": "Zoom molette désactivé",
+        "zoomOutTitle": "Dézoomer (minimum 100%)",
+        "zoomInTitle": "Zoomer",
+        "zoomDisabledTitle": "Activez le zoom molette pour utiliser les contrôles",
+        "resetTitle": "Réinitialiser le zoom et la position"
+      },
+      "input": {
+        "label": "Collez les coordonnées du jeu :",
+        "placeholder": "Coordonnées (ex : {X=... Y=...}) ou rechercher par joueur (coffres et drapeaux)",
+        "submit": "Rechercher"
+      },
+      "messages": {
+        "pasteCoords": "Veuillez coller les coordonnées du jeu.",
+        "invalidFormat": "Format de coordonnées invalide. Utilisez : {X=valeur Y=valeur ...}",
+        "invalidNumbers": "Coordonnées invalides. Vérifiez les valeurs X et Y.",
+        "processError": "Impossible de traiter les coordonnées."
+      },
+      "info": {
+        "title": "📊 Informations de position",
+        "gameCoords": "Coordonnées du jeu",
+        "mapPixels": "Position sur la carte (px)",
+        "quadrant": "Quadrant"
+      },
+      "drag": {
+        "active": "Glisser pour déplacer"
+      }
+    }
+  },
+  "map": {
+    "filters": {
+      "title": "Filtres",
+      "searchPlaceholder": "Tapez pour rechercher...",
+      "itemsCount": "{{count}} éléments",
+      "empty": "Aucun filtre ne correspond",
+      "labels": {
+        "chests": "Coffres",
+        "gps": "GPS",
+        "flags": "Drapeaux"
+      },
+      "descriptions": {
+        "chests": "Afficher tous les coffres synchronisés",
+        "gps": "Joueurs en ligne avec GPS",
+        "flags": "Afficher tous les drapeaux sur la carte"
+      }
+    },
+    "chests": {
+      "panelTitle": "Coffres sur la carte",
+      "loading": "Chargement des coffres...",
+      "error": "Échec du chargement des coffres",
+      "markersCount": "{{count}} coffres affichés",
+      "noLocationCount": "{{count}} sans coordonnées",
+      "lastSync": "Dernier instantané il y a {{time}}",
+      "refresh": "Actualiser les coffres",
+      "retry": "Réessayer",
+      "filter": {
+        "active": "Filtre : {{query}}",
+        "clear": "Effacer",
+        "noMatches": "Aucun coffre trouvé pour \"{{query}}\""
+      },
+      "vehicleList": {
+        "title": "Coffres stockés dans des véhicules",
+        "description": "Les coordonnées ne sont pas disponibles car les coffres sont à l'intérieur des véhicules.",
+        "empty": "Aucun coffre stocké dans des véhicules.",
+        "totalTitle": "Résumé",
+        "totalCount": "{{count}} coffres",
+        "groupTitle": "{{vehicle}}",
+        "unknownVehicle": "Véhicule inconnu",
+        "owner": "Joueur",
+        "lastSeen": "Vu pour la dernière fois le {{date}}",
+        "chestsCount": "{{count}} coffres"
+      }
+    },
+    "gps": {
+      "panelTitle": "GPS des joueurs",
+      "loading": "Chargement du GPS...",
+      "error": "Échec du chargement du GPS",
+      "markersCount": "{{count}} joueurs",
+      "markersCount_one": "{{count}} joueur",
+      "lastSync": "Synchronisé il y a {{time}}",
+      "refresh": "Actualiser le GPS",
+      "retry": "Réessayer"
+    },
+    "flags": {
+      "error": "Échec du chargement des drapeaux",
+      "noOwner": "Aucun propriétaire",
+      "clickToOpen": "Cliquer pour ouvrir sur Scum Map"
+    },
+    "search": {
+      "noMatches": "Aucun résultat pour \"{{query}}\" (recherche dans les coffres et drapeaux)"
+    }
+  },
+  "server": {
+    "title": "Serveur SCUM",
+    "description": "Gérez le serveur SCUM. Démarrez, arrêtez ou redémarrez le serveur lorsque nécessaire.",
+    "errors": {
+      "nssmStartFailed": "Échec du démarrage du service via NSSM. NSSM n'a pas pu démarrer le service. Vérifiez les logs du service Windows."
+    },
+    "status": {
+      "label": "Statut",
+      "running": "En cours d'exécution",
+      "stopped": "Arrêté"
+    },
+    "refreshStatus": "Actualiser le statut",
+    "fields": {
+      "service": "Service",
+      "port": "Port",
+      "maxPlayers": "Joueurs max",
+      "battlEye": "BattlEye",
+      "serviceStatus": "Statut du service"
+    },
+    "yes": "Oui",
+    "no": "Non",
+    "loadingStatus": "Chargement du statut...",
+    "actions": {
+      "success": "Succès",
+      "error": "Erreur",
+      "started": "Démarré",
+      "stopped": "Arrêté",
+      "restarted": "Redémarré",
+      "withSuccess": "avec succès",
+      "unknownError": "Erreur inconnue",
+      "requestError": "Erreur de requête",
+      "restart": {
+        "initiated": "Redémarrage lancé",
+        "message": "Redémarrage lancé. Le processus peut prendre plusieurs minutes, surtout s'il y a des Elevated Users à synchroniser",
+        "inProgress": "Redémarrage en cours",
+        "checking": "Vérification du statut du serveur",
+        "timeout": "Redémarrage en cours",
+        "timeoutMessage": "Le redémarrage prend plus de temps que prévu. Veuillez vérifier le statut du serveur manuellement"
+      }
+    },
+    "buttons": {
+      "start": {
+        "label": "Démarrer",
+        "loading": "Démarrage...",
+        "tooltip": "Le serveur est déjà en cours d'exécution"
+      },
+      "stop": {
+        "label": "Arrêter",
+        "loading": "Arrêt...",
+        "tooltip": "Le serveur est déjà arrêté"
+      },
+      "restart": {
+        "label": "Redémarrer",
+        "loading": "Redémarrage...",
+        "restarting": "Redémarrage...",
+        "tooltip": "Le serveur doit être en cours d'exécution pour redémarrer"
+      }
+    },
+    "serverInfo": {
+      "title": "Informations sur le serveur",
+      "service": "Service",
+      "pid": "PID",
+      "uptime": "Temps de fonctionnement"
+    },
+    "scheduler": {
+      "title": "Système de planification",
+      "description": "Gérer les redémarrages automatiques du serveur.",
+      "tabs": {
+        "status": "Statut",
+        "config": "Configuration",
+        "logs": "Logs"
+      },
+      "status": {
+        "enabled": "Activé",
+        "disabled": "Désactivé",
+        "running": "En cours d'exécution",
+        "stopped": "Arrêté",
+        "nextRestart": "Prochain redémarrage",
+        "noRestartScheduled": "Aucun redémarrage programmé",
+        "restartTimes": "Heures de redémarrage",
+        "scheduledJobs": "Tâches planifiées",
+        "logsCount": "Total des logs",
+        "notificationMinutes": "Notifications (minutes avant)"
+      },
+      "logs": {
+        "title": "Logs du planificateur",
+        "loading": "Chargement des logs...",
+        "empty": "Aucun log trouvé",
+        "limit": "Limite",
+        "refresh": "Actualiser",
+        "filter": {
+          "label": "Filtrer par type",
+          "all": "Tous",
+          "notification": "Notification",
+          "restart": "Redémarrage",
+          "scheduler_started": "Planificateur démarré",
+          "scheduler_stopped": "Planificateur arrêté",
+          "config_updated": "Configuration mise à jour",
+          "restart_scheduled": "Redémarrage planifié",
+          "notification_scheduled": "Notification planifiée",
+          "restart_started": "Redémarrage lancé",
+          "restart_success": "Redémarrage réussi",
+          "restart_failed": "Redémarrage échoué",
+          "force_restart": "Redémarrage forcé"
+        },
+        "columns": {
+          "timestamp": "Date/Heure",
+          "eventType": "Type",
+          "message": "Message",
+          "data": "Données"
+        }
+      },
+      "countdown": {
+        "hours": "h",
+        "minutes": "min",
+        "seconds": "s",
+        "passed": "Déjà passé"
+      },
+      "controls": {
+        "start": {
+          "label": "Démarrer le planificateur",
+          "loading": "Démarrage...",
+          "tooltip": "Le planificateur est déjà en cours d'exécution"
+        },
+        "stop": {
+          "label": "Arrêter le planificateur",
+          "loading": "Arrêt...",
+          "tooltip": "Le planificateur est déjà arrêté"
+        },
+        "restart": {
+          "label": "Redémarrer le planificateur",
+          "loading": "Redémarrage...",
+          "tooltip": "Redémarrer le planificateur avec la configuration actuelle"
+        },
+        "forceRestart": {
+          "label": "Forcer le redémarrage",
+          "loading": "Redémarrage...",
+          "tooltip": "Forcer un redémarrage immédiat du serveur",
+          "confirm": {
+            "title": "Confirmer le redémarrage",
+            "message": "Êtes-vous sûr de vouloir forcer un redémarrage du serveur maintenant ? Cette action est irréversible.",
+            "confirmButton": "Oui, redémarrer",
+            "cancelButton": "Annuler"
+          }
+        }
+      },
+      "config": {
+        "title": "Configuration du planificateur",
+        "enabled": "Activer le planificateur",
+        "autoStart": "Démarrage automatique",
+        "restartTimes": {
+          "label": "Heures de redémarrage",
+          "placeholder": "HH:MM",
+          "add": "Ajouter une heure",
+          "remove": "Supprimer",
+          "invalidFormat": "Format invalide. Utilisez HH:MM (ex. : 01:00)",
+          "empty": "Aucune heure configurée"
+        },
+        "notificationMinutes": {
+          "label": "Minutes de notification",
+          "placeholder": "Ex : 10, 5, 1",
+          "help": "Minutes avant le redémarrage pour envoyer des notifications (séparées par des virgules)"
+        },
+        "timezone": {
+          "label": "Fuseau horaire",
+          "placeholder": "Ex : America/Sao_Paulo"
+        },
+        "save": {
+          "label": "Enregistrer la configuration",
+          "loading": "Enregistrement...",
+          "success": "Configuration enregistrée avec succès",
+          "error": "Erreur lors de l'enregistrement de la configuration"
+        }
+      },
+      "errors": {
+        "loadStatus": "Erreur lors du chargement du statut du planificateur",
+        "loadConfig": "Erreur lors du chargement de la configuration",
+        "loadLogs": "Erreur lors du chargement des logs",
+        "startFailed": "Erreur lors du démarrage du planificateur",
+        "stopFailed": "Erreur lors de l'arrêt du planificateur",
+        "restartFailed": "Erreur lors du redémarrage du planificateur",
+        "saveFailed": "Erreur lors de l'enregistrement de la configuration",
+        "forceRestartFailed": "Erreur lors du redémarrage forcé",
+        "notInitialized": "RestartScheduler non initialisé",
+        "noTimesConfigured": "Aucune heure de redémarrage configurée",
+        "invalidTimeFormat": "Format d'heure invalide"
+      },
+      "success": {
+        "started": "Planificateur démarré avec succès",
+        "stopped": "Planificateur arrêté avec succès",
+        "restarted": "Planificateur redémarré avec succès",
+        "configSaved": "Configuration enregistrée et planificateur redémarré",
+        "forceRestart": "Serveur redémarré avec succès"
+      }
+    },
+    "notifications": {
+      "title": "Système de notifications",
+      "description": "Notifications personnalisées directement dans le jeu",
+      "loading": "Chargement du statut des notifications...",
+      "tabs": {
+        "status": "Statut",
+        "custom": "Message rapide",
+        "admin": "Message administratif",
+        "tools": "Opérations"
+      },
+      "errors": {
+        "loadStatus": "Erreur lors du chargement du statut des notifications",
+        "sendFailed": "Échec de l'envoi de la notification",
+        "clearFailed": "Échec de la suppression des notifications",
+        "resetCooldownsFailed": "Échec de la réinitialisation des délais",
+        "restartCreateFailed": "Échec de la création des notifications de redémarrage"
+      },
+      "scheduledLink": "Programmées",
+      "status": {
+        "enabled": "Activé",
+        "disabled": "Désactivé",
+        "running": "En cours d'exécution",
+        "stopped": "Arrêté",
+        "checkInterval": "Intervalle de vérification",
+        "restartProtection": "Protection de redémarrage",
+        "minutesSuffix": "min",
+        "secondsSuffix": "s",
+        "lastRestart": "Dernier paquet de redémarrage",
+        "disabledHint": "Le système de notifications est désactivé dans le backend.",
+        "notifier": {
+          "title": "SCUM Notifier",
+          "enabled": "Notifier activé",
+          "file": "Fichier Notifications.json",
+          "filePresent": "Trouvé",
+          "fileMissing": "Introuvable",
+          "currentCount": "Notifications dans le fichier",
+          "highestPriority": "Priorité la plus élevée"
+        }
+      },
+      "cooldowns": {
+        "title": "Délais",
+        "types": {
+          "restart": "Redémarrage",
+          "custom": "Personnalisées",
+          "events": "Administratives"
+        },
+        "lastSent": "Dernier envoi : {{value}}",
+        "ready": "Prêt",
+        "blocked": "Délai actif. Veuillez attendre {{time}}."
+      },
+      "forms": {
+        "custom": {
+          "title": "Message rapide",
+          "message": "Message",
+          "placeholder": "Ex : Le serveur redémarrera dans 15 minutes.",
+          "duration": "Durée (secondes)",
+          "color": "Couleur (R-G-B)",
+          "submit": "Envoyer la notification",
+          "help": "À utiliser pour des annonces ponctuelles ou urgentes. Respectez le délai configuré pour éviter le spam."
+        },
+        "admin": {
+          "title": "Message administratif",
+          "template": "Modèle",
+          "loading": "Chargement des modèles...",
+          "select": "Sélectionnez un modèle",
+          "preview": "Aperçu",
+          "color": "Couleur par défaut",
+          "duration": "Durée par défaut",
+          "examples": "Exemples",
+          "message": "Message complémentaire (optionnel)",
+          "messagePlaceholder": "Texte supplémentaire affiché avec le modèle",
+          "grantedBy": "Accordé par",
+          "notes": "Notes",
+          "submit": "Envoyer le message administratif"
+        },
+        "restart": {
+          "title": "Notifications de redémarrage",
+          "time": "Heure (HH:MM)",
+          "date": "Date (optionnel)",
+          "submit": "Générer les notifications"
+        }
+      },
+      "actions": {
+        "title": "Actions administratives",
+        "description": "Opérations critiques du système de notifications.",
+        "refresh": "Actualiser le statut",
+        "cancel": "Annuler",
+        "restart": {
+          "confirmTitle": "Générer des notifications de redémarrage",
+          "confirmMessage": "Générer des notifications pour {{date}} à {{time}} ?",
+          "confirmButton": "Oui, générer",
+          "today": "aujourd'hui"
+        },
+        "clear": {
+          "label": "Supprimer les notifications",
+          "confirmTitle": "Supprimer les notifications ?",
+          "confirmMessage": "Cela supprimera toutes les notifications actives.",
+          "confirmButton": "Oui, supprimer"
+        },
+        "resetCooldowns": {
+          "label": "Réinitialiser les délais",
+          "confirmTitle": "Réinitialiser les délais ?",
+          "confirmMessage": "Cela réinitialisera tous les délais d'envoi des notifications.",
+          "confirmButton": "Oui, réinitialiser"
+        }
+      },
+      "success": {
+        "sent": "Notification envoyée",
+        "customSent": "Message rapide envoyé.",
+        "adminSent": "Message administratif envoyé.",
+        "cleared": "Notifications supprimées.",
+        "cooldownsReset": "Délais réinitialisés.",
+        "restartCreated": "Notifications de redémarrage générées",
+        "restartCreatedDetails": "{{count}} notifications créées avec la priorité {{priority}}."
+      },
+      "validation": {
+        "messageRequired": "Le message est obligatoire.",
+        "durationInvalid": "La durée doit être un nombre entier supérieur à 0.",
+        "colorInvalid": "Indiquez la couleur au format R-G-B (0-255).",
+        "templateRequired": "Sélectionnez un modèle avant d'envoyer.",
+        "restartTimeInvalid": "Indiquez une heure valide au format HH:MM.",
+        "restartDateInvalid": "Indiquez la date au format AAAA-MM-JJ."
+      },
+      "lastSent": {
+        "never": "Jamais"
+      }
+    },
+    "scheduledNotifications": {
+      "title": "Notifications programmées",
+      "description": "Créez, validez et compilez des notifications programmées personnalisées dans SCUM Notifications.json.",
+      "empty": "Aucune notification programmée.",
+      "actions": {
+        "create": "Créer",
+        "edit": "Modifier",
+        "validate": "Valider",
+        "compile": "Compiler"
+      },
+      "form": {
+        "createTitle": "Créer une notification programmée",
+        "editTitle": "Modifier une notification programmée",
+        "validated": "Validée",
+        "notValidated": "Non validée"
+      },
+      "fields": {
+        "enabled": "Activée",
+        "title": "Titre",
+        "titlePlaceholder": "(optionnel)",
+        "message": "Message",
+        "messagePlaceholder": "Message",
+        "duration": "Durée (minutes)",
+        "color": "Couleur (R-G-B)",
+        "schedule": "Planification",
+        "scheduleType": "Type",
+        "dailyTime": "Heure (HH:MM)",
+        "onceDatetime": "Date/heure (ISO)",
+        "offsetMinutes": "Décalage (minutes)",
+        "schedulePreview": "Planification générée :"
+      },
+      "scheduleTypes": {
+        "once": "Une fois",
+        "daily": "Quotidien",
+        "relativeToRestart": "Relatif au redémarrage"
+      },
+      "scheduleLabels": {
+        "once": "Une fois : {{value}}",
+        "daily": "Quotidien : {{value}}",
+        "relativeToRestart": "Redémarrage {{value}} min"
+      },
+      "colors": {
+        "white": "Blanc",
+        "red": "Rouge",
+        "yellow": "Jaune",
+        "green": "Vert",
+        "blue": "Bleu",
+        "purple": "Violet",
+        "orange": "Orange"
+      },
+      "table": {
+        "enabled": "Activée",
+        "title": "Titre",
+        "message": "Message",
+        "schedule": "Planification",
+        "duration": "Durée",
+        "durationValue": "{{value}} min",
+        "color": "Couleur",
+        "actions": "Actions"
+      },
+      "hints": {
+        "validateRequired": "Vous devez cliquer sur Valider avant d'enregistrer."
+      },
+      "validate": {
+        "ok": "Validation OK. Vous pouvez maintenant enregistrer.",
+        "failed": "Échec de la validation.",
+        "conflictTitle": "Horaire réservé par le redémarrage",
+        "conflictRequested": "Demandé : {{value}}",
+        "conflictRestart": "Redémarrage : {{value}}",
+        "conflictWindow": "Fenêtre réservée : {{start}} -> {{end}}"
+      },
+      "save": {
+        "failed": "Échec de l'enregistrement."
+      },
+      "delete": {
+        "failed": "Échec de la suppression.",
+        "confirmTitle": "Supprimer la notification ?",
+        "confirmText": "Cela supprimera la notification programmée et recompilera Notifications.json."
+      },
+      "compile": {
+        "noInfo": "Aucune information de compilation retournée.",
+        "failed": "Échec de la compilation.",
+        "ok": "Compilation réussie.",
+        "summary": "Total : {{total}} | Redémarrage : {{restart}} | Personnalisées : {{custom}}"
+      }
+    }
+  },
+  "settings": {
+    "title": "Paramètres du serveur",
+    "description": "Gérez le fichier ServerSettings.ini du serveur SCUM. Modifiez les paramètres, ajoutez des champs personnalisés et des mods.",
+    "tabs": {
+      "serverSettings": "ServerSettings.ini",
+      "config": "Config.json",
+      "discord": "Discord",
+      "shopNotifications": "Notifications RCON",
+      "minePunishment": "Punition de Mines",
+      "killFeed": "Kill Feed",
+      "rconRoutines": "Routines RCON",
+      "users": "Utilisateurs"
+    },
+    "shopNotifications": {
+      "title": "Notifications RCON de la Boutique",
+      "description": "Personnalisez les messages que les joueurs reçoivent en jeu via RCON.",
+      "welcome_kit_delivered": "Livraison du Kit de Bienvenue / Kits",
+      "welcome_kit_delivered_help": "Message envoyé lorsqu'un kit est livré avec succès.",
+      "items_delivered": "Livraison d'Articles",
+      "items_delivered_help": "Message envoyé lorsque des articles individuels sont livrés avec succès.",
+      "insufficient_funds": "Fonds Insufisants",
+      "insufficient_funds_help": "Message envoyé lorsqu'un joueur tente d'acheter mais n'a pas assez de fonds. Utilisez {balance} pour afficher le solde actuel du joueur.",
+      "save_success": "Paramètres de notification enregistrés avec succès !"
+    },
+    "minePunishment": {
+      "title": "Punition de Mines Hors Drapeau",
+      "description": "Configurez le système de surveillance automatique et de punition pour les joueurs qui déploient des mines/pièges en dehors du rayon de protection de leurs drapeaux.",
+      "search": {
+        "placeholder": "Rechercher des configurations de punition..."
+      },
+      "save_success": "Paramètres enregistrés !",
+      "save_error": "Erreur lors de l'enregistrement des paramètres",
+      "error_loading": "Erreur lors du chargement des données",
+      "footer_warning": "Les modifications des paramètres s'appliquent en temps réel aux prochains logs traités.",
+      "teleport": {
+        "title": "Téléportation (Death Carousel)",
+        "description": "Téléporte le joueur qui a posé la mine illégale directement au-dessus d'elle.",
+        "delay": "Délai",
+        "delay_tooltip": "Temps en secondes avant d'exécuter la téléportation du contrevenant. Recommandé : 5 secondes.",
+        "message": "Message de Téléportation",
+        "message_tooltip": "Avertissement envoyé par notification au joueur lors de sa punition.",
+        "message_placeholder": "Message affiché à l'écran"
+      },
+      "wallet": {
+        "title": "Amende Financière",
+        "description": "Applique un débit sur le portefeuille du joueur immédiatement après la pose.",
+        "amount": "Montant de l'Amende",
+        "amount_tooltip": "Applique un débit sur le portefeuille du joueur. Le solde est déduit même s'il devient négatif."
+      },
+      "radius": {
+        "title": "Rayon de Protection",
+        "description": "Définit les limites de distance des mines par rapport aux drapeaux des joueurs.",
+        "tooltip": "Paramètres de distance pour la légalité des mines par rapport aux drapeaux des joueurs.",
+        "default_radius": "Rayon par Défaut du Drapeau",
+        "default_radius_tooltip": "Généralement, 10000 unités correspondent au rayon par défaut du cercle du drapeau.",
+        "tolerance": "Tolérance de Rayon",
+        "tolerance_tooltip": "Marge d'erreur tolérée au-delà du cercle du drapeau (600 unités par défaut)."
+      }
+    },
+    "killFeed": {
+      "title": "Configuration du Kill Feed",
+      "description": "Gerez la diffusion en temps reel des eliminations dans le chat du jeu avec des phrases dynamiques.",
+      "search": {
+        "placeholder": "Rechercher des parametres de kill feed..."
+      },
+      "enabled": "Activer le Kill Feed",
+      "enabled_help": "Si active, envoie des notifications de mort dans le chat du jeu.",
+      "mode": "Mode d'affichage",
+      "chat_type": "Canal de discussion (Couleur)",
+      "chat_type_help": "Selectionnez le canal SCUM dans lequel les messages de mort seront diffuses.",
+      "priority": "Priorite RCON",
+      "priority_help": "Ordre de priorite dans la file d'attente des commandes RCON (par defaut : 15).",
+      "template": "Modele de message",
+      "template_description": "Definissez le modele de texte pour les eliminations. Utilisez les balises rapides ci-dessous pour remplir les donnees.",
+      "template_help": "Format de texte des eliminations. Utilisez les balises rapides ci-dessous.",
+      "preview": "Vue en jeu (Simulation)",
+      "phrases_title": "Phrases de mort aleatoires ({phrase})",
+      "phrases_description": "Phrases qui remplacent aleatoirement la balise {phrase} dans les messages d'elimination.",
+      "add_phrase_placeholder": "Saisissez une phrase d'elimination...",
+      "add_button": "Ajouter",
+      "save_success": "Parametres du Kill Feed enregistres avec succes !",
+      "save_success_details": "Les parametres du Kill Feed et la liste des phrases ont ete enregistres avec succes.",
+      "restart_warning_title": "Redemarrage requis",
+      "restart_warning": "Les modifications apportées aux paramètres RCON nécessitent que vous redémarriez le SSM Backend manuellement pour prendre effet. Arrêtez le service, fermez le backend, ouvrez-le à nouveau et cliquez sur 'Start'.",
+      "error_loading": "Erreur lors du chargement des parametres du Kill Feed",
+      "footer_warning": "Les modifications apportees a la liste des phrases prennent effet apres l'enregistrement. Les modifications de canal et de priorite necessitent un redemarrage.",
+      "modes": {
+        "chat": "Chat",
+        "hidden": "Masque"
+      },
+      "channels": {
+        "global": {
+          "name": "Chat Global",
+          "desc": "Canal par defaut affiche a tout le monde"
+        },
+        "admin": {
+          "name": "Admin / Annonce",
+          "desc": "Surlignage jaune pour les annonces rapides"
+        },
+        "server": {
+          "name": "Message du Serveur",
+          "desc": "Message systeme gris/orange"
+        },
+        "alert": {
+          "name": "Alerte / Erreur",
+          "desc": "Canal d'alerte rouge accrocheur"
+        },
+        "local": {
+          "name": "Chat Local / Par defaut",
+          "desc": "Chat blanc par defaut du jeu"
+        },
+        "squad": {
+          "name": "Chat d'Escouade",
+          "desc": "Visible uniquement pour les membres du groupe"
+        }
+      },
+      "phrases": {
+        "duplicate_title": "Phrase en double",
+        "duplicate_text": "Cette phrase existe deja dans la liste.",
+        "empty": "Aucune phrase enregistree. Ajoutez des phrases ci-dessus pour alimenter le kill feed.",
+        "total": "Total : {{count}} phrases",
+        "tag_hint": "Balise utilisable dans le modele : {phrase}"
+      }
+    },
+    "rconRoutines": {
+      "title": "Planificateur de Routines RCON",
+      "description": "Gerez les commandes RCON periodiques a executer automatiquement sur le serveur.",
+      "search": {
+        "placeholder": "Rechercher des routines RCON..."
+      },
+      "new_button": "Nouvelle Routine",
+      "error_loading": "Erreur lors du chargement des routines RCON",
+      "toggle_failed": "Erreur lors de la mise a jour du statut de la routine.",
+      "validation": {
+        "name_required": "Le nom de la routine est requis.",
+        "interval_min": "L'intervalle minimum est de 1 minute.",
+        "command_required": "Ajoutez au moins une commande valide.",
+        "warning_minutes_min": "L'avertissement prealable doit etre d'au moins 1 minute.",
+        "warning_minutes_limit": "L'avertissement prealable doit etre inferieur a l'intervalle de la routine.",
+        "warning_message_required": "Saisissez le texte du message d'avertissement prealable."
+      },
+      "save_success": "Routine enregistree avec succes !",
+      "create_success": "Routine creee avec succes !",
+      "save_failed": "Erreur lors de l'enregistrement de la routine.",
+      "delete_confirm_title": "Supprimer la routine ?",
+      "delete_confirm_text": "Voulez-vous vraiment supprimer cette routine periodique ? Cette action est irreversible.",
+      "delete_success": "Routine supprimee avec succes !",
+      "delete_failed": "Erreur lors de la suppression de la routine.",
+      "test_failed_msg": "Erreur pendant le test de la routine.",
+      "never_run": "Jamais executee",
+      "every_interval": "Toutes les {{minutes}} minutes",
+      "warning_active_badge": "Avis ({{minutes}}m) : \"{{message}}\"",
+      "last_run_label": "Derniere Execution :",
+      "last_warning_label": "Dernier Avertissement :",
+      "test_now": "Tester",
+      "edit_modal_title": "Modifier la Routine RCON",
+      "create_modal_title": "Nouvelle Routine RCON",
+      "form_name": "Nom de la Routine",
+      "form_name_placeholder": "Ex: Nettoyage des objets au sol",
+      "form_interval": "Intervalle (Minutes)",
+      "form_enabled": "Activer la Routine",
+      "form_enabled_help": "Determine si os commandes seront executees periodiquement.",
+      "form_commands": "Commandes RCON (en sequence)",
+      "add_command_btn": "Nouvelle Commande",
+      "warning_section_title": "Alerte Prealable dans le Chat",
+      "warning_section_desc": "Configurez un message pour alerter les joueurs avant l'execution des commandes.",
+      "warning_enabled": "Envoyer une Alerte Prealable",
+      "warning_enabled_help": "Si active, alerte dans le chat {minutes} minutes avant.",
+      "warning_minutes": "Alerte Prealable (Minutes)",
+      "warning_minutes_hint": "Doit etre inferieur a l'intervalle de la routine ({{interval}}m).",
+      "warning_color": "Couleur de l'Alerte (Hex)",
+      "warning_color_presets": "Couleurs suggerees pour le chat RCON :",
+      "warning_message": "Message d'Alerte",
+      "warning_message_hint": "Conseil : Utilisez {minutes} pour remplacer dynamiquement le temps restant.",
+      "console_starting": "Demarrage de l'execution de la routine... Attente de la reponse RCON.",
+      "console_executing": "Execution des commandes. Cela peut prendre jusqu'a 25 secondes...",
+      "console_no_response": "(Aucune reponse de la console)",
+      "console_finished": "Routine executee completement.",
+      "colors": {
+        "red": "Rouge",
+        "orange": "Orange",
+        "yellow": "Jaune",
+        "green": "Vert",
+        "cyan": "Cyan/Bleu Clair",
+        "blue": "Bleu",
+        "purple": "Violet",
+        "white": "Blanc"
+      }
+    },
+    "loading": "Chargement des paramètres...",
+    "empty": "Aucun paramètre trouvé dans cette section.",
+    "unsavedChanges": "⚠️ Vous avez des modifications non enregistrées",
+    "fieldsCount": "Affichage de {{count}} sur {{total}} champ(s)",
+    "actions": {
+      "refresh": "Actualiser",
+      "addField": "Ajouter un champ",
+      "save": "Enregistrer la section",
+      "saving": "Enregistrement...",
+      "removeField": "Supprimer le champ"
+    },
+    "search": {
+      "placeholder": "Rechercher par clé ou valeur...",
+      "noResults": "Aucun résultat trouvé",
+      "filtered": "filtré"
+    },
+    "field": {
+      "original": "Original"
+    },
+    "addField": {
+      "title": "Ajouter un nouveau champ",
+      "keyLabel": "Nom du champ",
+      "valueTitle": "Valeur du champ",
+      "valueLabel": "Valeur",
+      "next": "Suivant",
+      "add": "Ajouter",
+      "keyRequired": "Le nom du champ est requis",
+      "valueRequired": "La valeur du champ est requise"
+    },
+    "removeField": {
+      "title": "Supprimer le champ",
+      "text": "Êtes-vous sûr de vouloir supprimer le champ \"{{key}}\" ?",
+      "confirm": "Supprimer"
+    },
+    "save": {
+      "success": "Paramètres enregistrés avec succès !",
+      "backup": "Sauvegarde créée à"
+    },
+    "errors": {
+      "loadFailed": "Erreur lors du chargement des paramètres",
+      "saveFailed": "Erreur lors de l'enregistrement des paramètres",
+      "tryAgain": "Réessayer",
+      "validationFailed": "Erreur de validation",
+      "validationErrors": "Les champs suivants ont des valeurs invalides"
+    },
+    "config": {
+      "title": "Configuration de l'application",
+      "description": "Gérez le fichier config.json de l'application. Configurez les chemins, le serveur, l'API, le planificateur et d'autres options.",
+      "loading": "Chargement de la configuration...",
+      "loadingSections": "Chargement des sections...",
+      "empty": "Aucune configuration trouvée dans cette section.",
+      "unsavedChanges": "⚠️ Vous avez des modifications non enregistrées",
+      "fieldsCount": "Affichage de {{count}} sur {{total}} champ(s)",
+      "requiresRestart": "Nécessite un redémarrage",
+      "sectionInfo": "Informations sur la section",
+      "actions": {
+        "refresh": "Actualiser",
+        "save": "Enregistrer la section",
+        "saving": "Enregistrement...",
+        "backups": "Sauvegardes",
+        "restore": "Restaurer"
+      },
+      "search": {
+        "placeholder": "Rechercher par clé ou valeur...",
+        "noResults": "Aucun résultat trouvé",
+        "filtered": "filtré"
+      },
+      "backups": {
+        "title": "Gérer les sauvegardes",
+        "loading": "Chargement des sauvegardes...",
+        "empty": "Aucune sauvegarde disponible",
+        "filename": "Fichier",
+        "createdAt": "Créée le",
+        "size": "Taille",
+        "restoreConfirm": "Êtes-vous sûr de vouloir restaurer la sauvegarde \"{{filename}}\" ? La configuration actuelle sera remplacée.",
+        "restoreSuccess": "Sauvegarde restaurée avec succès !",
+        "restoreError": "Erreur lors de la restauration de la sauvegarde"
+      },
+      "save": {
+        "success": "Configuration enregistrée avec succès !",
+        "backup": "Sauvegarde créée à",
+        "restartRequired": "Certaines sections nécessitent un redémarrage du serveur"
+      },
+      "errors": {
+        "loadFailed": "Erreur lors du chargement de la configuration",
+        "saveFailed": "Erreur lors de l'enregistrement de la configuration",
+        "tryAgain": "Réessayer",
+        "validationFailed": "Erreur de validation",
+        "validationErrors": "Les champs suivants ont des valeurs invalides"
+      },
+      "sections": {
+        "server": "Serveur",
+        "updates": "Mises à jour",
+        "weather_scheduler": "Planificateur météo",
+        "squad_sync": "Synchronisation des squads",
+        "survival_sync": "Synchronisation survie",
+        "rankings_sync": "Synchronisation des classements",
+        "player_skills_sync": "Synchronisation des compétences joueur",
+        "chest_sync": "Synchronisation des coffres",
+        "steam": "Steam",
+        "chat_monitoring": "Surveillance du chat",
+        "time_precision": "Précision du temps",
+        "fishing_ranking": "Classement pêche",
+        "lockpicking_ranking": "Classement crochetage",
+        "kills_ranking": "Classement éliminations",
+        "snipers_ranking": "Classement snipers",
+        "vehicle_verification": "Vérification des véhicules",
+        "player_gps_sync": "Synchronisation GPS joueur",
+        "scum_db_shared_copy": "Copie partagée de SCUM DB"
+      },
+      "sectionDescriptions": {
+        "time_precision": "Minutes à ajouter à l'heure du serveur pour une meilleure précision dans la commande /tm",
+        "player_gps_sync": "Synchronisation du GPS des joueurs en ligne - met à jour uniquement les joueurs avec le statut 'online' dans la table players_online. use_strict_readonly : connexion directe en lecture seule qui ne crée pas de fichiers WAL/SHM, garantissant des données à jour avec une latence minimale",
+        "player_skills_sync": "Synchronisation des compétences des joueurs de SCUM.db vers SSM.db - s'exécute toutes les 24 heures",
+        "vehicle_verification": "Vérification des véhicules sur le serveur - valide et surveille le statut des véhicules",
+        "scum_db_shared_copy": "Crée une copie partagée de la base de données SCUM pour l'utiliser dans d'autres processus ou systèmes",
+        "fishing_ranking": "Classement pêche - classe les joueurs selon leurs compétences de pêche",
+        "lockpicking_ranking": "Classement crochetage - classe les joueurs selon leurs compétences de crochetage",
+        "kills_ranking": "Classement éliminations - classe les joueurs par nombre d'éliminations",
+        "snipers_ranking": "Classement snipers - classe les joueurs selon leurs compétences de précision au fusil"
+      },
+      "fields": {
+        "server": {
+          "steamcmd_path": "Chemin SteamCMD",
+          "nssm_path": "Chemin NSSM",
+          "port": "Port",
+          "max_players": "Joueurs max",
+          "use_battleye": "Utiliser BattlEye",
+          "service_name": "Nom du service"
+        },
+        "updates": {
+          "enabled": "Activé",
+          "auto_update": "Mise à jour auto",
+          "check_interval": "Intervalle de vérification",
+          "backup_versions": "Versions de sauvegarde",
+          "force_update": "Forcer la mise à jour",
+          "notify_discord": "Notifier Discord",
+          "notify_panel": "Notifier le panel"
+        },
+        "squad_sync": {
+          "enabled": "Activé",
+          "auto_start": "Démarrage auto",
+          "sync_interval_minutes": "Intervalle de synchro (minutes)",
+          "scum_db_path": "Chemin SCUM DB",
+          "ssm_db_path": "Chemin SSM DB"
+        },
+        "survival_sync": {
+          "enabled": "Activé",
+          "auto_start": "Démarrage auto",
+          "sync_interval_minutes": "Intervalle de synchro (minutes)",
+          "scum_db_path": "Chemin SCUM DB",
+          "ssm_db_path": "Chemin SSM DB"
+        },
+        "chest_sync": {
+          "enabled": "Activé",
+          "auto_start": "Démarrage auto",
+          "sync_interval_minutes": "Intervalle de synchro (minutes)",
+          "scum_db_path": "Chemin SCUM DB",
+          "ssm_db_path": "Chemin SSM DB",
+          "webhook_name": "Nom du webhook",
+          "notify_events": "Notifier les événements",
+          "images_directory": "Dossier des images",
+          "vehicle_images_directory": "Dossier des images véhicules",
+          "vehicle_alert_webhook_name": "Webhook d'alerte véhicules"
+        },
+        "steam": {
+          "api_key": "Clé API",
+          "getApiKey": "Obtenir la clé"
+        },
+        "chat_monitoring": {
+          "enabled": "Activé",
+          "webhook_name": "Nom du webhook",
+          "rate_limit": "Limite de débit",
+          "cleanup_days": "Jours de nettoyage",
+          "channels": "Canaux",
+          "save_to_database": "Enregistrer en base de données"
+        },
+        "time_precision": {
+          "enabled": "Activé",
+          "offset_minutes": "Décalage (minutes)",
+          "description": "Description"
+        },
+        "weather_scheduler": {
+          "enabled": "Activé",
+          "auto_start": "Démarrage auto",
+          "sync_interval_minutes": "Intervalle de synchro (minutes)"
+        },
+        "rankings_sync": {
+          "enabled": "Activé",
+          "auto_start": "Démarrage auto",
+          "update_interval_hours": "Intervalle de mise à jour (heures)",
+          "update_time": "Heure de mise à jour",
+          "ssm_db_path": "Chemin SSM DB"
+        },
+        "player_skills_sync": {
+          "enabled": "Activé",
+          "auto_start": "Démarrage auto",
+          "sync_interval_hours": "Intervalle de synchro (heures)",
+          "scum_db_path": "Chemin SCUM DB",
+          "ssm_db_path": "Chemin SSM DB",
+          "description": "Description"
+        },
+        "fishing_ranking": {
+          "enabled": "Activé",
+          "schedule_time": "Heure de planification",
+          "max_players": "Joueurs max",
+          "send_parts": "Envoyer en parties",
+          "description": "Description"
+        },
+        "lockpicking_ranking": {
+          "enabled": "Activé",
+          "schedule_time": "Heure de planification",
+          "max_players": "Joueurs max",
+          "send_parts": "Envoyer en parties",
+          "description": "Description"
+        },
+        "kills_ranking": {
+          "enabled": "Activé",
+          "schedule_time": "Heure de planification",
+          "max_players": "Joueurs max",
+          "send_parts": "Envoyer en parties",
+          "description": "Description"
+        },
+        "snipers_ranking": {
+          "enabled": "Activé",
+          "schedule_time": "Heure de planification",
+          "max_players": "Joueurs max",
+          "send_parts": "Envoyer en parties",
+          "description": "Description"
+        },
+        "vehicle_verification": {
+          "enabled": "Activé"
+        },
+        "player_gps_sync": {
+          "enabled": "Activé"
+        },
+        "scum_db_shared_copy": {
+          "enabled": "Activé"
+        }
+      }
+    },
+    "discord": {
+      "title": "Webhooks Discord",
+      "description": "Gérez les webhooks Discord pour les notifications et les intégrations.",
+      "empty": "Aucun webhook configuré",
+      "unsavedChanges": "⚠️ Vous avez des modifications non enregistrées",
+      "urlPlaceholder": "https://discord.com/api/webhooks/...",
+      "noUrl": "Aucune URL configurée",
+      "edit": "Modifier",
+      "testWebhook": "Tester le webhook",
+      "actions": {
+        "add": "Ajouter un webhook",
+        "refresh": "Actualiser",
+        "backups": "Sauvegardes",
+        "save": "Enregistrer les modifications",
+        "saving": "Enregistrement..."
+      },
+      "search": {
+        "placeholder": "Rechercher par clé ou valeur...",
+        "noResults": "Aucun webhook trouvé"
+      },
+      "addModal": {
+        "title": "Ajouter un webhook",
+        "webhookName": "Nom du webhook",
+        "selectWebhook": "Sélectionnez un webhook",
+        "url": "URL du webhook",
+        "urlHint": "L'URL doit commencer par https://discord.com/api/webhooks/ ou https://discordapp.com/api/webhooks/",
+        "add": "Ajouter",
+        "cancel": "Annuler"
+      },
+      "delete": {
+        "confirmTitle": "Supprimer le webhook ?",
+        "confirmText": "Êtes-vous sûr de vouloir supprimer le webhook \"{{name}}\" ?",
+        "confirm": "Supprimer",
+        "cancel": "Annuler",
+        "success": "Webhook supprimé",
+        "successText": "Le webhook \"{{name}}\" a été supprimé avec succès."
+      },
+      "save": {
+        "success": "Webhooks enregistrés",
+        "backup": "Sauvegarde créée automatiquement"
+      },
+      "test": {
+        "success": "Webhook testé",
+        "successText": "Webhook testé avec succès !",
+        "error": "Erreur de test",
+        "invalidUrl": "URL invalide",
+        "emptyUrl": "Veuillez saisir une URL à tester",
+        "testWebhook": "Tester le webhook configuré",
+        "testUrl": "Tester l'URL avant d'enregistrer"
+      },
+      "backups": {
+        "title": "Gérer les sauvegardes",
+        "empty": "Aucune sauvegarde disponible",
+        "restore": "Restaurer",
+        "cancel": "Annuler",
+        "restoreConfirm": "Restaurer la sauvegarde ?",
+        "restoreConfirmText": "Êtes-vous sûr de vouloir restaurer la sauvegarde \"{{file}}\" ? Les webhooks actuels seront remplacés.",
+        "restoreSuccess": "Sauvegarde restaurée",
+        "restoreSuccessText": "La sauvegarde \"{{file}}\" a été restaurée avec succès."
+      },
+      "errors": {
+        "loadFailed": "Erreur lors du chargement des webhooks",
+        "saveFailed": "Erreur lors de l'enregistrement des webhooks",
+        "deleteFailed": "Erreur lors de la suppression du webhook",
+        "restoreFailed": "Erreur lors de la restauration de la sauvegarde",
+        "validationFailed": "Erreur de validation",
+        "invalidUrl": "URL invalide. Doit être un webhook Discord valide.",
+        "invalidUrls": "Les webhooks suivants ont des URLs invalides : {{webhooks}}",
+        "requiredFields": "Tous les champs sont requis",
+        "webhookExists": "Ce webhook existe déjà"
+      },
+      "webhooks": {
+        "serverstatus": "Statut du serveur",
+        "new_player": "Nouveau joueur",
+        "players_online": "Joueurs en ligne",
+        "vehicle_registration": "Enregistrement des véhicules",
+        "chat_in_game": "Chat en jeu",
+        "adminlog": "Adminlog",
+        "vehicle-log": "Log véhicules",
+        "bunkers_status": "Statut des bunkers",
+        "timer": "Timer",
+        "commands": "Commandes",
+        "fishing_ranking": "Classement pêche",
+        "kill_log": "Kill Log",
+        "chest_events": "Événements coffres",
+        "chest_vehicle_alerts": "Alertes véhicules coffres",
+        "log-ssm": "Log SSM",
+        "lockpicking_events": "Événements crochetage",
+        "top20_lockpicking": "Top 20 Crochetage",
+        "top20_kills": "Top 20 Éliminations",
+        "top20_snipers": "Top 20 Snipers"
+      }
+    },
+    "users": {
+      "title": "Gestion des utilisateurs",
+      "description": "Créer et gérer les utilisateurs du système",
+      "empty": "Aucun utilisateur trouvé",
+      "loading": "Chargement des utilisateurs...",
+      "tabs": {
+        "users": "Utilisateurs"
+      },
+      "table": {
+        "id": "ID",
+        "username": "Nom d'utilisateur",
+        "role": "Rôle",
+        "status": "Statut",
+        "passwordChanged": "Mot de passe modifié",
+        "passwordChangedShort": "Mot de passe",
+        "linkedPlayer": "ID Steam",
+        "lastLogin": "Dernière connexion",
+        "createdAt": "Créé le",
+        "actions": "Actions",
+        "active": "Actif",
+        "inactive": "Inactif",
+        "never": "Jamais",
+        "notLinked": "Non lié"
+      },
+      "create": {
+        "title": "Créer un utilisateur",
+        "username": "Nom d'utilisateur",
+        "password": "Mot de passe",
+        "role": "Rôle",
+        "steamId": "ID Steam (optionnel)",
+        "searchPlayer": "Rechercher un joueur",
+        "submit": "Créer",
+        "cancel": "Annuler",
+        "passwordHint": "Minimum 8 caractères",
+        "selectRole": "Sélectionnez un rôle"
+      },
+      "edit": {
+        "title": "Modifier l'utilisateur",
+        "status": "Statut",
+        "role": "Rôle",
+        "steamId": "ID Steam",
+        "save": "Enregistrer",
+        "cancel": "Annuler"
+      },
+      "actions": {
+        "create": "Créer un utilisateur",
+        "edit": "Modifier",
+        "delete": "Supprimer",
+        "activate": "Activer",
+        "deactivate": "Désactiver",
+        "refresh": "Actualiser"
+      },
+      "search": {
+        "placeholder": "Rechercher des utilisateurs...",
+        "noResults": "Aucun utilisateur trouvé"
+      },
+      "playerSearch": {
+        "placeholder": "Rechercher un joueur par nom ou ID Steam...",
+        "noResults": "Aucun joueur trouvé",
+        "selecting": "Sélection..."
+      },
+      "delete": {
+        "confirmTitle": "Supprimer l'utilisateur ?",
+        "confirmText": "Êtes-vous sûr de vouloir supprimer l'utilisateur \"{{username}}\" ?",
+        "confirm": "Supprimer",
+        "cancel": "Annuler",
+        "success": "Utilisateur supprimé",
+        "successText": "L'utilisateur \"{{username}}\" a été supprimé avec succès."
+      },
+      "createSuccess": {
+        "title": "Utilisateur créé",
+        "text": "L'utilisateur \"{{username}}\" a été créé avec succès."
+      },
+      "updateSuccess": {
+        "title": "Utilisateur mis à jour",
+        "text": "L'utilisateur a été mis à jour avec succès."
+      },
+      "errors": {
+        "loadFailed": "Erreur lors du chargement des utilisateurs",
+        "createFailed": "Erreur lors de la création de l'utilisateur",
+        "updateFailed": "Erreur lors de la mise à jour de l'utilisateur",
+        "deleteFailed": "Erreur lors de la suppression de l'utilisateur",
+        "usernameExists": "Le nom d'utilisateur existe déjà",
+        "invalidPassword": "Le mot de passe doit contenir au moins 8 caractères",
+        "cannotDeleteAdmin": "Impossible de supprimer un utilisateur administrateur",
+        "userNotFound": "Utilisateur introuvable",
+        "adminRequired": "Seuls les administrateurs peuvent gérer les utilisateurs",
+        "searchPlayersFailed": "Erreur lors de la recherche de joueurs"
+      },
+      "roles": {
+        "admin": "Administrateur",
+        "moderator": "Modérateur"
+      }
+    }
+  }
+}

@@ -1,0 +1,9 @@
+$kind: http-request
+name: POST /api/scheduler/config
+description: POST /api/scheduler/config
+url: "{{baseUrl}}/api/scheduler/config"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+order: 4000

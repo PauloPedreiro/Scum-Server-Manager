@@ -1,0 +1,9 @@
+$kind: http-request
+name: POST /api/time-precision/test
+description: POST /api/time-precision/test
+url: "{{baseUrl}}/api/time-precision/test"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+order: 2000

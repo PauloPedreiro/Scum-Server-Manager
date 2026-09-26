@@ -1,0 +1,20 @@
+$kind: http-request
+name: GET /api/admin/flags/owners
+description: GET /api/admin/flags/owners - Endpoint enxuto para dropdown do frontend (flag_id + owner formatado)
+url: "{{baseUrl}}/api/admin/flags/owners?only_with_owner=true&q=&page=1&page_size=50"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+queryParams:
+  - key: only_with_owner
+    value: "true"
+    description: Quando true, retorna apenas flags com owner. Aceita false/0/no/off para incluir no owner.
+  - key: q
+    value: ""
+    description: Filtro de busca (flag_id, owner_name, owner_steam_id ou owner formatado)
+  - key: page
+    value: "1"
+  - key: page_size
+    value: "50"
+    description: "Tamanho da página (max: 500)"
+order: 2000

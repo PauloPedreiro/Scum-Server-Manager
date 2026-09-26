@@ -1,0 +1,8 @@
+$kind: http-request
+name: GET /api/players/<steam_id>/permissions
+description: GET /api/players/<steam_id>/permissions
+url: "{{baseUrl}}/api/players/<steam_id>/permissions"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+order: 3000

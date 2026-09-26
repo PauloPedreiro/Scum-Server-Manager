@@ -1,0 +1,9 @@
+$kind: http-request
+name: POST /api/notifications/restart/create-all
+description: POST /api/notifications/restart/create-all
+url: "{{baseUrl}}/api/notifications/restart/create-all"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+order: 15000

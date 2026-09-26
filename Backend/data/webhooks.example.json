@@ -1,0 +1,186 @@
+{
+  "schema_version": 2,
+  "defaults": {
+    "category_name": "SSM",
+    "webhook_name_prefix": "SSM",
+    "delivery_mode": "append"
+  },
+  "events": {
+    "serverstatus": {
+      "enabled": false,
+      "display_name": "serverstatus",
+      "delivery": {"mode": "append"},
+      "target": {"webhook": {"url": null}},
+      "state": {}
+    },
+    "new_player": {
+      "enabled": false,
+      "display_name": "new_player",
+      "delivery": {"mode": "append"},
+      "target": {"webhook": {"url": null}},
+      "state": {}
+    },
+    "ban-list": {
+      "enabled": false,
+      "display_name": "ban-list",
+      "delivery": {"mode": "append"},
+      "target": {"webhook": {"url": null}},
+      "state": {}
+    },
+    "players_online": {
+      "enabled": false,
+      "display_name": "players_online",
+      "delivery": {"mode": "append"},
+      "target": {"webhook": {"url": null}},
+      "state": {}
+    },
+    "vehicle_registration": {
+      "enabled": false,
+      "display_name": "vehicle_registration",
+      "delivery": {"mode": "append"},
+      "target": {"webhook": {"url": null}},
+      "state": {}
+    },
+    "chat_in_game": {
+      "enabled": false,
+      "display_name": "chat_in_game",
+      "delivery": {"mode": "append"},
+      "target": {"webhook": {"url": null}},
+      "state": {}
+    },
+    "adminlog": {
+      "enabled": false,
+      "display_name": "adminlog",
+      "delivery": {"mode": "append"},
+      "target": {"webhook": {"url": null}},
+      "state": {}
+    },
+    "vehicle-log": {
+      "enabled": false,
+      "display_name": "vehicle-log",
+      "delivery": {"mode": "append"},
+      "target": {"webhook": {"url": null}},
+      "state": {}
+    },
+    "bunkers_status": {
+      "enabled": false,
+      "display_name": "bunkers_status",
+      "delivery": {"mode": "append"},
+      "target": {"webhook": {"url": null}},
+      "state": {}
+    },
+    "register": {
+      "enabled": false,
+      "display_name": "register",
+      "delivery": {"mode": "append"},
+      "target": {"webhook": {"url": null}},
+      "state": {}
+    },
+    "cargo_drop": {
+
+      "enabled": false,
+      "display_name": "cargo_drop",
+      "delivery": {"mode": "append"},
+      "target": {"webhook": {"url": null}},
+      "state": {}
+    },
+    "mines_alerts": {
+      "enabled": false,
+      "display_name": "mines_alerts",
+      "delivery": {"mode": "append"},
+      "target": {"webhook": {"url": null}},
+      "state": {}
+    },
+    "commands": {
+      "enabled": false,
+      "display_name": "commands",
+      "delivery": {"mode": "append"},
+      "target": {"webhook": {"url": null}},
+      "state": {}
+    },
+    "fishing_ranking": {
+      "enabled": false,
+      "display_name": "fishing_ranking",
+      "delivery": {"mode": "append"},
+      "target": {"webhook": {"url": null}},
+      "state": {}
+    },
+    "kill_log": {
+      "enabled": false,
+      "display_name": "kill_log",
+      "delivery": {"mode": "append"},
+      "target": {"webhook": {"url": null}},
+      "state": {}
+    },
+    "chest_events": {
+      "enabled": false,
+      "display_name": "chest_events",
+      "delivery": {"mode": "append"},
+      "target": {"webhook": {"url": null}},
+      "state": {}
+    },
+    "chest_vehicle_alerts": {
+      "enabled": false,
+      "display_name": "chest_vehicle_alerts",
+      "delivery": {"mode": "append"},
+      "target": {"webhook": {"url": null}},
+      "state": {}
+    },
+    "shop-log": {
+      "enabled": false,
+      "display_name": "shop-log",
+      "delivery": {"mode": "append"},
+      "target": {"webhook": {"url": null}},
+      "state": {}
+    },
+    "log-ssm": {
+      "enabled": false,
+      "display_name": "log-ssm",
+      "delivery": {"mode": "append"},
+      "target": {"webhook": {"url": null}},
+      "state": {}
+    },
+    "lockpicking_events": {
+      "enabled": false,
+      "display_name": "lockpicking_events",
+      "delivery": {"mode": "append"},
+      "target": {"webhook": {"url": null}},
+      "state": {}
+    },
+    "top10_lockpicking": {
+      "enabled": false,
+      "display_name": "top10_lockpicking",
+      "delivery": {"mode": "append"},
+      "target": {"webhook": {"url": null}},
+      "state": {}
+    },
+    "top10_kills": {
+      "enabled": false,
+      "display_name": "top10_kills",
+      "delivery": {"mode": "append"},
+      "target": {"webhook": {"url": null}},
+      "state": {}
+    },
+    "bank_transaction": {
+      "enabled": false,
+      "display_name": "bank_transaction",
+      "delivery": {"mode": "append"},
+      "target": {"webhook": {"url": null}},
+      "state": {}
+    },
+    "events": {
+      "enabled": false,
+      "display_name": "events",
+      "delivery": {"mode": "append"},
+      "target": {"webhook": {"url": null}},
+      "state": {}
+    },
+    "playtime_rewards": {
+      "enabled": false,
+      "display_name": "playtime_rewards",
+      "delivery": {"mode": "append"},
+      "target": {"webhook": {"url": null}},
+      "state": {}
+    }
+  }
+}

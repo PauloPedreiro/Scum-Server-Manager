@@ -1,0 +1,42 @@
+$kind: http-request
+name: POST /api/server/stop
+description: |-
+  Parar servidor SCUM
+
+  **Parâmetros opcionais:**
+  - `force` (boolean): Forçar parada mesmo se não estiver rodando (padrão: false)
+  - `wait_timeout` (number): Tempo em segundos para aguardar confirmação de parada (padrão: 30, máximo: 10)
+
+  **Nota:** O body pode ser vazio `{}` - todos os parâmetros são opcionais.
+
+  **Exemplo de resposta de sucesso:**
+  ```json
+  {
+    "success": true,
+    "message": "Servidor parado com sucesso",
+    "data": {
+      "is_running": false
+    },
+    "final_status": {
+      "is_running": false
+    }
+  }
+  ```
+
+  **Possíveis erros:**
+  - 400: Servidor não está rodando (a menos que force=true)
+  - 400: JSON inválido
+  - 500: Erro ao parar servidor
+url: "{{baseUrl}}/api/server/stop"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+body:
+  type: json
+  content: |-
+    {
+      "force": false,
+      "wait_timeout": 30
+    }
+order: 8000

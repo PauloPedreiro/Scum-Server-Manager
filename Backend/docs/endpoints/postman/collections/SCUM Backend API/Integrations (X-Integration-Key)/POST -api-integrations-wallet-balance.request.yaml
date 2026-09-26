@@ -1,0 +1,19 @@
+$kind: http-request
+name: POST /api/integrations/wallet/balance
+description: "Consulta saldo da carteira via integração (X-Integration-Key). Retorna balance e player_name. Rate limit: 10 min por steam_id."
+url: "{{baseUrl}}/api/integrations/wallet/balance"
+method: POST
+headers:
+  Content-Type: application/json
+  X-Integration-Key: "{{integrationKey}}"
+body:
+  type: json
+  content: |-
+    {
+      "external_id": "postman:balance:{{$randomUUID}}",
+      "steam_id": "{{steamId}}",
+      "meta": {
+        "source": "postman"
+      }
+    }
+order: 3000

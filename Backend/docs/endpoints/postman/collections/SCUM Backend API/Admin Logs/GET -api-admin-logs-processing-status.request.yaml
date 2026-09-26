@@ -1,0 +1,8 @@
+$kind: http-request
+name: GET /api/admin-logs/processing-status
+description: GET /api/admin-logs/processing-status
+url: "{{baseUrl}}/api/admin-logs/processing-status"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+order: 2000

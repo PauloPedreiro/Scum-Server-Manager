@@ -1,0 +1,17 @@
+$kind: http-request
+name: POST /api/elevated-users/sync
+description: POST /api/elevated-users/sync
+url: "{{baseUrl}}/api/elevated-users/sync"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+body:
+  type: json
+  content: |-
+    {
+      "username": "usuario",
+      "password": "senha123",
+      "role": "moderator"
+    }
+order: 3000

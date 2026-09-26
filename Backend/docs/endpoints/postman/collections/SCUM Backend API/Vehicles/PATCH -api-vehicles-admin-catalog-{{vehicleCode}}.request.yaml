@@ -1,0 +1,17 @@
+$kind: http-request
+name: PATCH /api/vehicles/admin/catalog/{{vehicleCode}}
+description: PATCH /api/vehicles/admin/catalog/<code> (editar display_name/price/enabled)
+url: "{{baseUrl}}/api/vehicles/admin/catalog/{{vehicleCode}}"
+method: PATCH
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+body:
+  type: json
+  content: |-
+    {
+      "display_name": "Laika (VIP)",
+      "price": 25000,
+      "enabled": true
+    }
+order: 3000

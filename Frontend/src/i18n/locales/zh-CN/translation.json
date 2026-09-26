@@ -1,0 +1,176 @@
+{
+  "tools": {
+    "shopDeliveries": {
+      "sections": {
+        "raidWebhooks": "突袭 Webhook (/rd)",
+        "attributes": "属性",
+        "wantedBounty": "通缉赏金系统"
+      },
+      "attributes": {
+        "level": "等级 {{level}}",
+        "noChanges": "无更改。",
+        "invalidDays": "有效期必须是大于或等于 1 天的整数。",
+        "saveSuccess": "配置保存成功！",
+        "help": {
+          "title": "价格配置是如何工作的？",
+          "description": "玩家使用 RCON 命令（如 /f5、/c3）直接在游戏聊天中购买属性等级。",
+          "fieldsTitle": "📌 每个字段代表什么意思？",
+          "fieldsDesc": "在每个“等级”中配置的值是玩家达到该属性等级所需的积分成本。",
+          "exampleTitle": "💡 实际案例：",
+          "exampleDesc": "如果力量等级 5 字段配置为 500，则玩家在输入 /f5 时支付 500 积分以获得力量 5。"
+        },
+        "expiration": {
+          "title": "属性有效期规则",
+          "description": "启用临时有效期后，玩家购买的属性等级将在选择的期限到期后恢复为购买前的基础值。",
+          "enableLabel": "启用临时属性过期",
+          "durationLabel": "有效期："
+        }
+      },
+      "raidWebhooks": {
+        "title": "突袭 Webhook (/rd)",
+        "infoTitle": "个人突袭 Webhook (/rd)",
+        "infoDesc": "此功能允许玩家直接在游戏聊天中注册自己的 Discord webhook，以实时接收突袭警报。要使用 /rd 命令，玩家需要具有 raid_webhook_manage 权限且钱包中有足够的积分。",
+        "generalConfig": "常规设置",
+        "enableFeature": "启用该功能",
+        "costLabel": "启用 / 续订费用",
+        "costSuffix": "积分",
+        "durationLabel": "订阅时长",
+        "durationSuffix": "天",
+        "accessControlTitle": "访问控制 (/rd)",
+        "accessControlDesc": "启用或禁用特定玩家对 /rd 命令 carbon 的访问：",
+        "searchPlaceholder": "搜索玩家（名字或 Steam ID）...",
+        "loadingPlayers": "加载玩家中...",
+        "noPlayersFound": "未找到玩家。",
+        "allowed": "已允许",
+        "blocked": "已禁用",
+        "allowBtn": "允许",
+        "blockBtn": "禁用",
+        "prevPage": "上一页",
+        "nextPage": "下一页",
+        "pageIndicator": "第 {{page}} / {{totalPages}} 页",
+        "chatMessagesTitle": "RCON 聊天消息",
+        "chatMessagesDesc": "自定义玩家与 /rd 命令交互时在游戏聊天中收到的回复。使用指示器插入动态变量。",
+        "unsavedChanges": "您在此面板中有未保存的更改。",
+        "noChanges": "没有待保存的更改。",
+        "revertBtn": "还原",
+        "saveBtn": "保存",
+        "savingBtn": "保存中...",
+        "validationPriceError": "订阅价格必须是大于或等于 0 的整数。",
+        "validationDurationError": "订阅时长必须是大于或等于 0 的整数。",
+        "saveSuccess": "突袭 Webhook 配置保存成功！",
+        "saveError": "保存设置失败。",
+        "groups": {
+          "commandUsage": "命令与状态",
+          "registration": "手动注册与续订",
+          "autoRenewal": "自动续订与警报",
+          "errors": "错误与限制"
+        },
+        "labels": {
+          "system_disabled": "系统已禁用",
+          "usage_help": "使用说明",
+          "no_permission": "没有权限",
+          "insufficient_funds": "余额不足",
+          "disabled_success": "订阅已关闭（保留余额天数）",
+          "disabled_success_lifetime": "个人突袭 Webhook 已成功关闭。",
+          "registered_success": "已成功订阅 {{days}} 天！有效期至：{{expires_at}}。已扣除 {{price}} 积分。",
+          "registered_success_lifetime": "个人突袭 Webhook 订阅成功（终身计划）！",
+          "updated_success": "Webhook 更新成功！有效期至：{{expires_at}}。",
+          "updated_success_lifetime": "个人突袭 Webhook 更新成功！",
+          "renewed_success": "订阅已延长 {{days}} 天！新有效期至：{{expires_at}}。已扣除 {{price}} 积分。",
+          "status_info": "Webhook: {{url}} | 订阅有效期：{{expires_at}} {{remaining}}。",
+          "status_expired": "Webhook: {{url}} | 订阅已于 {{expires_at}} 过期。",
+          "status_no_subscription": "您没有处于活跃状态的个人 Webhook 订阅。",
+          "invalid_webhook": "无效的 Webhook URL。请使用有效的 Discord URL。",
+          "database_error": "保存 Webhook 配置时发生内部数据库错误。",
+          "auto_renew_success": "🔄 您的突袭 Webhook 订阅已自动延长 {{days}} 天！新有效期至：{{expires_at}}。已扣除 {{price}} 积分。",
+          "auto_renew_failed": "⚠️ 您的突袭 Webhook 订阅已过期且由于余额不足未能自动续订（价格：{{price}} 积分 | 您的当前余额：{{balance}}）。请充值以重新启用。",
+          "expiry_warning_3_days": "📅 提醒：您的突袭 Webhook 订阅将在 3 天后（{{expires_at}}）到期。如余额充足，它将自动续订。",
+          "expiry_warning_1_day": "🚨 注意：您的突袭 Webhook 订阅将在明天（{{expires_at}}）到期。请确保有足够的余额用于自动续订。"
+        },
+        "lifetimePlan": {
+          "title": "终身计划（永不过期）",
+          "desc": "设置为 0 以启用终身模式。玩家的过期时间将保存为空（NULL），Webhook 永不过期，后台调度器也不会进行任何扣费或停用操作。"
+        }
+      },
+      "wantedBounty": {
+        "tabs": {
+          "variables": "系统变量",
+          "alerts": "警报与 Discord 集成"
+        },
+        "fields": {
+          "enabled": "启用系统",
+          "enabledDesc": "启用或禁用连杀赏金奖励系统",
+          "killstreakTrigger": "连杀触发器（最少击杀数）",
+          "baseBounty": "基础赏金",
+          "incrementBounty": "每击杀递增额",
+          "cooldown": "冷却时间（小时）",
+          "squadCooldown": "退出小队冷却时间（小时）",
+          "chatColor": "游戏内聊天颜色",
+          "activationTemplate": "激活模板",
+          "incrementTemplate": "递增模板（新击杀）",
+          "claimedTemplate": "领取模板（赏金已支付）",
+          "placeholdersTitle": "动态占位符：",
+          "topKillersMsgId": "连杀排行消息 ID",
+          "shameRankMsgId": "羞耻排行消息 ID"
+        },
+        "placeholders": {
+          "player": "通缉玩家名称",
+          "killer": "赏金猎人名称",
+          "victim": "受害者名称",
+          "streak": "当前连杀数",
+          "points": "赏金奖励值"
+        },
+        "tooltips": {
+          "msgId": "由后台自动填充。清空它可以强制机器人发布新消息。"
+        },
+        "validation": {
+          "triggerMin": "连杀触发值必须至少为 1。"
+        },
+        "saveSuccess": "通缉配置已成功更新。",
+        "resetAll": {
+          "confirmTitle": "您确定吗？",
+          "confirmText": "这将清除所有活跃玩家的通缉状态！",
+          "confirmButton": "是的，重置所有！",
+          "successText": "所有通缉玩家已被重置。"
+        },
+        "resetPlayer": {
+          "confirmTitle": "重置通缉状态？",
+          "confirmText": "您想清除玩家 {{name}} 的通缉状态吗？",
+          "confirmButton": "是的，重置",
+          "successText": "玩家 {{name}} 的通缉状态已重置。"
+        },
+        "monitoring": {
+          "title": "活跃通缉玩家",
+          "desc": "当前被通缉玩家的实时列表",
+          "empty": "目前没有被通缉的玩家。"
+        },
+        "actions": {
+          "resetAll": "全部重置",
+          "triggerManual": "手动设置通缉",
+          "resetPlayer": "重置该玩家的赏金",
+          "resetBtn": "重置"
+        },
+        "table": {
+          "status": "状态",
+          "player": "玩家",
+          "steamId": "Steam ID",
+          "streak": "连杀数",
+          "bounty": "赏金值",
+          "actions": "操作"
+        },
+        "manualTrigger": {
+          "title": "手动设置通缉",
+          "searchLabel": "搜索玩家",
+          "searchPlaceholder": "名称或 Steam ID...",
+          "noPlayers": "未找到玩家。",
+          "startSearch": "输入进行搜索...",
+          "select": "选择",
+          "selectedPlayer": "已选玩家",
+          "valueLabel": "赏金值（积分）",
+          "submit": "设为通缉",
+          "successText": "玩家 {{name}} 已成功手动设为通缉。"
+        }
+      }
+    }
+  }
+}

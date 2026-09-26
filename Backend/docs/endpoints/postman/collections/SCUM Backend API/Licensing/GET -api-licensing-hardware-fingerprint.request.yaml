@@ -1,0 +1,8 @@
+$kind: http-request
+name: GET /api/licensing/hardware-fingerprint
+description: GET /api/licensing/hardware-fingerprint
+url: "{{baseUrl}}/api/licensing/hardware-fingerprint"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+order: 1000

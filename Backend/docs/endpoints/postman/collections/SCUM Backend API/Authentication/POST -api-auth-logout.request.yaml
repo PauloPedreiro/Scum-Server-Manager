@@ -1,0 +1,9 @@
+$kind: http-request
+name: POST /api/auth/logout
+description: POST /api/auth/logout
+url: "{{baseUrl}}/api/auth/logout"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+order: 9000

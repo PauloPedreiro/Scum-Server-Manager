@@ -1,0 +1,15 @@
+$kind: http-request
+name: POST /api/shop/delivery/run
+description: Executa job offline de entrega manualmente (admin).
+url: "{{baseUrl}}/api/shop/delivery/run"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+body:
+  type: json
+  content: |-
+    {
+      "limit": 50
+    }
+order: 19000

@@ -1,0 +1,19 @@
+$kind: http-request
+name: POST /api/integrations/vip/activate
+description: Ativa VIP via integração (X-Integration-Key).
+url: "{{baseUrl}}/api/integrations/vip/activate"
+method: POST
+headers:
+  Content-Type: application/json
+  X-Integration-Key: "{{integrationKey}}"
+body:
+  type: json
+  content: |-
+    {
+      "external_id": "{{integrationExternalId}}",
+      "steam_id": "{{steamId}}",
+      "meta": {
+        "source": "postman"
+      }
+    }
+order: 4000

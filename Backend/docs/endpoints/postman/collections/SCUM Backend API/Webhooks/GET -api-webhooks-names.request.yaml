@@ -1,0 +1,8 @@
+$kind: http-request
+name: GET /api/webhooks/names
+description: GET /api/webhooks/names
+url: "{{baseUrl}}/api/webhooks/names"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+order: 4000

@@ -1,0 +1,18 @@
+$kind: http-request
+name: POST /api/shop/admin/catalog/import (dry_run)
+description: Valida snapshot e retorna resumo sem gravar (admin).
+url: "{{baseUrl}}/api/shop/admin/catalog/import?dry_run=true"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+queryParams:
+  dry_run: "true"
+body:
+  type: json
+  content: |-
+    {
+      "schema": "shop_catalog_snapshot_v1",
+      "items": []
+    }
+order: 16000

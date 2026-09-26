@@ -1,0 +1,317 @@
+{
+  "schema_version": 1,
+  "context": {
+    "flag_id": 5,
+    "internal_base_id": 2,
+    "scum_db_path": "C:\\Servers\\scum\\SCUM\\Saved\\SaveFiles\\SCUM.db",
+    "template_db_path": "data/templates/scum_base_template.db",
+    "notes": "Captura manual de assets por nível para posterior migração para scum_base_template.db (asset_whitelist + family_level_asset)."
+  },
+  "snapshots": {
+    "baseline_2026-04-08T21:58:34": {
+      "28": "/Game/ConZ_Files/BaseBuilding/BaseElements/Modular/BPC_Base_Modular_Door_Frame_Single_Cement.BPC_Base_Modular_Door_Frame_Single_Cement_C",
+      "29": "/Game/ConZ_Files/BaseBuilding/BaseElements/Modular/BPC_Base_Modular_Door_Frame_Double_Cement.BPC_Base_Modular_Door_Frame_Double_Cement_C",
+      "45": "/Game/ConZ_Files/BaseBuilding/BaseElements/NewWalls/BP_Base_Wall_Basic_500.BP_Base_Wall_Basic_500_C",
+      "46": "/Game/ConZ_Files/BaseBuilding/BaseElements/NewWalls/BP_Base_Wall_Basic_500.BP_Base_Wall_Basic_500_C",
+      "47": "/Game/ConZ_Files/BaseBuilding/BaseElements/NewWalls/BP_Base_Frame_Single_Basic.BP_Base_Frame_Single_Basic_C",
+      "49": "/Game/ConZ_Files/BaseBuilding/BaseElements/NewWalls/Bp_Base_Airplane_Door_Frame_Upgr_4.Bp_Base_Airplane_Door_Frame_Upgr_4_C",
+      "50": "/Game/ConZ_Files/BaseBuilding/BaseElements/NewWalls/Bp_Base_Airplane_Door_Upgr_3.Bp_Base_Airplane_Door_Upgr_3_C",
+      "51": "/Game/ConZ_Files/BaseBuilding/BaseElements/NewWalls/BP_Base_Frame_Basic.BP_Base_Frame_Basic_C"
+    },
+    "baseline_2026-04-09T10:34:59": {
+      "5": "/Game/ConZ_Files/BaseBuilding/BaseElements/BP_Base_Flag_Supporter.BP_Base_Flag_Supporter_C",
+      "6": "/Game/ConZ_Files/BaseBuilding/BaseElements/NewWalls/BP_Base_Frame_Single_Basic.BP_Base_Frame_Single_Basic_C"
+    },
+    "baseline_2026-04-09T14:37:00": {
+      "5": "/Game/ConZ_Files/BaseBuilding/BaseElements/BP_Base_Flag_Supporter.BP_Base_Flag_Supporter_C",
+      "6": "/Game/ConZ_Files/BaseBuilding/BaseElements/NewWalls/BP_Base_Wall_Basic_300.BP_Base_Wall_Basic_300_C"
+    }
+  },
+  "families": {
+    "Bp_Base_Airplane_Door_Frame": {
+      "element_ids": [
+        49
+      ],
+      "levels": {
+        "0": {
+          "asset": "/Game/ConZ_Files/BaseBuilding/BaseElements/NewWalls/Bp_Base_Airplane_Door_Frame.Bp_Base_Airplane_Door_Frame_C",
+          "source": "baseline"
+        },
+        "1": {
+          "asset": "/Game/ConZ_Files/BaseBuilding/BaseElements/NewWalls/Bp_Base_Airplane_Door_Frame_Upgr_1.Bp_Base_Airplane_Door_Frame_Upgr_1_C",
+          "source": "manual_upgrade"
+        },
+        "2": {
+          "asset": "/Game/ConZ_Files/BaseBuilding/BaseElements/NewWalls/Bp_Base_Airplane_Door_Frame_Upgr_2.Bp_Base_Airplane_Door_Frame_Upgr_2_C",
+          "source": "manual_upgrade"
+        },
+        "3": {
+          "asset": "/Game/ConZ_Files/BaseBuilding/BaseElements/NewWalls/Bp_Base_Airplane_Door_Frame_Upgr_3.Bp_Base_Airplane_Door_Frame_Upgr_3_C",
+          "source": "manual_upgrade"
+        },
+        "4": {
+          "asset": "/Game/ConZ_Files/BaseBuilding/BaseElements/NewWalls/Bp_Base_Airplane_Door_Frame_Upgr_4.Bp_Base_Airplane_Door_Frame_Upgr_4_C",
+          "source": "manual_upgrade"
+        }
+      }
+    },
+    "BP_Base_Wall_Basic_500": {
+      "element_ids": [
+        13,
+        14
+      ],
+      "levels": {
+        "0": {
+          "asset": "/Game/ConZ_Files/BaseBuilding/BaseElements/NewWalls/BP_Base_Wall_Basic_500.BP_Base_Wall_Basic_500_C",
+          "source": "baseline"
+        },
+        "1": {
+          "asset": "/Game/ConZ_Files/BaseBuilding/BaseElements/NewWalls/BP_Base_Wall_Upgr_500.BP_Base_Wall_Upgr_500_C",
+          "source": "manual_upgrade"
+        },
+        "2": {
+          "asset": "/Game/ConZ_Files/BaseBuilding/BaseElements/NewWalls/BP_Base_Wall_Upgr_2_500.BP_Base_Wall_Upgr_2_500_C",
+          "source": "manual_upgrade"
+        },
+        "3": {
+          "asset": "/Game/ConZ_Files/BaseBuilding/BaseElements/NewWalls/BP_Base_Wall_Upgr_3_500.BP_Base_Wall_Upgr_3_500_C",
+          "source": "manual_upgrade"
+        },
+        "4": {
+          "asset": "/Game/ConZ_Files/BaseBuilding/BaseElements/NewWalls/BP_Base_Wall_Upgr_4_500.BP_Base_Wall_Upgr_4_500_C",
+          "source": "manual_upgrade"
+        }
+      }
+    },
+    "BP_Base_Wall_Basic_400": {
+      "element_ids": [
+        21
+      ],
+      "levels": {
+        "0": {
+          "asset": "/Game/ConZ_Files/BaseBuilding/BaseElements/NewWalls/BP_Base_Wall_Basic_400.BP_Base_Wall_Basic_400_C",
+          "source": "baseline"
+        },
+        "1": {
+          "asset": "/Game/ConZ_Files/BaseBuilding/BaseElements/NewWalls/BP_Base_Wall_Upgr_400.BP_Base_Wall_Upgr_400_C",
+          "source": "manual_upgrade"
+        },
+        "4": {
+          "asset": "/Game/ConZ_Files/BaseBuilding/BaseElements/NewWalls/BP_Base_Wall_Upgr_4_400.BP_Base_Wall_Upgr_4_400_C",
+          "source": "manual_upgrade"
+        }
+      }
+    },
+    "BP_Base_Wall_Basic_50": {
+      "element_ids": [
+        22
+      ],
+      "levels": {
+        "0": {
+          "asset": "/Game/ConZ_Files/BaseBuilding/BaseElements/NewWalls/BP_Base_Wall_Basic_50.BP_Base_Wall_Basic_50_C",
+          "source": "baseline"
+        },
+        "2": {
+          "asset": "/Game/ConZ_Files/BaseBuilding/BaseElements/NewWalls/BP_Base_Wall_Upgr_2_50.BP_Base_Wall_Upgr_2_50_C",
+          "source": "manual_upgrade"
+        },
+        "3": {
+          "asset": "/Game/ConZ_Files/BaseBuilding/BaseElements/NewWalls/BP_Base_Wall_Upgr_3_50.BP_Base_Wall_Upgr_3_50_C",
+          "source": "manual_upgrade"
+        },
+        "4": {
+          "asset": "/Game/ConZ_Files/BaseBuilding/BaseElements/NewWalls/BP_Base_Wall_Upgr_4_50.BP_Base_Wall_Upgr_4_50_C",
+          "source": "manual_upgrade"
+        }
+      }
+    },
+    "BP_Base_Wall_Basic_25": {
+      "element_ids": [
+        55
+      ],
+      "levels": {
+        "0": {
+          "asset": "/Game/ConZ_Files/BaseBuilding/BaseElements/NewWalls/BP_Base_Wall_Basic_25.BP_Base_Wall_Basic_25_C",
+          "source": "baseline"
+        },
+        "1": {
+          "asset": "/Game/ConZ_Files/BaseBuilding/BaseElements/NewWalls/BP_Base_Wall_Upgr_25.BP_Base_Wall_Upgr_25_C",
+          "source": "manual_upgrade"
+        },
+        "2": {
+          "asset": "/Game/ConZ_Files/BaseBuilding/BaseElements/NewWalls/BP_Base_Wall_Upgr_2_25.BP_Base_Wall_Upgr_2_25_C",
+          "source": "manual_upgrade"
+        },
+        "3": {
+          "asset": "/Game/ConZ_Files/BaseBuilding/BaseElements/NewWalls/BP_Base_Wall_Upgr_3_25.BP_Base_Wall_Upgr_3_25_C",
+          "source": "manual_upgrade"
+        },
+        "4": {
+          "asset": "/Game/ConZ_Files/BaseBuilding/BaseElements/NewWalls/BP_Base_Wall_Upgr_4_25.BP_Base_Wall_Upgr_4_25_C",
+          "source": "manual_upgrade"
+        }
+      }
+    },
+    "BP_Base_Wall_Basic_300": {
+      "element_ids": [
+        6
+      ],
+      "levels": {
+        "0": {
+          "asset": "/Game/ConZ_Files/BaseBuilding/BaseElements/NewWalls/BP_Base_Wall_Basic_300.BP_Base_Wall_Basic_300_C",
+          "source": "baseline"
+        },
+        "1": {
+          "asset": "/Game/ConZ_Files/BaseBuilding/BaseElements/NewWalls/BP_Base_Wall_Upgr_300.BP_Base_Wall_Upgr_300_C",
+          "source": "manual_upgrade"
+        },
+        "2": {
+          "asset": "/Game/ConZ_Files/BaseBuilding/BaseElements/NewWalls/BP_Base_Wall_Upgr_2_300.BP_Base_Wall_Upgr_2_300_C",
+          "source": "manual_upgrade"
+        },
+        "3": {
+          "asset": "/Game/ConZ_Files/BaseBuilding/BaseElements/NewWalls/BP_Base_Wall_Upgr_3_300.BP_Base_Wall_Upgr_3_300_C",
+          "source": "manual_upgrade"
+        },
+        "4": {
+          "asset": "/Game/ConZ_Files/BaseBuilding/BaseElements/NewWalls/BP_Base_Wall_Upgr_4_300.BP_Base_Wall_Upgr_4_300_C",
+          "source": "manual_upgrade"
+        }
+      }
+    },
+    "BP_Base_Airplane_Door": {
+      "element_ids": [
+        50
+      ],
+      "levels": {
+        "1": {
+          "asset": "/Game/ConZ_Files/BaseBuilding/BaseElements/NewWalls/BP_Base_Airplane_Door_1.BP_Base_Airplane_Door_1_C",
+          "source": "manual_place"
+        },
+        "2": {
+          "asset": "/Game/ConZ_Files/BaseBuilding/BaseElements/NewWalls/Bp_Base_Airplane_Door_Upgr_1.Bp_Base_Airplane_Door_Upgr_1_C",
+          "source": "manual_upgrade"
+        },
+        "3": {
+          "asset": "/Game/ConZ_Files/BaseBuilding/BaseElements/NewWalls/Bp_Base_Airplane_Door_Upgr_2.Bp_Base_Airplane_Door_Upgr_2_C",
+          "source": "manual_upgrade"
+        },
+        "4": {
+          "asset": "/Game/ConZ_Files/BaseBuilding/BaseElements/NewWalls/Bp_Base_Airplane_Door_Upgr_3.Bp_Base_Airplane_Door_Upgr_3_C",
+          "source": "manual_upgrade"
+        }
+      }
+    },
+    "BP_Base_BasicDoor_Single": {
+      "element_ids": [
+        7
+      ],
+      "levels": {
+        "0": {
+          "asset": "/Game/ConZ_Files/BaseBuilding/BaseElements/NewWalls/BP_Base_BasicDoor_Single.BP_Base_BasicDoor_Single_C",
+          "source": "manual_place"
+        },
+        "1": {
+          "asset": "/Game/ConZ_Files/BaseBuilding/BaseElements/NewWalls/BP_Base_Door_Upgr1_Single.BP_Base_Door_Upgr1_Single_C",
+          "source": "manual_upgrade"
+        },
+        "2": {
+          "asset": "/Game/ConZ_Files/BaseBuilding/BaseElements/NewWalls/BP_Base_Door_Upgr2_Single.BP_Base_Door_Upgr2_Single_C",
+          "source": "manual_upgrade"
+        },
+        "3": {
+          "asset": "/Game/ConZ_Files/BaseBuilding/BaseElements/NewWalls/BP_Base_Door_Upgr3_Single.BP_Base_Door_Upgr3_Single_C",
+          "source": "manual_upgrade"
+        }
+      }
+    },
+    "BP_Base_BasicDoor_Double": {
+      "element_ids": [
+        52
+      ],
+      "levels": {
+        "0": {
+          "asset": "/Game/ConZ_Files/BaseBuilding/BaseElements/NewWalls/BP_Base_BasicDoor_Double.BP_Base_BasicDoor_Double_C",
+          "source": "manual_place"
+        },
+        "1": {
+          "asset": "/Game/ConZ_Files/BaseBuilding/BaseElements/NewWalls/BP_Base_Door_Upgr1_Double.BP_Base_Door_Upgr1_Double_C",
+          "source": "manual_upgrade"
+        },
+        "2": {
+          "asset": "/Game/ConZ_Files/BaseBuilding/BaseElements/NewWalls/BP_Base_Door_Upgr2_Double.BP_Base_Door_Upgr2_Double_C",
+          "source": "manual_upgrade"
+        },
+        "3": {
+          "asset": "/Game/ConZ_Files/BaseBuilding/BaseElements/NewWalls/BP_Base_Door_Upgr3_Double.BP_Base_Door_Upgr3_Double_C",
+          "source": "manual_upgrade"
+        }
+      }
+    },
+    "BPC_Base_Modular_Door_Frame_Single": {
+      "element_ids": [
+        28
+      ],
+      "levels": {
+        "0": {
+          "asset": "/Game/ConZ_Files/BaseBuilding/BaseElements/Modular/BPC_Base_Modular_Door_Frame_Single_Cement.BPC_Base_Modular_Door_Frame_Single_Cement_C",
+          "source": "baseline"
+        }
+      }
+    },
+    "BP_Base_Frame_Single_Basic": {
+      "element_ids": [
+        6
+      ],
+      "levels": {
+        "0": {
+          "asset": "/Game/ConZ_Files/BaseBuilding/BaseElements/NewWalls/BP_Base_Frame_Single_Basic.BP_Base_Frame_Single_Basic_C",
+          "source": "baseline"
+        },
+        "1": {
+          "asset": "/Game/ConZ_Files/BaseBuilding/BaseElements/NewWalls/BP_Base_Frame_Single_Upgr_1.BP_Base_Frame_Single_Upgr_1_C",
+          "source": "manual_upgrade"
+        },
+        "2": {
+          "asset": "/Game/ConZ_Files/BaseBuilding/BaseElements/NewWalls/BP_Base_Frame_Single_Upgr_2.BP_Base_Frame_Single_Upgr_2_C",
+          "source": "manual_upgrade"
+        },
+        "3": {
+          "asset": "/Game/ConZ_Files/BaseBuilding/BaseElements/NewWalls/BP_Base_Frame_Single_Upgr_3.BP_Base_Frame_Single_Upgr_3_C",
+          "source": "manual_upgrade"
+        },
+        "4": {
+          "asset": "/Game/ConZ_Files/BaseBuilding/BaseElements/NewWalls/BP_Base_Frame_Single_Upgr_4.BP_Base_Frame_Single_Upgr_4_C",
+          "source": "manual_upgrade"
+        }
+      }
+    },
+    "BP_Base_Frame_Basic": {
+      "element_ids": [
+        51
+      ],
+      "levels": {
+        "0": {
+          "asset": "/Game/ConZ_Files/BaseBuilding/BaseElements/NewWalls/BP_Base_Frame_Basic.BP_Base_Frame_Basic_C",
+          "source": "baseline"
+        },
+        "1": {
+          "asset": "/Game/ConZ_Files/BaseBuilding/BaseElements/NewWalls/BP_Base_Frame_Upgr_1.BP_Base_Frame_Upgr_1_C",
+          "source": "manual_upgrade"
+        },
+        "2": {
+          "asset": "/Game/ConZ_Files/BaseBuilding/BaseElements/NewWalls/BP_Base_Frame_Upgr_2.BP_Base_Frame_Upgr_2_C",
+          "source": "manual_upgrade"
+        },
+        "3": {
+          "asset": "/Game/ConZ_Files/BaseBuilding/BaseElements/NewWalls/BP_Base_Frame_Upgr_3.BP_Base_Frame_Upgr_3_C",
+          "source": "manual_upgrade"
+        },
+        "4": {
+          "asset": "/Game/ConZ_Files/BaseBuilding/BaseElements/NewWalls/BP_Base_Frame_Upgr_4.BP_Base_Frame_Upgr_4_C",
+          "source": "manual_upgrade"
+        }
+      }
+    }
+  }
+}

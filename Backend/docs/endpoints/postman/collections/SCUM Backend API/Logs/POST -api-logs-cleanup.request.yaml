@@ -1,0 +1,9 @@
+$kind: http-request
+name: POST /api/logs/cleanup
+description: POST /api/logs/cleanup
+url: "{{baseUrl}}/api/logs/cleanup"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+order: 4000

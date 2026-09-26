@@ -1,0 +1,52 @@
+$kind: collection
+description: |-
+  Coleção de endpoints para controle do servidor SCUM com sistema de deduplicação
+
+  ## Atualizações recentes
+  - 2025-01-XX: Melhorado tratamento de erros nos endpoints PATCH /api/webhooks, PUT /api/webhooks e PUT /api/webhooks/<webhook_name> com validação de JSON e mensagens de erro mais claras.
+  - 2025-01-XX: Melhorado tratamento de erros nos endpoints PATCH /api/config e PUT /api/config com validação de JSON e mensagens de erro mais claras.
+  - 2025-01-XX: Melhorado tratamento de erros nos endpoints POST /api/server/start, POST /api/server/stop e POST /api/server/restart com validação de JSON e mensagens de erro mais claras.
+  - 2025-01-XX: Melhorado tratamento de erros no endpoint PATCH /api/server/settings com validação de JSON e mensagens de erro mais claras.
+  - 2025-01-XX: Corrigido erro 'StructuredLogger' object has no attribute 'warning' - substituído logger.warning() por logger.warn() em todos os endpoints.
+  - 2025-01-XX: Adicionado handler global de erros BadRequest para melhor tratamento de requisições malformadas.
+  - 2025-01-XX: Adicionado sistema de recuperação de senha (/api/auth/request-password-reset, /api/auth/reset-password) com tokens enviados via DM do Discord (para admins vinculados).
+  - 2025-12-XX: Implementado sistema de sincronização com Gestão (GestaoSyncService) - sincronização automática de dados de servidor, jogadores e rankings a cada 4 horas.
+  - 2025-12-04: Adicionado sistema completo de autenticação JWT (/api/auth/*) com login, mudança de senha, gerenciamento de usuários e proteção de endpoints.
+  - 2025-12-02: Adicionados endpoints de gerenciamento do webhooks.json (/api/webhooks/*) com suporte a teste de webhooks. Removida funcionalidade de deletar webhooks (estrutura padrão preservada).
+  - 2025-12-02: Adicionados endpoints de gerenciamento do config.json (/api/config/*).
+  - 2025-12-02: Adicionados endpoints de gerenciamento do ServerSettings.ini (/api/server/settings).
+  - 2025-12-02: Adicionado endpoint para lista completa de rankings (/api/rankings/list) com ordenação dinâmica.
+  - 2025-12-02: Adicionados endpoints de fama dos jogadores (/api/players/fame, /api/players/<steam_id>/fame).
+  - 2025-11-24: Adicionados endpoints de rankings de snipers (/api/rankings/snipers/*).
+  - 2025-11-24: Adicionados endpoints de rankings de kills (/api/rankings/kills/*).
+  - 2025-11-24: Adicionados endpoints de rankings de lockpicking (/api/rankings/lockpicking/*).
+  - 2025-01-XX: Adicionado endpoint para listar todas as bandeiras do mapa com localizações (/api/flags).
+  - 2025-01-15: Adicionados endpoints de gerenciamento de Elevated Users (/api/elevated-users/*, /api/players/<steam_id>/elevated-user).
+  - 2025-11-17: Adicionados endpoints de sincronização de GPS dos jogadores online (/api/gps/*).
+  - 2025-11-10: Adicionados endpoints de verificação periódica de veículos (/api/vehicles/verification/*).
+  - 2025-11-08: Ajustada documentação para remoção do link SCUM Maps dos alertas de baú e correção de anexos no Discord (sem novos endpoints).
+  - 2025-01-XX: Adicionado endpoint POST /api/scheduler/test-alert para testar alertas de restart no Discord.
+  - 2025-01-XX: Atualização completa da coleção com todos os 152 endpoints disponíveis.
+  - 2025-01-13: Adicionados endpoints de relatórios de jogadores (/api/reports/players/*) para análise de média de jogadores online com gráficos.
+variables:
+  baseUrl: http://localhost:3000
+  baseProtocol: http
+  basePort: "3000"
+  token: ""
+  gestaoPlayerToken: ""
+  playerToken: ""
+  scheduledNotificationId: ""
+  gestaoUrl: localhost
+  gestaoProtocol: http
+  gestaoPort: "8000"
+  serverHash: ""
+  steamId: ""
+  mailboxChestId: "60008"
+  chestEntityId: ""
+  vehicleEntityId: ""
+  shopExternalId: PIX_ABC123
+  shopOrderId: ""
+  vehicleCode: "1"
+  playtimeRuleId: ""
+  integrationKey: ""
+  integrationExternalId: discord:op:123

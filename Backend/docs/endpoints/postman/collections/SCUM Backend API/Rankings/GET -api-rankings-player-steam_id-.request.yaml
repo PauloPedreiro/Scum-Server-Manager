@@ -1,0 +1,8 @@
+$kind: http-request
+name: GET /api/rankings/player/<steam_id>
+description: GET /api/rankings/player/<steam_id>
+url: "{{baseUrl}}/api/rankings/player/<steam_id>"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+order: 5000

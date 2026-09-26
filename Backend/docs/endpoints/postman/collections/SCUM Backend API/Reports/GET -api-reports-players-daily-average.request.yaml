@@ -1,0 +1,23 @@
+$kind: http-request
+name: GET /api/reports/players/daily-average
+description: |-
+  Obter média de jogadores por dia no período especificado.
+
+  **Parâmetros Query:**
+  - `days` (opcional, padrão: 7): Número de dias para analisar (1-365)
+  - `interval_minutes` (opcional, padrão: 15): Intervalo entre snapshots em minutos (5-60)
+
+  **Resposta:**
+  Retorna média, mínimo, máximo, pico e baixa por dia, incluindo estatísticas gerais do período.
+url: "{{baseUrl}}/api/reports/players/daily-average?days=7&interval_minutes=15"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+queryParams:
+  - key: days
+    value: "7"
+    description: "Número de dias para analisar (1-365, padrão: 7)"
+  - key: interval_minutes
+    value: "15"
+    description: "Intervalo entre snapshots em minutos (5-60, padrão: 15)"
+order: 3000

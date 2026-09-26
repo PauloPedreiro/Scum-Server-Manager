@@ -1,0 +1,9 @@
+$kind: http-request
+name: POST /api/webhooks/restore
+description: POST /api/webhooks/restore
+url: "{{baseUrl}}/api/webhooks/restore"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+order: 7000

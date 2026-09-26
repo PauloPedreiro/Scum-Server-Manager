@@ -1,0 +1,23 @@
+# Binários
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Arquivos de build
+rsrc.syso
+versioninfo.json
+versioninfo.syso
+
+# Testes
+*.test
+*.out
+
+# Go workspace
+go.work
+
+# Arquivos copiados para build
+Mine_01.ico
+dist/
+

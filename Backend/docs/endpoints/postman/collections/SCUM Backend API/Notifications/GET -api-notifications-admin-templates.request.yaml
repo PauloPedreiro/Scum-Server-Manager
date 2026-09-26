@@ -1,0 +1,8 @@
+$kind: http-request
+name: GET /api/notifications/admin/templates
+description: GET /api/notifications/admin/templates
+url: "{{baseUrl}}/api/notifications/admin/templates"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+order: 1000

@@ -1,0 +1,15 @@
+$kind: http-request
+name: POST /api/shop/admin/catalog/clear
+description: Zera o catálogo removendo todas as linhas de shop_catalog e shop_offer (admin).
+url: "{{baseUrl}}/api/shop/admin/catalog/clear"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+body:
+  type: json
+  content: |-
+    {
+      "confirm": "DELETE_ALL_CATALOG"
+    }
+order: 17000

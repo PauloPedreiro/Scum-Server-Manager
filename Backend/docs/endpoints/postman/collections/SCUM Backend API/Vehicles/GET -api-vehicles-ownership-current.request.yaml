@@ -1,0 +1,8 @@
+$kind: http-request
+name: GET /api/vehicles/ownership/current
+description: GET /api/vehicles/ownership/current
+url: "{{baseUrl}}/api/vehicles/ownership/current"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+order: 6000

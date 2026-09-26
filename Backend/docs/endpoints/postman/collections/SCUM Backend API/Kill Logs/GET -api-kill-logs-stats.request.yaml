@@ -1,0 +1,8 @@
+$kind: http-request
+name: GET /api/kill-logs/stats
+description: GET /api/kill-logs/stats
+url: "{{baseUrl}}/api/kill-logs/stats"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+order: 3000

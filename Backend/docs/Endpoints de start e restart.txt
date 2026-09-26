@@ -1,0 +1,55 @@
+1. Teste INICIAR servidor:
+
+POST http://localhost:3000/api/server/start
+Content-Type: application/json
+
+{
+  "force": false,
+  "wait_timeout": 30
+}
+
+2. Teste PARAR servidor:
+
+POST http://localhost:3000/api/server/stop
+Content-Type: application/json
+
+{
+  "force": false,
+  "wait_timeout": 30
+}
+
+3. Teste REINICIAR servidor:
+
+POST http://localhost:3000/api/server/restart
+Content-Type: application/json
+
+{
+  "force": false,
+  "wait_timeout": 30
+}
+
+1. 🕐 Sistema de Agendamento Completo
+Classe RestartScheduler com funcionalidades completas
+Agendamento automático em horários configuráveis
+Notificações prévias (5min e 1min antes)
+Logs detalhados de todas as operações
+Thread separada para não bloquear a API
+2. ⚙️ Configuração Flexível
+3. 🔌 API REST Completa
+GET /api/scheduler/status - Status do agendador
+POST /api/scheduler/start - Iniciar agendador
+POST /api/scheduler/stop - Parar agendador
+POST /api/scheduler/restart - Reiniciar agendador
+GET /api/scheduler/logs - Logs do agendador
+GET /api/scheduler/config - Obter configuração
+POST /api/scheduler/config - Atualizar configuração
+POST /api/scheduler/force-restart - Reinicialização forçada
+
+
+4. 📊 Status Atual
+
+✅ Agendador iniciado automaticamente
+✅ Próxima reinicialização: 17:00 (hoje)
+✅ Notificações agendadas: 16:55 e 16:59
+✅ 8 jobs agendados no sistema
+✅ Loop do agendador rodando

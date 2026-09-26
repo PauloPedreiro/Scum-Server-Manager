@@ -1,0 +1,8 @@
+$kind: http-request
+name: GET /api/squads/<squad_id>/members
+description: GET /api/squads/<squad_id>/members
+url: "{{baseUrl}}/api/squads/<squad_id>/members"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+order: 3000

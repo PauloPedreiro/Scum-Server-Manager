@@ -1,0 +1,52 @@
+$kind: http-request
+name: PUT /api/webhooks
+description: |-
+  PUT /api/webhooks
+
+  Substituir completamente todos os webhooks.
+
+  **Parâmetros:**
+  - `webhooks` (objeto, obrigatório): Objeto completo com todos os webhooks
+  - `create_backup` (boolean, opcional): Criar backup antes de substituir (padrão: true)
+
+  **Exemplo de Body:**
+  ```json
+  {
+    "webhooks": {
+      "serverstatus": "https://discord.com/api/webhooks/...",
+      "new_player": "https://discord.com/api/webhooks/...",
+      "players_online": "https://discord.com/api/webhooks/..."
+    },
+    "create_backup": true
+  }
+  ```
+
+  **Resposta de Sucesso (200):**
+  ```json
+  {
+    "success": true,
+    "message": "Webhooks completos atualizados",
+    "timestamp": 1701504000
+  }
+  ```
+
+  **Possíveis Erros:**
+  - 400: Body vazio, JSON inválido ou campo "webhooks" ausente/inválido
+  - 500: Erro interno do servidor
+url: "{{baseUrl}}/api/webhooks"
+method: PUT
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+body:
+  type: json
+  content: |-
+    {
+      "webhooks": {
+        "serverstatus": "https://discord.com/api/webhooks/...",
+        "new_player": "https://discord.com/api/webhooks/...",
+        "players_online": "https://discord.com/api/webhooks/..."
+      },
+      "create_backup": true
+    }
+order: 12000

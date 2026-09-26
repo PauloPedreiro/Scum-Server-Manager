@@ -1,0 +1,8 @@
+$kind: http-request
+name: GET /api/rankings/list
+description: GET /api/rankings/list
+url: "{{baseUrl}}/api/rankings/list"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+order: 3000

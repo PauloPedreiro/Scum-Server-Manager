@@ -1,0 +1,68 @@
+{
+  "Notifications": [
+    {
+      "day": "Everyday",
+      "time": [
+        "18:50"
+      ],
+      "duration": 10,
+      "color": "255-180-50",
+      "message": "⚠️ SERVER RESTART IN 10 MINUTES! | #NumPlayers players online"
+    },
+    {
+      "day": "Everyday",
+      "time": [
+        "18:52"
+      ],
+      "duration": 10,
+      "color": "150-255-150",
+      "message": "Enquanto o Servidor reinicia, peça um ifood cupom 545asdff"
+    },
+    {
+      "day": "Everyday",
+      "time": [
+        "18:55"
+      ],
+      "duration": 10,
+      "color": "255-180-50",
+      "message": "⚠️ SERVER RESTART IN 5 MINUTES! | #NumPlayers players online"
+    },
+    {
+      "day": "Everyday",
+      "time": [
+        "18:56"
+      ],
+      "duration": 10,
+      "color": "255-180-50",
+      "message": "⚠️ SERVER RESTART IN 4 MINUTES! | #NumPlayers players online"
+    },
+    {
+      "day": "Everyday",
+      "time": [
+        "18:57"
+      ],
+      "duration": 10,
+      "color": "255-180-50",
+      "message": "⚠️ SERVER RESTART IN 3 MINUTES! | #NumPlayers players online"
+    },
+    {
+      "day": "Everyday",
+      "time": [
+        "18:58"
+      ],
+      "duration": 10,
+      "color": "255-180-50",
+      "message": "⚠️ SERVER RESTART IN 2 MINUTES! | #NumPlayers players online"
+    },
+    {
+      "day": "Everyday",
+      "time": [
+        "18:59"
+      ],
+      "duration": 10,
+      "color": "255-100-100",
+      "message": "⚠️ SERVER RESTART IN 1 MINUTE! | #NumPlayers players online"
+    }
+  ]
+}
+

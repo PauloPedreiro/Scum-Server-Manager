@@ -1,0 +1,6 @@
+$kind: http-request
+url: "{{baseUrl}}/api/review/items/reprocess-all"
+method: POST
+headers:
+  Authorization: Bearer {{accessToken}}
+order: 3000

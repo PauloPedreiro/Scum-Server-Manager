@@ -1,0 +1,12 @@
+$kind: http-request
+name: POST /api/shop/admin/scanner/sync
+description: Lê o chest scanner no SCUM.db e cria entradas no catálogo/ofertas (SSM.db).
+url: "{{baseUrl}}/api/shop/admin/scanner/sync"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+body:
+  type: json
+  content: "{}"
+order: 9000

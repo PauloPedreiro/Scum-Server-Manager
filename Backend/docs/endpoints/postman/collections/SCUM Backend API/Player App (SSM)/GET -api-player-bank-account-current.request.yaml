@@ -1,0 +1,8 @@
+$kind: http-request
+name: GET /api/player/bank-account/current
+description: GET /api/player/bank-account/current
+url: "{{baseProtocol}}://{{baseUrl}}:{{basePort}}/api/player/bank-account/current"
+method: GET
+headers:
+  Authorization: Bearer {{playerToken}}
+order: 4000

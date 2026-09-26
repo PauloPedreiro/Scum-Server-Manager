@@ -1,0 +1,25 @@
+$kind: http-request
+name: GET /api/reports/players/chart-data
+description: |-
+  Obter dados formatados prontos para uso em gráficos (Chart.js, Plotly, etc.).
+
+  **Parâmetros Query:**
+  - `days` (opcional, padrão: 7): Número de dias para analisar (1-365)
+  - `granularity` (opcional, padrão: "hour"): Tipo de granularidade
+    - `"hour"`: Média por hora do dia (0-23)
+    - `"day"`: Média por dia no período
+
+  **Resposta:**
+  Retorna objeto com `labels` (array de strings) e `datasets` (array com dados numéricos) formatados para gráficos.
+url: "{{baseUrl}}/api/reports/players/chart-data?days=7&granularity=hour"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+queryParams:
+  - key: days
+    value: "7"
+    description: "Número de dias para analisar (1-365, padrão: 7)"
+  - key: granularity
+    value: hour
+    description: "Tipo de granularidade: 'hour' (média por hora do dia) ou 'day' (média por dia)"
+order: 2000

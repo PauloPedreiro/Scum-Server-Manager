@@ -1,0 +1,16 @@
+$kind: http-request
+name: POST /api/player/auth/exchange
+description: POST /api/player/auth/exchange
+url: "{{baseProtocol}}://{{baseUrl}}:{{basePort}}/api/player/auth/exchange"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{gestaoPlayerToken}}
+  X-Server-Hash: "{{serverHash}}"
+body:
+  type: json
+  content: |-
+    {
+      "server_hash": "{{serverHash}}"
+    }
+order: 1000

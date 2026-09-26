@@ -1,0 +1,121 @@
+﻿# ==========================================
+# SCUM Server Manager - Monorepo .gitignore
+# ==========================================
+
+# OS & Temp
+.DS_Store
+Thumbs.db
+ehthumbs.db
+*.bak
+*.backup
+*.tmp
+*.temp
+temp/
+tmp/
+scratch/
+**/.git_old/
+**/.git_old_root/
+
+# IDEs & Editors
+.vscode/
+.idea/
+.cursor/
+.windsurf/
+*.swp
+*.swo
+*~
+*.suo
+*.user
+*.workspace
+
+# BACKEND
+**/__pycache__/
+*.py[cod]
+*.class
+*.so
+.Python
+build/
+develop-eggs/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Python Virtual Environments
+**/.venv/
+**/venv/
+**/env/
+**/ENV/
+**/env.bak/
+**/venv.bak/
+
+# Build Output
+**/dist/
+*.spec.bak
+
+# Sensitive Configuration & Secrets (NEVER COMMIT)
+Backend/config.json
+Backend/webhooks.json
+Backend/data/config.json
+Backend/data/webhooks.json
+Backend/data/identity.json
+Backend/data/license.json
+Backend/data/config.backup.*
+**/config.json
+**/webhooks.json
+
+# SSM Database & Runtime State (DO NOT COMMIT)
+*.db
+*.db-*
+**/*.db
+**/*.db-*
+!Backend/data/templates/*.db
+!Backend/Implementar/scum_base_template.db
+Backend/data/backups/
+Backend/data/event_teleport_codes.json
+Backend/data/playtime_sessions.json
+Backend/data/chat_processed.json
+Backend/data/chat_state.json
+Backend/data/processed_commands.json
+Backend/data/mines_alerts_state.json
+Backend/data/cargo_drop_state.json
+Backend/data/fishing_ranking_last_run.json
+Backend/data/scum_installer_status.json
+
+# Whitelist safe configuration examples
+!Backend/data/config.example.json
+!Backend/data/webhooks.example.json
+
+# Logs
+*.log
+Backend/data/logs/*
+!Backend/data/logs/.gitkeep
+
+# Large Binary Mod Pak Files
+*.pak
+*.pak.disabled
+Backend/data/mods/paks/*
+!Backend/data/mods/paks/.gitkeep
+
+# FRONTEND
+**/node_modules/
+Frontend/dist/
+Frontend/.env
+Frontend/.env.local
+Frontend/.env.development.local
+Frontend/.env.test.local
+Frontend/.env.production.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+Backend/data/server_settings_presets/default.ini

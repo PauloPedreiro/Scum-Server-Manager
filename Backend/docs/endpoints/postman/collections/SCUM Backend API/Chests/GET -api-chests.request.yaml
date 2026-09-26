@@ -1,0 +1,8 @@
+$kind: http-request
+name: GET /api/chests
+description: GET /api/chests
+url: "{{baseUrl}}/api/chests"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+order: 1000

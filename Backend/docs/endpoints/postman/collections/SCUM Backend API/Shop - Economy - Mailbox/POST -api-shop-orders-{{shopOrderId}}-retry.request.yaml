@@ -1,0 +1,8 @@
+$kind: http-request
+name: POST /api/shop/orders/{{shopOrderId}}/retry
+description: Marca retry para pedido com status failed (admin).
+url: "{{baseUrl}}/api/shop/orders/{{shopOrderId}}/retry"
+method: POST
+headers:
+  Authorization: Bearer {{token}}
+order: 18000

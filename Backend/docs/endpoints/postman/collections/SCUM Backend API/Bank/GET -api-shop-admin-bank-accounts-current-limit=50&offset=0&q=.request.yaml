@@ -1,0 +1,18 @@
+$kind: http-request
+name: GET /api/shop/admin/bank-accounts/current?limit=50&offset=0&q=
+description: Lista saldos atuais (admin) com paginação. Ordena por money_total DESC e gold DESC.
+url: "{{baseUrl}}/api/shop/admin/bank-accounts/current?limit=50&offset=0&q="
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+queryParams:
+  - key: limit
+    value: "50"
+    description: "Tamanho da página (default: 50, max: 200)"
+  - key: offset
+    value: "0"
+    description: "Offset (default: 0)"
+  - key: q
+    value: ""
+    description: Busca opcional por steam_id (prefixo) ou player_name (contém)
+order: 2000

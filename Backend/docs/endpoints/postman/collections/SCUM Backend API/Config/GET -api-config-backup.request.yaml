@@ -1,0 +1,8 @@
+$kind: http-request
+name: GET /api/config/backup
+description: GET /api/config/backup
+url: "{{baseUrl}}/api/config/backup"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+order: 2000

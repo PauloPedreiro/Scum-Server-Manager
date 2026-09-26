@@ -1,0 +1,8 @@
+$kind: http-request
+name: GET /api/player/wallet/balance
+description: GET /api/player/wallet/balance
+url: "{{baseProtocol}}://{{baseUrl}}:{{basePort}}/api/player/wallet/balance"
+method: GET
+headers:
+  Authorization: Bearer {{playerToken}}
+order: 3000

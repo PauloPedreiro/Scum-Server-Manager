@@ -1,0 +1,11 @@
+$kind: http-request
+name: GET /api/shop/mailbox?limit=100&offset=0
+description: Lista jogadores com mailbox registrado (autenticado).
+url: "{{baseUrl}}/api/shop/mailbox?limit=100&offset=0"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+queryParams:
+  limit: "100"
+  offset: "0"
+order: 5000

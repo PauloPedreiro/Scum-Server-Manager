@@ -1,0 +1,9 @@
+$kind: http-request
+name: POST /api/notifications/compile
+description: POST /api/notifications/compile
+url: "{{baseUrl}}/api/notifications/compile"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+order: 9000

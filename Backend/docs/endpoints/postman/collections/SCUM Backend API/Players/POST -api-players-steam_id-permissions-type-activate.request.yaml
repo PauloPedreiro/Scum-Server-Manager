@@ -1,0 +1,9 @@
+$kind: http-request
+name: POST /api/players/<steam_id>/permissions/<type>/activate
+description: POST /api/players/<steam_id>/permissions/<type>/activate
+url: "{{baseUrl}}/api/players/<steam_id>/permissions/<type>/activate"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+order: 10000

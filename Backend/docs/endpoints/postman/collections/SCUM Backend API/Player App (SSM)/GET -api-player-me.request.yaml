@@ -1,0 +1,8 @@
+$kind: http-request
+name: GET /api/player/me
+description: GET /api/player/me
+url: "{{baseProtocol}}://{{baseUrl}}:{{basePort}}/api/player/me"
+method: GET
+headers:
+  Authorization: Bearer {{playerToken}}
+order: 2000

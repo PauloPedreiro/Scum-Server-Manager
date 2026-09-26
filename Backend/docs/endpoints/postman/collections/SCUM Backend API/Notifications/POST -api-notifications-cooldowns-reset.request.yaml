@@ -1,0 +1,9 @@
+$kind: http-request
+name: POST /api/notifications/cooldowns/reset
+description: POST /api/notifications/cooldowns/reset
+url: "{{baseUrl}}/api/notifications/cooldowns/reset"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+order: 13000

@@ -1,0 +1,8 @@
+$kind: http-request
+name: GET /api/chat-commands/status
+description: GET /api/chat-commands/status
+url: "{{baseUrl}}/api/chat-commands/status"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+order: 1000

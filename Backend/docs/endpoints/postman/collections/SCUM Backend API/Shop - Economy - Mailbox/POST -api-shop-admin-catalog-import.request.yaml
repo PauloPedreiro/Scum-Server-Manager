@@ -1,0 +1,31 @@
+$kind: http-request
+name: POST /api/shop/admin/catalog/import
+description: Importa snapshot do catálogo e faz upsert por code (admin). Suporta dry_run e mode=merge.
+url: "{{baseUrl}}/api/shop/admin/catalog/import"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+body:
+  type: json
+  content: |-
+    {
+      "schema": "shop_catalog_snapshot_v1",
+      "exportedAt": "2026-02-09T04:42:07.889Z",
+      "mode": "merge",
+      "dry_run": false,
+      "items": [
+        {
+          "code": 1,
+          "display_name": "2H_Axe_ES",
+          "setup": "2H_Axe_ES",
+          "catalog_enabled": true,
+          "offer_enabled": false,
+          "price": 0,
+          "qty": 1,
+          "max_per_order": null,
+          "max_per_day": null
+        }
+      ]
+    }
+order: 15000

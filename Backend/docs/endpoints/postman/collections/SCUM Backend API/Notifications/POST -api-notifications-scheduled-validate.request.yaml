@@ -1,0 +1,21 @@
+$kind: http-request
+name: POST /api/notifications/scheduled/validate
+description: POST /api/notifications/scheduled/validate
+url: "{{baseUrl}}/api/notifications/scheduled/validate"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+body:
+  type: text
+  content: |-
+    {
+      "message": "Custom scheduled message",
+      "duration": 15,
+      "color": "255-255-255",
+      "schedule": {
+        "type": "daily",
+        "time": "00:44"
+      }
+    }
+order: 5000

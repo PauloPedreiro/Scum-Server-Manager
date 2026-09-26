@@ -1,0 +1,9 @@
+$kind: http-request
+name: POST /api/gps/sync/stop
+description: POST /api/gps/sync/stop
+url: "{{baseUrl}}/api/gps/sync/stop"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+order: 5000

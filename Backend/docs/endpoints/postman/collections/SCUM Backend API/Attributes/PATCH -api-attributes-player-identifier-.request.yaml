@@ -1,0 +1,20 @@
+$kind: http-request
+name: PATCH /api/attributes/player/<identifier>
+description: PATCH /api/attributes/player/<identifier>
+url: "{{baseUrl}}/api/attributes/player/<identifier>"
+method: PATCH
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+body:
+  type: json
+  content: |-
+    {
+      "attributes": {
+        "strength": 5.0,
+        "constitution": 3.0,
+        "dexterity": 3.0,
+        "intelligence": 2.0
+      }
+    }
+order: 3000

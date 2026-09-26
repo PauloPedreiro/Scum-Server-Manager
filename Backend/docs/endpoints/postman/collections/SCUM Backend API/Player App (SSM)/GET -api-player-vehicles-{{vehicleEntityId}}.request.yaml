@@ -1,0 +1,15 @@
+$kind: http-request
+name: GET /api/player/vehicles/{{vehicleEntityId}}
+description: GET /api/player/vehicles/<vehicle_entity_id> - Detalhe de um veiculo com historico opcional
+url: "{{baseProtocol}}://{{baseUrl}}:{{basePort}}/api/player/vehicles/{{vehicleEntityId}}?history=true&history_limit=20"
+method: GET
+headers:
+  Authorization: Bearer {{playerToken}}
+queryParams:
+  - key: history
+    value: "true"
+    description: Incluir historico de ownership
+  - key: history_limit
+    value: "20"
+    description: "Max registros de historico (default: 20, max: 100)"
+order: 13000

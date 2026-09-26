@@ -1,0 +1,8 @@
+$kind: http-request
+name: GET /api/survival/player/<identifier>
+description: GET /api/survival/player/<identifier>
+url: "{{baseUrl}}/api/survival/player/<identifier>"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+order: 2000

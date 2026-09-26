@@ -1,0 +1,9 @@
+$kind: http-request
+name: POST /api/fishing-ranking/test
+description: POST /api/fishing-ranking/test
+url: "{{baseUrl}}/api/fishing-ranking/test"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+order: 2000

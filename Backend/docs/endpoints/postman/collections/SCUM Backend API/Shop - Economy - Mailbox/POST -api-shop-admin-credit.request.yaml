@@ -1,0 +1,20 @@
+$kind: http-request
+name: POST /api/shop/admin/credit
+description: Crédito administrativo idempotente (admin).
+url: "{{baseUrl}}/api/shop/admin/credit"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+body:
+  type: json
+  content: |-
+    {
+      "external_id": "{{shopExternalId}}",
+      "steam_id": "{{steamId}}",
+      "amount": 100,
+      "meta": {
+        "provider": "pix"
+      }
+    }
+order: 1000

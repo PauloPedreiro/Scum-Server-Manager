@@ -1,0 +1,11 @@
+$kind: http-request
+name: GET /api/admin-logs/stats
+description: |-
+  Estatisticas de admin logs.
+
+  As categorias sao agregadas por category_key (quando existir) ou category legado, e incluem name/emoji/color por categoria.
+url: "{{baseProtocol}}://{{baseUrl}}:{{basePort}}/api/admin-logs/stats"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+order: 4000

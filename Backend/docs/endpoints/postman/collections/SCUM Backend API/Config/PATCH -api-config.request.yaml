@@ -1,0 +1,46 @@
+$kind: http-request
+name: PATCH /api/config
+description: |-
+  Atualizar seção(s) específica(s) do config.json
+
+  **Campos obrigatórios:**
+  - `sections` (objeto): Objeto com as seções a serem atualizadas
+
+  **Campos opcionais:**
+  - `create_backup` (boolean): Criar backup antes de atualizar (padrão: true)
+
+  **Exemplo de resposta de sucesso:**
+  ```json
+  {
+    "success": true,
+    "message": "Configuração atualizada com sucesso",
+    "data": {
+      "updated_sections": ["server"],
+      "requires_restart": ["server"]
+    },
+    "timestamp": 1701504000
+  }
+  ```
+
+  **Possíveis erros:**
+  - 400: JSON inválido ou campo "sections" faltando
+  - 400: Campo "sections" deve ser um objeto
+  - 500: Erro ao processar configuração
+url: "{{baseUrl}}/api/config"
+method: PATCH
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+body:
+  type: json
+  content: |-
+    {
+      "sections": {
+        "server": {
+          "port": 7002,
+          "max_players": 64
+        }
+      },
+      "create_backup": true
+    }
+order: 4000

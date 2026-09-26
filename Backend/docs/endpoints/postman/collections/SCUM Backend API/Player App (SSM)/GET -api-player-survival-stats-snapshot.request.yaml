@@ -1,0 +1,8 @@
+$kind: http-request
+name: GET /api/player/survival-stats/snapshot
+description: GET /api/player/survival-stats/snapshot
+url: "{{baseProtocol}}://{{baseUrl}}:{{basePort}}/api/player/survival-stats/snapshot"
+method: GET
+headers:
+  Authorization: Bearer {{playerToken}}
+order: 8000

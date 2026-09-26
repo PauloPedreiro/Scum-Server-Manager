@@ -1,0 +1,8 @@
+$kind: http-request
+name: GET /api/gps/online
+description: GET /api/gps/online
+url: "{{baseUrl}}/api/gps/online"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+order: 1000

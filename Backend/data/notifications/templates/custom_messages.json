@@ -1,0 +1,112 @@
+{
+  "name": "admin_messages",
+  "description": "Template para mensagens administrativas enviadas pelo administrador",
+  "version": "1.0",
+  "default_colors": {
+    "admin_announcement": "255-255-100",
+    "admin_warning": "255-180-50",
+    "admin_info": "100-200-255",
+    "admin_success": "100-255-100",
+    "admin_error": "255-100-100",
+    "admin_maintenance": "255-150-100",
+    "admin_event": "200-100-255"
+  },
+  "default_duration": 20,
+  "admin_message_types": [
+    {
+      "type": "admin_announcement",
+      "description": "Anúncios gerais do administrador",
+      "color": "255-255-100",
+      "duration": 25,
+      "examples": [
+        "Novo evento especial iniciado!",
+        "Regras do servidor atualizadas",
+        "Bem-vindos novos jogadores!"
+      ]
+    },
+    {
+      "type": "admin_warning",
+      "description": "Avisos e alertas importantes",
+      "color": "255-180-50",
+      "duration": 30,
+      "examples": [
+        "Manutenção programada para hoje às 02:00",
+        "Lembrete: Respeitem as regras do servidor",
+        "Backup do servidor em andamento"
+      ]
+    },
+    {
+      "type": "admin_info",
+      "description": "Informações úteis para jogadores",
+      "color": "100-200-255",
+      "duration": 20,
+      "examples": [
+        "Dicas de sobrevivência disponíveis no Discord",
+        "Horário de pico: 18h às 22h",
+        "Servidor suporta até 64 jogadores"
+      ]
+    },
+    {
+      "type": "admin_success",
+      "description": "Confirmações de sucesso",
+      "color": "100-255-100",
+      "duration": 15,
+      "examples": [
+        "Evento concluído com sucesso!",
+        "Problema técnico resolvido",
+        "Atualização aplicada com sucesso"
+      ]
+    },
+    {
+      "type": "admin_error",
+      "description": "Avisos de problemas técnicos",
+      "color": "255-100-100",
+      "duration": 25,
+      "examples": [
+        "Problema técnico detectado. Reinicialização em breve",
+        "Conexão instável. Verificando...",
+        "Erro no sistema. Aguardem um momento"
+      ]
+    },
+    {
+      "type": "admin_maintenance",
+      "description": "Avisos de manutenção",
+      "color": "255-150-100",
+      "duration": 30,
+      "examples": [
+        "Manutenção programada em 30 minutos",
+        "Backup em andamento - lag pode ocorrer",
+        "Atualização do servidor em progresso"
+      ]
+    },
+    {
+      "type": "admin_event",
+      "description": "Eventos especiais do servidor",
+      "color": "200-100-255",
+      "duration": 20,
+      "examples": [
+        "Evento PvP iniciado! Local: Centro da ilha",
+        "Caça ao tesouro ativa por 2 horas",
+        "Desafio semanal: Sobrevivam 24h sem morte"
+      ]
+    }
+  ],
+  "usage_instructions": {
+    "description": "Como usar este template para mensagens administrativas",
+    "steps": [
+      "1. Escolha o tipo de mensagem apropriado",
+      "2. Use a cor e duração sugeridas para o tipo",
+      "3. Personalize a mensagem para seu servidor",
+      "4. Envie via API endpoint /api/notifications/send",
+      "5. A mensagem aparecerá no jogo em 2 minutos"
+    ],
+    "api_example": {
+      "endpoint": "POST /api/notifications/send",
+      "body": {
+        "message": "Sua mensagem personalizada aqui",
+        "duration": 20,
+        "color": "255-255-100"
+      }
+    }
+  }
+}

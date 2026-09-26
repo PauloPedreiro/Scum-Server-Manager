@@ -1,0 +1,8 @@
+$kind: http-request
+name: GET /api/shop/admin/catalog
+description: Lista catálogo completo (admin), incluindo itens/ofertas desabilitados.
+url: "{{baseUrl}}/api/shop/admin/catalog"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+order: 13000

@@ -1,0 +1,8 @@
+$kind: http-request
+name: GET /api/chests/player/<steam_id>
+description: GET /api/chests/player/<steam_id>
+url: "{{baseUrl}}/api/chests/player/<steam_id>"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+order: 2000

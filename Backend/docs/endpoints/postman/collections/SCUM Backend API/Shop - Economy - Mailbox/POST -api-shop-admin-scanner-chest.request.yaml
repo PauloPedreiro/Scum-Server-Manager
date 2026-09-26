@@ -1,0 +1,15 @@
+$kind: http-request
+name: POST /api/shop/admin/scanner-chest
+description: Define o chest usado como scanner de catálogo.
+url: "{{baseUrl}}/api/shop/admin/scanner-chest"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+body:
+  type: json
+  content: |-
+    {
+      "chest_id": {{mailboxChestId}}
+    }
+order: 8000

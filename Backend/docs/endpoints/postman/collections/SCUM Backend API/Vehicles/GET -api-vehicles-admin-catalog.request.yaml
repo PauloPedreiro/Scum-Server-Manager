@@ -1,0 +1,8 @@
+$kind: http-request
+name: GET /api/vehicles/admin/catalog
+description: GET /api/vehicles/admin/catalog (retorna setup, display_name, name, enabled, price, template_vehicle_entity_id)
+url: "{{baseUrl}}/api/vehicles/admin/catalog"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+order: 2000

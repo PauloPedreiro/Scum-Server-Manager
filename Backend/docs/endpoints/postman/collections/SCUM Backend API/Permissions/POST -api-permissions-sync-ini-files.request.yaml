@@ -1,0 +1,9 @@
+$kind: http-request
+name: POST /api/permissions/sync-ini-files
+description: POST /api/permissions/sync-ini-files
+url: "{{baseUrl}}/api/permissions/sync-ini-files"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+order: 4000

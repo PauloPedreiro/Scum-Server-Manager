@@ -1,0 +1,8 @@
+$kind: http-request
+name: GET /api/elevated-users/list
+description: GET /api/elevated-users/list
+url: "{{baseUrl}}/api/elevated-users/list"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+order: 1000

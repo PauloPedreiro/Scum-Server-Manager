@@ -1,0 +1,43 @@
+{
+  "name": "restart_notification",
+  "description": "Template para notificações de restart baseado na configuração do scheduler",
+  "version": "3.0",
+  "notifications": [
+    {
+      "time": "10_min_before",
+      "duration": 10,
+      "color": "255-180-50",
+      "message": "⚠️ SERVER RESTART IN 10 MINUTES! | #NumPlayers players online"
+    },
+    {
+      "time": "5_min_before",
+      "duration": 10,
+      "color": "255-180-50",
+      "message": "⚠️ SERVER RESTART IN 5 MINUTES! | #NumPlayers players online"
+    },
+    {
+      "time": "4_min_before",
+      "duration": 10,
+      "color": "255-180-50",
+      "message": "⚠️ SERVER RESTART IN 4 MINUTES! | #NumPlayers players online"
+    },
+    {
+      "time": "3_min_before",
+      "duration": 10,
+      "color": "255-180-50",
+      "message": "⚠️ SERVER RESTART IN 3 MINUTES! | #NumPlayers players online"
+    },
+    {
+      "time": "2_min_before",
+      "duration": 10,
+      "color": "255-180-50",
+      "message": "⚠️ SERVER RESTART IN 2 MINUTES! | #NumPlayers players online"
+    },
+    {
+      "time": "1_min_before",
+      "duration": 10,
+      "color": "255-100-100",
+      "message": "⚠️ SERVER RESTART IN 1 MINUTE! | #NumPlayers players online"
+    }
+  ]
+}

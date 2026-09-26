@@ -1,0 +1,11 @@
+$kind: http-request
+name: GET /api/shop/admin/wallet/transactions?steam_id={{steamId}}
+description: Extrato de um jogador específico (admin).
+url: "{{baseUrl}}/api/shop/admin/wallet/transactions?steam_id={{steamId}}&limit=100"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+queryParams:
+  steam_id: "{{steamId}}"
+  limit: "100"
+order: 7000

@@ -1,0 +1,8 @@
+$kind: http-request
+name: GET /api/scheduler/status
+description: GET /api/scheduler/status
+url: "{{baseUrl}}/api/scheduler/status"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+order: 3000

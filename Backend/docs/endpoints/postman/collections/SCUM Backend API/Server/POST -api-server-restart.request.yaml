@@ -1,0 +1,35 @@
+$kind: http-request
+name: POST /api/server/restart
+description: |-
+  Reiniciar servidor SCUM
+
+  **Parâmetros opcionais:**
+  - `force` (boolean): Forçar reinício mesmo se já estiver rodando (padrão: false)
+  - `wait_timeout` (number): Tempo em segundos para aguardar confirmação (padrão: 0 - não aguarda)
+
+  **Nota:** O body pode ser vazio `{}` - todos os parâmetros são opcionais.
+
+  **Exemplo de resposta de sucesso:**
+  ```json
+  {
+    "success": true,
+    "message": "Servidor reiniciado com sucesso",
+    "data": {
+      "pid": 12345,
+      "uptime": 0
+    }
+  }
+  ```
+url: "{{baseUrl}}/api/server/restart"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+body:
+  type: json
+  content: |-
+    {
+      "force": false,
+      "wait_timeout": 0
+    }
+order: 6000

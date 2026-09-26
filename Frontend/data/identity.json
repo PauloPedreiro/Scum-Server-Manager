@@ -1,0 +1,15 @@
+{
+  "backend_id": "SCUM-BACKEND-76D4BC33924B",
+  "owner_id": null,
+  "created_at": "2026-05-27T10:53:53.091011",
+  "last_updated": "2026-05-27T10:53:53.091014",
+  "version": "1.0.0",
+  "region": "america_south",
+  "status": "unregistered",
+  "capabilities": [
+    "server_control",
+    "scheduler",
+    "notifications",
+    "discord_webhooks"
+  ]
+}

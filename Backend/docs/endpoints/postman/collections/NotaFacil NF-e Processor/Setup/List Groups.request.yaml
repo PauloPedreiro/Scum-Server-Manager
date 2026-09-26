@@ -1,0 +1,6 @@
+$kind: http-request
+url: "{{baseUrl}}/api/setup/groups"
+method: GET
+headers:
+  Authorization: Bearer {{accessToken}}
+order: 1000

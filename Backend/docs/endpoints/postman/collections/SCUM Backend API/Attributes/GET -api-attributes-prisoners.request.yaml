@@ -1,0 +1,12 @@
+$kind: http-request
+name: GET /api/attributes/prisoners
+description: GET /api/attributes/prisoners
+url: "{{baseUrl}}/api/attributes/prisoners?query=&limit=200&offset=0"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+queryParams:
+  query: ""
+  limit: "200"
+  offset: "0"
+order: 1000

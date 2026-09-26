@@ -1,0 +1,14 @@
+[
+  {
+    "id": "5b124e62-f517-4a8d-a73e-535616e090f2",
+    "name": "TesteMacs",
+    "enabled": true,
+    "days_of_week": [
+      0,
+      1
+    ],
+    "start_time": "12:00",
+    "end_time": "18:00",
+    "preset_file": "TesteMacs.ini"
+  }
+]

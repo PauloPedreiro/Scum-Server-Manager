@@ -1,0 +1,8 @@
+$kind: http-request
+name: GET /api/weather/logs
+description: GET /api/weather/logs
+url: "{{baseUrl}}/api/weather/logs"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+order: 1000

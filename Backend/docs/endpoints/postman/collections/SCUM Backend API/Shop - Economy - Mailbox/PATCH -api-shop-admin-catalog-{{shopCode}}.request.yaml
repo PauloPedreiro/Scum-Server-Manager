@@ -1,0 +1,21 @@
+$kind: http-request
+name: PATCH /api/shop/admin/catalog/{{shopCode}}
+description: Atualiza um item do catálogo/oferta por code (admin).
+url: "{{baseUrl}}/api/shop/admin/catalog/{{shopCode}}"
+method: PATCH
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+body:
+  type: json
+  content: |-
+    {
+      "display_name": "2H Axe",
+      "catalog_enabled": true,
+      "offer_enabled": true,
+      "price": 100,
+      "qty": 1,
+      "max_per_order": 5,
+      "max_per_day": null
+    }
+order: 14000

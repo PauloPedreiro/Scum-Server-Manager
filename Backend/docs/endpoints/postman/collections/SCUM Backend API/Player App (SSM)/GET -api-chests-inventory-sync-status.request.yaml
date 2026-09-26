@@ -1,0 +1,8 @@
+$kind: http-request
+name: GET /api/chests/inventory/sync/status
+description: GET /api/chests/inventory/sync/status (admin)
+url: "{{baseProtocol}}://{{baseUrl}}:{{basePort}}/api/chests/inventory/sync/status"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+order: 9000

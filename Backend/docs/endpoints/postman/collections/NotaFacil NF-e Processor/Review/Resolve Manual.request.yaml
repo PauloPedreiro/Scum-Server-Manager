@@ -1,0 +1,17 @@
+$kind: http-request
+url: "{{baseUrl}}/api/review/resolve/manual"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{accessToken}}
+body:
+  type: text
+  content: |-
+    {
+      "identificacao_id": {{identificacaoId}},
+      "produto_normalizado_id": {{produtoNormalizadoId}},
+      "fator_conversao": 1.0,
+      "fornecedor_id": {{fornecedorId}},
+      "codigo_fornecedor": "{{codigoFornecedor}}"
+    }
+order: 2000

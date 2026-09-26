@@ -1,0 +1,355 @@
+{
+  "paths": {
+    "application": {
+      "data_directory": "data",
+      "logs_directory": "data/logs",
+      "database": "data/SSM.db",
+      "config_file": "data/config.json",
+      "webhooks_file": "data/webhooks.json"
+    },
+    "scum_server": {
+      "root_directory": "C:\\Servers\\scum",
+      "binaries_directory": "C:\\Servers\\scum\\SCUM\\Binaries\\Win64",
+      "logs_directory": "C:\\Servers\\scum\\SCUM\\Saved\\SaveFiles\\Logs",
+      "server_logs_directory": "C:\\Servers\\scum\\SCUM\\Saved\\Logs",
+      "config_directory": "C:\\Servers\\scum\\SCUM\\Saved\\Config\\WindowsServer",
+      "database": "C:\\Servers\\scum\\SCUM\\Saved\\SaveFiles\\SCUM.db",
+      "savefiles_directory": "C:\\Servers\\scum\\SCUM\\Saved\\SaveFiles"
+    }
+  },
+  "server": {
+    "steamcmd_path": "C:\\Servers\\steamcmd",
+    "nssm_path": "nssm-2.24\\win64\\nssm.exe",
+    "port": 7777,
+    "external_ip": "",
+    "max_players": 64,
+    "use_battleye": true,
+    "service_name": "SCUMServer"
+  },
+
+  "logging": {
+    "log_level": "info",
+    "log_dir": "data/logs",
+    "max_size": "10MB",
+    "backup_count": 5,
+    "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  },
+  "api": {
+    "host": "0.0.0.0",
+    "port": 3000,
+    "debug": false
+  },
+  "public": {
+    "backend_base_url_enabled": true,
+    "backend_base_url": "",
+    "gestao_player_me_path": "/api/v1/player/me",
+    "player_jwt_expiration_hours": 24
+  },
+  "frontend": {
+    "port": 5173,
+    "description": "Porta do servidor frontend para o botão Control Panel"
+  },
+  "updates": {
+    "enabled": true,
+    "auto_update": true,
+    "check_interval": 86400,
+    "backup_versions": 3,
+    "force_update": true,
+    "notify_discord": true,
+    "notify_panel": true
+  },
+  "communication": {
+    "frontend_url": "https://your-frontend.com",
+    "api_key": "your-api-key-here",
+    "webhook_url": "https://discord.com/api/webhooks/...",
+    "timeout": 30,
+    "retry_attempts": 3,
+    "retry_delay": 5000,
+    "backend_id": null,
+    "owner_id": null,
+    "server_name": "Meu Servidor SCUM",
+    "region": "america_south",
+    "auto_register": false,
+    "heartbeat_interval": 60,
+    "license_validation": {
+      "enabled": true,
+      "check_interval": 3600,
+      "grace_period": 86400
+    }
+  },
+  "scheduler": {
+    "enabled": true,
+    "auto_start": true,
+    "restart_times": [
+      "01:00",
+      "05:00",
+      "09:00",
+      "13:00",
+      "17:00",
+      "21:00"
+    ],
+    "notification_minutes": [
+      10,
+      5,
+      4,
+      3,
+      2,
+      1
+    ],
+    "timezone": "America/Sao_Paulo"
+  },
+  "weather_scheduler": {
+    "enabled": true,
+    "auto_start": true,
+    "sync_interval_minutes": 30
+  },
+  "squad_sync": {
+    "enabled": true,
+    "auto_start": true,
+    "sync_interval_minutes": 30,
+    "scum_db_path": null,
+    "ssm_db_path": null
+  },
+  "survival_sync": {
+    "enabled": true,
+    "auto_start": true,
+    "sync_interval_minutes": 30,
+    "scum_db_path": null,
+    "ssm_db_path": null
+  },
+  "rankings_sync": {
+    "enabled": true,
+    "auto_start": true,
+    "update_interval_hours": 24,
+    "update_time": "03:00",
+    "ssm_db_path": null
+  },
+  "player_skills_sync": {
+    "enabled": true,
+    "auto_start": true,
+    "sync_interval_hours": 24,
+    "scum_db_path": null,
+    "ssm_db_path": null,
+    "description": "Sincronização de skills dos jogadores do SCUM.db para SSM.db - executa a cada 24 horas"
+  },
+  "bank_account_sync": {
+    "enabled": true,
+    "auto_start": true,
+    "sync_interval_hours": 4,
+    "reconcile_enabled": true,
+    "reconcile_interval_minutes": 1,
+    "scum_db_path": null,
+    "ssm_db_path": null,
+    "description": "Sincronização periódica de saldos bancários do SCUM.db para SSM.db - executa a cada 4 horas"
+  },
+  "chest_sync": {
+    "enabled": true,
+    "auto_start": true,
+    "sync_interval_minutes": 10,
+    "scum_db_path": null,
+    "ssm_db_path": null,
+    "webhook_name": "",
+    "notify_events": [
+      "created",
+      "destroyed",
+      "owner_changed",
+      "moved",
+      "renamed",
+      "vehicle_attached",
+      "vehicle_detached",
+      "vehicle_changed",
+      "vehicle_owner_mismatch"
+    ],
+    "images_directory": null,
+    "vehicle_images_directory": null,
+    "vehicle_alert_webhook_name": ""
+  },
+  "notifications": {
+    "enabled": true,
+    "check_interval": 30000,
+    "restart_protection_window": 12,
+    "notifications_file": "Notifications.json",
+    "max_notifications_per_hour": 20,
+    "auto_cleanup_days": 30,
+    "discord_offset": {
+      "enabled": true,
+      "seconds": 120,
+      "description": "Offset em segundos para mover notificações para o futuro, garantindo visibilidade no Discord"
+    },
+    "custom_message_protection": {
+      "enabled": true,
+      "protection_minutes": 5,
+      "description": "Proteção para mensagens personalizadas - não recria notificações de restart se há mensagem personalizada recente"
+    }
+  },
+  "logs": {
+    "monitor_enabled": true,
+    "real_time_processing": true,
+    "file_check_interval": 5
+  },
+  "scum_logs_cleanup": {
+    "enabled": true,
+    "auto_start": true,
+    "run_on_startup": false,
+    "retention_days": 14,
+    "min_age_hours": 24,
+    "schedule_time": "03:30",
+    "interval_hours": 24,
+    "max_total_size_mb": 2048,
+    "file_extensions": [".log", ".txt", ".dmp", ".bak"],
+    "logs_directory": null
+  },
+  "chat_monitoring": {
+    "enabled": true,
+    "webhook_name": "",
+    "rate_limit": 10,
+    "cleanup_days": 7,
+    "channels": [
+      "Global",
+      "Local",
+      "Squad",
+      "Admin"
+    ],
+    "save_to_database": false
+  },
+  "time_precision": {
+    "enabled": true,
+    "offset_minutes": 15,
+    "description": "Minutos para adicionar ao horário do servidor para maior precisão no comando /tm"
+  },
+  "fishing_ranking": {
+    "enabled": true,
+    "interval_minutes": 15,
+    "schedule_time": "17:30",
+    "max_players": 20,
+    "send_parts": true,
+    "run_on_startup": true,
+    "description": "Sistema de ranking de pescadores - executa a cada intervalo e diariamente no horário configurado e opcionalmente ao iniciar"
+  },
+  "lockpicking_ranking": {
+    "enabled": true,
+    "interval_minutes": 15,
+    "schedule_time": "00:00",
+    "min_attempts": 10,
+    "top_n": 10,
+    "send_on_startup": true,
+    "description": "Sistema de ranking de lockpicking por tipo - executa a cada intervalo e diariamente no horário configurado e envia top 10 por tipo de fechadura"
+  },
+  "kills_ranking": {
+    "enabled": true,
+    "interval_minutes": 15,
+    "schedule_time": "00:00",
+    "top_n": 10,
+    "send_on_startup": true,
+    "description": "Sistema de ranking de combate unificado (Top 10 Killers, Snipers e Shame Rank) - executa a cada intervalo e diariamente"
+  },
+  "snipers_ranking": {
+    "enabled": false,
+    "schedule_time": "00:00",
+    "top_n": 10,
+    "send_on_startup": false,
+    "description": "Descontinuado - Integrado diretamente no kills_ranking (top10-kills)"
+  },
+  "kill_feed": {
+    "enabled": true,
+    "mode": "chat",
+    "chat_type": 2,
+    "message_template": "{killer} matou {victim} ({weapon} - {distance}m) | {phrase}",
+    "phrases_path": "data/kill_feed_phrases.json",
+    "priority": 15
+  },
+  "vehicle_verification": {
+    "enabled": true,
+    "auto_start": true,
+    "verification_interval_hours": 24,
+    "description": "Verificação periódica se os veículos registrados ainda existem no SCUM.db"
+  },
+  "vehicle_registration": {
+    "show_location": true,
+    "description": "Controla se a localização é exibida no embed do Discord para registro de veículos. true = mostra localização, false = oculta (dados continuam sendo salvos no banco normalmente)"
+  },
+  "player_gps_sync": {
+    "enabled": false,
+    "auto_start": true,
+    "sync_interval_seconds": 60,
+    "use_strict_readonly": true,
+    "description": "Sincronização de GPS dos jogadores online - atualiza apenas jogadores com status 'online' na tabela players_online. use_strict_readonly: conexão direta read-only que não cria arquivos WAL/SHM, garantindo dados frescos com latência mínima"
+  },
+  "scum_db_shared_copy": {
+    "enabled": true,
+    "temp_dir": "data/temp",
+    "max_copy_age_seconds": 120,
+    "cleanup_orphaned_copies": true,
+    "max_orphan_age_hours": 1,
+    "description": "Gerenciador de cópia compartilhada do SCUM.db - cria uma única cópia temporária reutilizável por múltiplos serviços para reduzir carga no disco. SEMPRE usa cópia compartilhada (sem fallback para conexão direta)"
+  },
+  "licensing": {
+    "description": "Sistema de licenciamento com hardware fingerprint - Configure server_url e defina enabled=true para ativar. Endpoint: POST http://localhost:8000/api/v1/validate (TESTE) | https://www.scumsm.com/api/v1/validate (PRODUÇÃO)",
+    "gestao_api_key": "your-api-key-here"
+  },
+  "auth": {
+    "enabled": true,
+    "jwt_secret": "ssm-backend-secret-key-change-in-production",
+    "jwt_expiration_hours": 24,
+    "default_username": "admin",
+    "default_password": "12345678910",
+    "password_min_length": 8,
+    "auto_create_admin": true
+  },
+
+  "gui": {
+    "minimize_to_tray": false
+  },
+  "chest_inventory_sync": {
+    "enabled": true,
+    "auto_start": true,
+    "sync_interval_minutes": 30,
+    "batch_size": 25,
+    "ttl_minutes": 120
+  },
+  "discord_bot": {
+    "bot_token": "",
+    "guild_id": "",
+    "default_category_name": "Scum Server",
+    "include_disabled_events": true,
+    "validate_existing_urls": true,
+    "repair_invalid_urls": true,
+    "register_role_id": ""
+  },
+  "mines_alerts": {
+    "flag_radius_units": 10000,
+    "flag_radius_tolerance_units": 600,
+    "teleport_punishment_enabled": false,
+    "teleport_punishment_delay_seconds": 5,
+    "wallet_fine_enabled": false,
+    "wallet_fine_amount": 1000,
+    "teleport_message": "ATENCAO: Voce foi teleportado por implantar mina fora da flag!"
+  },
+  "file_monitor": {
+    "polling_interval_seconds": 5,
+    "gameplay_copy_interval_seconds": 5,
+    "chest_ownership_copy_interval_seconds": 30,
+    "economy_copy_interval_seconds": 30
+  },
+  "playtime_rewards": {
+    "enabled": true,
+    "interval_seconds": 30,
+    "startup_delay_seconds": 3,
+    "wait_for_rankings_initial_update": false,
+    "grace_period_minutes": 5
+  },
+  "rcon": {
+    "enabled": true,
+    "ip": "127.0.0.1",
+    "port": 28015,
+    "password": "your-password-here"
+  },
+  "steam": {
+    "api_key": ""
+  },
+  "shop_notifications": {
+    "welcome_kit_delivered": "Your kit has been successfully delivered!",
+    "items_delivered": "Seus itens foram entregues com sucesso!",
+    "insufficient_funds": "Saldo insuficiente! Seu saldo atual: R$ {balance}"
+  }
+}

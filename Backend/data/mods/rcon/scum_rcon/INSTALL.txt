@@ -1,0 +1,120 @@
+================================================================
+ SCUM-RCON - Drop-In Install for a SCUM dedicated server
+================================================================
+
+This bundle adds a Source RCON server to a SCUM dedicated server.
+It includes UE4SS + the scum_rcon mod, pre-configured and ready
+to drop in. You set a password, the listener comes up, and any
+standard Source RCON client can talk to it.
+
+No RCON client is bundled - use whichever you already have
+(mcrcon, rcon-cli, BattleMetrics, RconShell, WebRcon, a custom
+bot, ...). They all speak the same protocol.
+
+================================================================
+ REQUIREMENTS
+================================================================
+
+* A SCUM dedicated server you control.
+* Private / whitelisted server only - NOT for anti-cheat-protected
+  public PvP servers.
+* BattlEye DISABLED: launch the server with -nobattleye AND
+  stop/disable the BattlEye service. UE4SS mods do not load while
+  BattlEye is active.
+
+================================================================
+ QUICK-START INSTALL (5 minutes)
+================================================================
+
+1) Extract the contents of THIS bundle (everything next to this
+   INSTALL.txt -- "dwmapi.dll" and the "ue4ss" folder) into your
+   dedicated server's Win64 folder:
+
+       <ServerInstall>\SCUM\Binaries\Win64\
+
+   The result should look like:
+
+       Win64/
+        |-- dwmapi.dll                            <- from this bundle
+        |-- SCUMServer.exe                        <- already there
+        |-- ue4ss/                                <- from this bundle
+        |   |-- UE4SS.dll
+        |   |-- UE4SS-settings.ini
+        |   |-- LICENSE
+        |   \-- Mods/
+        |       |-- mods.txt
+        |       \-- scum_rcon/
+        |           |-- dlls/main.dll
+        |           |-- config.ini                <- EDIT THIS
+        |           \-- enabled.txt
+        \-- ... (other server files)
+
+2) Open ue4ss/Mods/scum_rcon/config.ini and set a real password:
+
+       password = use-a-real-password-here
+
+   The listener REFUSES to start while the password is still
+   "CHANGE_ME_BEFORE_USE". The default port is 28015 (change it
+   in config.ini if you like).
+
+3) Make sure BattlEye is disabled (see Requirements), then start
+   your dedicated server.
+
+4) Verify the mod loaded.
+   Open: <Win64>\ue4ss\UE4SS.log
+   Look for the banner:
+
+       [SCUM-RCON] SCUM-RCON ready - listening on 0.0.0.0:28015
+
+   If you see "RCON listener NOT started: password is unset or
+   still the default", go back to step 2.
+
+5) Connect with any Source RCON client. For example, with mcrcon
+   (not bundled -- download separately if you want it):
+
+       mcrcon -H <server-ip> -P 28015 -p <your-password> -t
+
+   At the prompt, type:   ListSquads
+
+   Any client that speaks Source RCON works the same way.
+
+================================================================
+ USING THE COMMANDS
+================================================================
+
+See USAGE.md (next to this file) for the full command guide:
+how to send commands, which commands need a player's SteamID,
+the notification and chat-colour codes, the spawn-location forms,
+and the common mistakes.
+
+================================================================
+ IMPORTANT WARNINGS
+================================================================
+
+* USE AT YOUR OWN RISK. No warranty. No guarantee against future
+  game updates breaking the mod, and no guarantee against bans.
+
+* PRIVATE / WHITELISTED SERVERS ONLY, BattlEye disabled.
+
+* DO NOT expose the RCON port to the open internet without a
+  strong password. The protocol does not encrypt traffic - use a
+  VPN or SSH tunnel for remote access.
+
+================================================================
+ LICENSE / CREDITS
+================================================================
+
+Command guide:  USAGE.md (next to this file)
+
+Licenses:
+- scum_rcon:        Proprietary EULA - free for community use, not
+                    open source (see LICENSE next to this file)
+- UE4SS framework:  MIT (see ue4ss/LICENSE)
+
+Credits:
+- UE4SS framework by the RE-UE4SS team:
+    https://github.com/UE4SS-RE/RE-UE4SS
+
+Not affiliated with Gamepires. SCUM is a trademark of Gamepires.
+
+================================================================

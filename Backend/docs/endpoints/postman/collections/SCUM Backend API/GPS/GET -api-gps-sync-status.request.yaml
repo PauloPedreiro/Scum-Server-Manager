@@ -1,0 +1,8 @@
+$kind: http-request
+name: GET /api/gps/sync/status
+description: GET /api/gps/sync/status
+url: "{{baseUrl}}/api/gps/sync/status"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+order: 2000

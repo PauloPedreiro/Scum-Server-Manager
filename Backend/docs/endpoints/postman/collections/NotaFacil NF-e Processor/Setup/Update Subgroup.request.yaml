@@ -1,0 +1,14 @@
+$kind: http-request
+url: "{{baseUrl}}/api/setup/subgroups/{{subgroupId}}"
+method: PATCH
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{accessToken}}
+body:
+  type: text
+  content: |-
+    {
+      "nome": "ARROZ EDITADO",
+      "descricao": "Nova descrição do subgrupo"
+    }
+order: 5000

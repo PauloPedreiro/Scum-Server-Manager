@@ -1,0 +1,8 @@
+$kind: http-request
+name: GET /api/shop/admin/rewards/playtime-rules/{{playtimeRuleId}}/targets
+description: Lista steam_ids alvo de uma regra (admin).
+url: "{{baseUrl}}/api/shop/admin/rewards/playtime-rules/{{playtimeRuleId}}/targets"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+order: 3000

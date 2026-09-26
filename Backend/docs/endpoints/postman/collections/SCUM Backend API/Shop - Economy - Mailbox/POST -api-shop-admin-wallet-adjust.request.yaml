@@ -1,0 +1,21 @@
+$kind: http-request
+name: POST /api/shop/admin/wallet/adjust
+description: Ajuste manual de saldo (delta +/-) com idempotência via external_id (admin).
+url: "{{baseUrl}}/api/shop/admin/wallet/adjust"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+body:
+  type: json
+  content: |-
+    {
+      "external_id": "{{shopExternalId}}",
+      "steam_id": "{{steamId}}",
+      "delta": -50,
+      "reason": "admin_adjust",
+      "meta": {
+        "note": "chargeback"
+      }
+    }
+order: 6000

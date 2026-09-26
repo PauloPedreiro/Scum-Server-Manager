@@ -1,0 +1,8 @@
+$kind: http-request
+name: GET /api/vehicles/player/<steam_id>/by-status
+description: GET /api/vehicles/player/<steam_id>/by-status
+url: "{{baseUrl}}/api/vehicles/player/<steam_id>/by-status"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+order: 8000

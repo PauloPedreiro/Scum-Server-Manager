@@ -1,0 +1,18 @@
+$kind: http-request
+name: POST /api/admin/base-material/dry-run
+description: POST /api/admin/base-material/dry-run - Simula upgrade/downgrade da base pela flag (nao escreve no SCUM.db). Response inclui aliases from_asset/to_asset (alem de old_asset/new_asset). Erros retornam code (e opcionalmente details). Parametro auto_enrich_whitelist (default true) enriquece o asset_whitelist do scum_base_template.db com assets observados na base. Debug pode incluir auto_whitelisted/auto_whitelisted_assets.
+url: "{{baseUrl}}/api/admin/base-material/dry-run"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+body:
+  type: json
+  content: |-
+    {
+      "flag_id": 343,
+      "target_level": 3,
+      "fallback_lowest": true,
+      "auto_enrich_whitelist": true
+    }
+order: 1000

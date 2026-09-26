@@ -1,0 +1,55 @@
+$kind: http-request
+name: PUT /api/webhooks/<webhook_name>
+description: |-
+  PUT /api/webhooks/<webhook_name>
+
+  Atualizar um webhook específico (apenas webhooks existentes).
+
+  **Parâmetros de Rota:**
+  - `webhook_name` (string): Nome do webhook (ex: new_player, serverstatus, players_online)
+
+  **Query Params (opcional):**
+  - `create_backup` (boolean): Criar backup antes de atualizar (padrão: true)
+
+  **Parâmetros do Body:**
+  - `url` (string, obrigatório): URL do webhook do Discord
+  - `create_backup` (boolean, opcional): Criar backup antes de atualizar (padrão: true)
+
+  **Exemplo de Body:**
+  ```json
+  {
+    "url": "https://discord.com/api/webhooks/123456789/abcdefghijklmnopqrstuvwxyz",
+    "create_backup": true
+  }
+  ```
+
+  **Resposta de Sucesso (200):**
+  ```json
+  {
+    "success": true,
+    "message": "Webhook \"new_player\" atualizado com sucesso",
+    "data": {
+      "webhook_name": "new_player",
+      "url": "https://discord.com/api/webhooks/123456789/abcdefghijklmnopqrstuvwxyz"
+    },
+    "timestamp": 1701504000
+  }
+  ```
+
+  **Possíveis Erros:**
+  - 400: Body vazio, JSON inválido ou campo "url" ausente/inválido
+  - 404: Webhook não existe (apenas atualização de webhooks existentes é permitida)
+  - 500: Erro interno do servidor
+url: "{{baseUrl}}/api/webhooks/new_player"
+method: PUT
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+body:
+  type: json
+  content: |-
+    {
+      "url": "https://discord.com/api/webhooks/123456789/abcdefghijklmnopqrstuvwxyz",
+      "create_backup": true
+    }
+order: 13000

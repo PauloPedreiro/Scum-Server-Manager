@@ -1,0 +1,9 @@
+$kind: http-request
+name: POST /api/rankings/snipers/send
+description: POST /api/rankings/snipers/send
+url: "{{baseUrl}}/api/rankings/snipers/send"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+order: 10000

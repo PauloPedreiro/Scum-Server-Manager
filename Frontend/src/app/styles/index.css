@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  --app-bg-url: none;
+}
+
+html {
+  /* Tipografia fluida entre 14px e 16px conforme a largura */
+  font-size: clamp(14px, 1.2vw + 0.5rem, 16px);
+}
+
+body {
+  @apply bg-scum-bg text-white antialiased;
+  background-image: var(--app-bg-url);
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  overflow-x: hidden; /* evita rolagem horizontal indesejada */
+}
+
+.card {
+  @apply bg-scum-panel/80 backdrop-blur rounded-xl border border-white/5 shadow-lg;
+}
+
+.accent {
+  @apply text-scum-accent;
+}
+
+

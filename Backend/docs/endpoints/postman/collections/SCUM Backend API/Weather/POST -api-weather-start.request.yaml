@@ -1,0 +1,9 @@
+$kind: http-request
+name: POST /api/weather/start
+description: POST /api/weather/start
+url: "{{baseUrl}}/api/weather/start"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+order: 4000

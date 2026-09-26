@@ -1,0 +1,8 @@
+$kind: http-request
+name: GET /api/players
+description: GET /api/players
+url: "{{baseUrl}}/api/players"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+order: 1000

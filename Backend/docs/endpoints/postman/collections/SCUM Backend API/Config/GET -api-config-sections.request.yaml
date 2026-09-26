@@ -1,0 +1,8 @@
+$kind: http-request
+name: GET /api/config/sections
+description: GET /api/config/sections
+url: "{{baseUrl}}/api/config/sections"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+order: 3000

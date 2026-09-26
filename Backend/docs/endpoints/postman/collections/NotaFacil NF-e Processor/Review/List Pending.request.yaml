@@ -1,0 +1,9 @@
+$kind: http-request
+url: "{{baseUrl}}/api/review/items?status=pendente&limit=100"
+method: GET
+headers:
+  Authorization: Bearer {{accessToken}}
+queryParams:
+  status: pendente
+  limit: "100"
+order: 1000

@@ -1,0 +1,12 @@
+$kind: http-request
+name: GET /api/shop/admin/bank-account/current?steam_id={{steamId}}
+description: Consulta saldo atual (money em mãos, money no banco, total money) e gold para um jogador (admin).
+url: "{{baseUrl}}/api/shop/admin/bank-account/current?steam_id={{steamId}}"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+queryParams:
+  - key: steam_id
+    value: "{{steamId}}"
+    description: SteamID do jogador
+order: 1000

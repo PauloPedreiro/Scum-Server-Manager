@@ -1,0 +1,12 @@
+$kind: http-request
+name: GET /api/player/chests
+description: GET /api/player/chests
+url: "{{baseProtocol}}://{{baseUrl}}:{{basePort}}/api/player/chests?limit=100&offset=0&minimal=true"
+method: GET
+headers:
+  Authorization: Bearer {{playerToken}}
+queryParams:
+  limit: "100"
+  offset: "0"
+  minimal: "true"
+order: 6000

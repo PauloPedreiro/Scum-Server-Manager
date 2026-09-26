@@ -1,0 +1,14 @@
+$kind: http-request
+url: "{{baseUrl}}/api/catalog/products/{{produtoNormalizadoId}}"
+method: PATCH
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{accessToken}}
+body:
+  type: text
+  content: |-
+    {
+      "subgrupo_id": {{subgroupId}},
+      "nome_normalizado": "ARROZ TIPO 1 NOVO NOME"
+    }
+order: 2000

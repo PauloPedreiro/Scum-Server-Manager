@@ -1,0 +1,12 @@
+{
+  "cooldowns": {
+    "restart": 600,
+    "custom": 30,
+    "events": 120
+  },
+  "last_sent": {
+    "restart": null,
+    "custom": "2025-12-26T00:34:30.195004",
+    "events": null
+  }
+}

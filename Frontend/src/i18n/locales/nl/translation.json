@@ -1,0 +1,1850 @@
+{
+  "app": {
+    "title": "SCUM Server Manager",
+    "nav": {
+      "overview": "Overzicht",
+      "map": "Kaart",
+      "server": "Server"
+    },
+    "sidebar": {
+      "title": "Menu",
+      "players": "Spelers",
+      "settings": "Instellingen"
+    }
+  },
+  "tools": {
+    "title": "Tools",
+    "subtitle": "Beheerhulpmiddelen en routines.",
+    "search": {
+      "placeholder": "Tools zoeken...",
+      "noResults": "Geen resultaten"
+    },
+    "favorites": {
+      "toggle": "Favoriet wisselen"
+    },
+    "filters": {
+      "title": "Filters",
+      "allCategories": "Alle categorieen",
+      "allTypes": "Alle types",
+      "modules": "Modules",
+      "actions": "Snelle acties"
+    },
+    "router": {
+      "notFoundTitle": "Tool niet gevonden",
+      "notFoundText": "De gevraagde tool bestaat niet.",
+      "comingSoon": "Binnenkort",
+      "pageNotImplemented": "Toolpagina niet geimplementeerd"
+    },
+    "categories": {
+      "Player": "Speler",
+      "World": "Wereld",
+      "Economy": "Economie",
+      "Server": "Server",
+      "RCON": "RCON",
+      "Mods": "Mods",
+      "Logs": "Logs",
+      "Other": "Overig"
+    },
+    "types": {
+      "module": "Module",
+      "action": "Actie"
+    },
+    "status": {
+      "active": "actief",
+      "coming_soon": "binnenkort",
+      "beta": "beta"
+    },
+    "registry": {
+      "attributes": {
+        "title": "Attributen",
+        "description": "Bewerk spelerattributen (Kracht/Conditie/Vaardigheid/Intelligentie)."
+      },
+      "shop-deliveries": {
+        "title": "Shop & Leveringen",
+        "description": "Beheer van de admin-catalogus (scanner, in-/uitschakelen, prijzen, limieten)."
+      },
+      "kits": {
+        "title": "Kits",
+        "description": "Beheer kits voor spelers."
+      },
+      "integrations": {
+        "title": "Integraties",
+        "description": "Beheer publieke integraties (API keys) voor externe bots/systemen."
+      }
+    },
+    "sections": {
+      "favorites": "Favorieten",
+      "recents": "Recent",
+      "allTools": "Alle tools"
+    },
+    "kits": {
+      "title": "Kitbeheer",
+      "subtitle": "Beheer kits bestaande uit meerdere in-game items handmatig of door kisten rechtstreeks te scannen.",
+      "totalKits": "Totaal aantal kits",
+      "scanChest": "Kist scannen",
+      "createManual": "Handmatige kit maken",
+      "table": {
+        "kit": "Kit",
+        "name": "Kitnaam",
+        "onlyOnce": "Eenmalige aankoop",
+        "items": "Items",
+        "actions": "Acties",
+        "yes": "Ja",
+        "no": "Nee",
+        "itemUnit": "item",
+        "itemsUnit": "items"
+      }
+    },
+    "shopDeliveries": {
+      "title": "Shop & Leveringen",
+      "subtitle": "Beheer van de admin-catalogus (scanner, in-/uitschakelen, prijzen, limieten).",
+      "bulk": {
+        "scopeHint": "Bulkacties zijn van toepassing op gefilterde items (huidige zoekopdracht).",
+        "catalogEnableAll": "Alles inschakelen",
+        "catalogDisableAll": "Alles uitschakelen",
+        "offerEnableAll": "Alles inschakelen",
+        "offerDisableAll": "Alles uitschakelen",
+        "saveAll": "Opslaan ({{count}})",
+        "savingProgress": "Opslaan {{done}}/{{total}}",
+        "confirmTitle": "Alle wijzigingen opslaan?",
+        "confirmText": "Dit slaat wijzigingen op voor {{count}} item(s).",
+        "savedAll": "Alle wijzigingen opgeslagen.",
+        "partialTitle": "Sommige items zijn mislukt",
+        "partialText": "Opgeslagen: {{ok}} | Mislukt: {{fail}}",
+        "toggleAllCatalog": "Alles (gefilterd) wisselen - catalogus ingeschakeld",
+        "toggleAllOffer": "Alles (gefilterd) wisselen - aanbieding ingeschakeld"
+      },
+      "export": {
+        "title": "Catalogus exporteren",
+        "button": "Exporteren"
+      },
+      "import": {
+        "title": "Catalogus importeren",
+        "button": "Importeren",
+        "confirm": "Importeren",
+        "loadFirst": "Laad eerst de catalogus (Vernieuwen) om wijzigingen te bekijken en toe te passen.",
+        "loadingCatalog": "Huidige catalogus laden om import toe te passen...",
+        "emptyCatalog": "Geen catalogusitems gevonden op deze server. Run de scanner (of laad een basis-catalogus) voordat je importeert, omdat import bestaande codes bijwerkt.",
+        "loadTimeout": "Time-out bij het laden van de catalogus. Probeer Vernieuwen.",
+        "loadError": "Catalogus laden voor import mislukt.",
+        "backendSummary": "Aangemaakt: {{created}} | Bijgewerkt: {{updated}} | Genegeerd: {{ignored}}",
+        "backendErrors": "Fouten: {{errors}}",
+        "pickFile": "Kies een .json-bestand om te importeren.",
+        "invalidSchema": "Ongeldig schema. Verwacht: shop_catalog_snapshot_v1.",
+        "previewTitle": "Importvoorbeeld",
+        "previewText": "Wijzigingen: {{changed}} | Genegeerd (ontbrekende codes): {{ignored}}",
+        "previewList": "Voorbeeld van gewijzigde codes: {{codes}}",
+        "apply": "Toepassen op concept",
+        "applyAndSave": "Toepassen & opslaan",
+        "applied": "Geimporteerde wijzigingen toegepast op concept. Controleer en klik op Opslaan."
+      },
+      "sections": {
+        "catalog": "Catalogus",
+        "vehicles": "Voertuigen",
+        "wallet": "Portemonnee",
+        "rewards": "Beloningen",
+        "baseUpgrades": "Basis-upgrades",
+        "kits": "Kits",
+        "shopNotifications": "RCON-notificaties",
+        "attributes": "Attributen",
+        "raidWebhooks": "Raid Webhook (/rd)",
+        "wantedBounty": "Premiejagersysteem"
+      },
+      "baseUpgrades": {
+        "search": "Vlaggen zoeken (eigenaar, id)...",
+        "pageSize": "Items per pagina",
+        "flagsTitle": "Vlaggen / Bases",
+        "configTitle": "Upgradeconfig",
+        "selectedFlag": "Geselecteerde vlag",
+        "targetLevel": "Doelniveau (1..5)",
+        "fallbackLowest": "Gebruik de laagste beschikbare mapping als het exacte niveau ontbreekt",
+        "runNowIfOffline": "Nu uitvoeren als de server offline is",
+        "dryRun": "Proefdraaien",
+        "scheduleBtn": "Inplannen",
+        "previewTitle": "Voorbeeld",
+        "sample": "Voorbeeldwijzigingen",
+        "noSample": "Geen voorbeeld geretourneerd.",
+        "empty": "Geen vlaggen gevonden.",
+        "pagination": "Pagina {{p}} / {{tp}} (totaal {{total}})",
+        "columns": {
+          "flagId": "Vlag-ID",
+          "owner": "Eigenaar",
+          "type": "Type",
+          "elements": "Elementen",
+          "lastSeen": "Laatst gezien"
+        },
+        "validation": {
+          "level": "Doelniveau moet tussen 1 en 5 liggen.",
+          "previewFirst": "Voer eerst de proefdraaien-voorvertoning uit voordat je inplant."
+        },
+        "schedule": {
+          "confirmTitle": "Basis-upgrade inplannen?",
+          "confirmText": "Dit zal de server NIET herstarten. Het wordt toegepast bij de volgende automatische restart. Te wijzigen: {{toChange}} | Al doel: {{already}} | Geen mapping: {{noMapping}}",
+          "confirmBtn": "Inplannen",
+          "scheduled": "Ingepland. Wordt toegepast bij de volgende automatische restart. Job: {{job}}",
+          "executedNow": "Nu uitgevoerd (server offline). Bijgewerkt: {{u}} | Mislukt: {{f}} | Geen wijzigingen: {{n}}"
+        }
+      },
+      "vehicles": {
+        "search": "Voertuigen zoeken (naam, setup, code)...",
+        "saveAll": "Opslaan ({{count}})",
+        "savingProgress": "Opslaan {{done}}/{{total}}",
+        "invalidPrice": "Prijs moet >= 0 zijn.",
+        "saveConfirmTitle": "Voertuigwijzigingen opslaan?",
+        "saveConfirmText": "Dit slaat wijzigingen op voor {{count}} voertuig(en).",
+        "table": {
+          "code": "Code",
+          "setup": "Setup",
+          "display": "Weergave",
+          "enabled": "Ingeschakeld",
+          "price": "Prijs"
+        }
+      },
+      "vehicleTemplates": {
+        "templateIds": "Template voertuig-entity-IDs",
+        "sync": "Synchroniseren",
+        "reset": "Reset",
+        "resetConfirm": "Dit reset SCUM_TEMPLATES.db en kan optioneel de voertuigcatalogus/bestellingen wissen. Doorgaan?",
+        "resetDone": "Templates-reset voltooid.",
+        "idsRequired": "Voer minstens een template voertuig-entity-id in.",
+        "syncConfirm": "Dit voegt templates uit een offline SCUM.db samen in SCUM_TEMPLATES.db en voert upsert uit in de voertuigcatalogus. Doorgaan?",
+        "syncDone": "Synchronisatie voltooid. Gesynchroniseerd: {{synced}} | Ontbrekend: {{missing}}",
+        "synced": "Gesynchroniseerd",
+        "missing": "Ontbrekend"
+      },
+      "resultsCount": "Resultaten: {{count}}",
+      "search": "Catalogus zoeken (naam, setup, code)...",
+      "empty": "Geen items.",
+      "scanner": {
+        "title": "Scanner",
+        "chestId": "Kist-ID",
+        "set": "Instellen",
+        "sync": "Scanner"
+      },
+      "invalidChestId": "Ongeldige kist-id.",
+      "scannerSet": "Scannerkist bijgewerkt.",
+      "scannerSetError": "Scannerkist instellen mislukt.",
+      "scannerSyncError": "Scanner synchroniseren mislukt.",
+      "scannerSyncResult": "Ontdekt: {{d}} | Aangemaakt: {{c}}",
+      "clear": {
+        "section": "Gevarenzone",
+        "hint": "Gebruik dit om de catalogus hard te wissen voordat je de scanner opnieuw vanaf nul draait.",
+        "button": "Catalogus wissen",
+        "title": "Catalogus wissen",
+        "desc": "Dit wist de catalogus hard (shop_offer + shop_catalog). Bestelgeschiedenis blijft behouden. Ter bevestiging, typ:",
+        "confirm": "Wissen",
+        "validation": "Bevestigingstekst komt niet overeen.",
+        "success": "Gewist. Offers: {{offers}} | Catalogus: {{catalog}}",
+        "error": "Catalogus wissen mislukt."
+      },
+      "wallet": {
+        "title": "Portemonnee",
+        "playersTitle": "Spelers",
+        "playersSearch": "Spelers zoeken (naam of Steam ID)...",
+        "playersCount": "Spelers: {{count}}",
+        "playersEmpty": "Geen spelers.",
+        "selected": "Geselecteerd: {{steam_id}}",
+        "selectPlayerHint": "Selecteer links een speler.",
+        "statement": "Volledig overzicht",
+        "recentTx": "Recente transacties",
+        "noTx": "Geen transacties.",
+        "fetchAll": "Saldi ophalen",
+        "fetchAllProgress": "Saldi {{done}}/{{total}}",
+        "fetchAllHelp": "Saldi ophalen voor alle geladen spelers.",
+        "table": {
+          "name": "Naam",
+          "steamId": "Steam ID",
+          "balance": "Saldo"
+        },
+        "balanceLoading": "Laden...",
+        "balanceUnknown": "—",
+        "steamId": "Speler (naam of Steam ID)",
+        "fetchBalance": "Saldo ophalen",
+        "balanceLabel": "Saldo ({{steam_id}}): {{balance}}",
+        "balanceEmpty": "Geen saldo geladen.",
+        "operation": "Operatie",
+        "add": "Toevoegen",
+        "remove": "Verwijderen",
+        "amount": "Bedrag",
+        "note": "Notitie (optioneel)",
+        "apply": "Toepassen",
+        "validationSteamId": "Steam ID is verplicht.",
+        "validationAmount": "Bedrag moet groter zijn dan nul.",
+        "balanceRequired": "Haal eerst het huidige saldo op voordat je een aanpassing toepast.",
+        "removeConfirmTitle": "Verwijderen bevestigen",
+        "removeConfirmText": "{{amount}} credits verwijderen van {{steam_id}}?",
+        "confirm": "Bevestigen",
+        "adjusted": "Aangepast. Nieuw saldo: {{balance}}",
+        "alreadyApplied": "Al toegepast (idempotent).",
+        "adjustMissingData": "Request geslaagd maar er is geen data geretourneerd.",
+        "adjustError": "Portemonnee aanpassen mislukt.",
+        "balanceError": "Saldo ophalen mislukt.",
+        "insufficientFunds": "Onvoldoende saldo."
+      },
+      "walletTabs": {
+        "wallet": "Portemonnee",
+        "rewards": "Beloningen"
+      },
+      "transactions": {
+        "title": "Portemonnee-overzicht",
+        "steamId": "Steam ID: {{steam_id}}",
+        "missingSteamId": "Steam ID ontbreekt.",
+        "empty": "Geen transacties.",
+        "errors": {
+          "requestFailed": "Request mislukt"
+        },
+        "loadMore": "Meer laden",
+        "count": "Toont {{shown}} van {{count}}",
+        "countUnknown": "Toont {{shown}}",
+        "meta": {
+          "more": "+{{count}} meer"
+        },
+        "metaKeys": {
+          "order_id": "Bestelling",
+          "code": "Code",
+          "template_vehicle_entity_id": "Voertuigtemplate",
+          "hours_to_pay": "Te betalen uren",
+          "hours_total": "Totaal uren",
+          "last_paid_hours": "Laatst betaalde uren",
+          "points_per_hour": "Punten/uur",
+          "rule_id": "Regel"
+        },
+        "refTypes": {
+          "order": "Bestelling",
+          "playtime_rule": "Speeltijdregel",
+          "vehicle": "Voertuig",
+          "admin": "Admin"
+        },
+        "reasons": {
+          "playtime_reward": "Beloning voor speeltijd",
+          "shop_purchase": "Aankoop in winkel",
+          "vehicle_purchase": "Voertuigaankoop",
+          "admin_adjust": "Admin-aanpassing"
+        },
+        "table": {
+          "createdAt": "Aangemaakt op",
+          "delta": "Delta",
+          "reason": "Reden",
+          "ref": "Ref",
+          "meta": "Meta"
+        }
+      },
+      "actions": {
+        "revertHelp": "Niet-opgeslagen wijzigingen voor deze rij terugdraaien. Alleen ingeschakeld wanneer je nog niet-opgeslagen bewerkingen hebt.",
+        "saveHelp": "Wijzigingen voor deze rij opslaan naar de server. Na opslaan is er niets meer om terug te draaien tenzij je opnieuw bewerkt."
+      },
+      "table": {
+        "code": "Code",
+        "name": "Naam",
+        "setup": "Setup",
+        "catalog": "Catalogus",
+        "offer": "Aanbieding",
+        "price": "Prijs",
+        "qty": "Aantal",
+        "maxOrder": "Max/Bestelling",
+        "maxDay": "Max/Dag",
+        "actions": "Acties"
+      },
+      "tableHelp": {
+        "code": "Unieke item-id (gebruikt om dit item bij te werken).",
+        "name": "Weergavenaam die aan spelers wordt getoond.",
+        "setup": "Scanner setup/groep waar dit item bij hoort (gebruikt om de catalogus te organiseren).",
+        "catalog": "Als uitgeschakeld, is het item verborgen/uitgeschakeld in de catalogus.",
+        "offer": "Als uitgeschakeld, kan het item niet als aanbieding gekocht worden.",
+        "price": "Prijs voor de aanbieding (in de valuta van je server).",
+        "qty": "Geleverde hoeveelheid per aankoop.",
+        "maxOrder": "Maximale hoeveelheid per aankoop/bestelling.",
+        "maxDay": "Maximale hoeveelheid per dag (per speler)."
+      },
+      "attributes": {
+        "level": "Niveau {{level}}",
+        "noChanges": "Geen wijzigingen.",
+        "invalidDays": "De geldigheidsduur moet een geheel getal van minimaal 1 dag zijn.",
+        "saveSuccess": "Configuraties succesvol opgeslagen!",
+        "help": {
+          "title": "Hoe werkt de prijsconfiguratie?",
+          "description": "Spelers kopen attribuutniveaus direct in de in-game chat met behulp van RCON-commando's (zoals /f5, /c3).",
+          "fieldsTitle": "📌 Wat betekent elk veld?",
+          "fieldsDesc": "De geconfigureerde waarde in elk Niveau is de kostprijs in credits voor de speler om dat exacte attribuutniveau te bereiken.",
+          "exampleTitle": "💡 Praktisch voorbeeld:",
+          "exampleDesc": "Als het veld Kracht Niveau 5 is geconfigureerd als 500, betaalt de speler 500 credits bij het typen van /f5 om Kracht 5 te krijgen."
+        },
+        "expiration": {
+          "title": "Geldigheidsregels voor Attributen",
+          "description": "Bij het inschakelen van tijdelijke geldigheid, zullen de door spelers verworven attribuutniveaus terugkeren naar de basiswaarden van vóór de aankoop nadat de geselecteerde periode is verstreken.",
+          "enableLabel": "Tijdelijke vervaldatum van attributen inschakelen",
+          "durationLabel": "Geldigheidsduur:"
+        }
+      },
+      "raidWebhooks": {
+        "title": "Raid Webhook (/rd)",
+        "infoTitle": "Persoonlijke Raid Webhook (/rd)",
+        "infoDesc": "Met deze functie kunnen spelers hun eigen Discord-webhooks registreren in de in-game chat om real-time raid-waarschuwingen te ontvangen. Om het commando /rd te gebruiken, hebben spelers de machtiging raid_webhook_manage en voldoende punten in hun portemonnee nodig.",
+        "generalConfig": "Algemene Instellingen",
+        "enableFeature": "Functie Inschakelen",
+        "costLabel": "Activerings- / Verlengingskosten",
+        "costSuffix": "punten",
+        "durationLabel": "Abonnementsduur",
+        "durationSuffix": "dagen",
+        "accessControlTitle": "Toegangscontrole (/rd)",
+        "accessControlDesc": "Toegang tot het /rd-commando in- of uitschakelen voor specifieke spelers:",
+        "searchPlaceholder": "Zoek speler (naam of Steam-ID)...",
+        "loadingPlayers": "Laden van spelers...",
+        "noPlayersFound": "Geen spelers gevonden.",
+        "allowed": "Toegestaan",
+        "blocked": "Geblokkeerd",
+        "allowBtn": "Toestaan",
+        "blockBtn": "Blokkeren",
+        "prevPage": "Vorige",
+        "nextPage": "Volgende",
+        "pageIndicator": "Pagina {{page}} / {{totalPages}}",
+        "chatMessagesTitle": "RCON Chat Berichten",
+        "chatMessagesDesc": "Pas de antwoorden aan die naar spelers in de in-game chat worden verzonden wanneer ze interactie hebben met het commando /rd. Gebruik de indicatoren om dynamische variabelen in te voegen.",
+        "unsavedChanges": "U hebt niet-opgeslagen wijzigingen in dit paneel.",
+        "noChanges": "Geen openstaande wijzigingen.",
+        "revertBtn": "Terugdraaien",
+        "saveBtn": "Opslaan",
+        "savingBtn": "Opslaan...",
+        "validationPriceError": "De abonnementsprijs moet een geheel getal groter dan of gelijk aan 0 zijn.",
+        "validationDurationError": "De abonnementsduur moet een geheel getal groter dan of gelijk aan 0 zijn.",
+        "saveSuccess": "Raid Webhook-configuraties succesvol opgeslagen!",
+        "saveError": "Fout bij het opslaan van instellingen.",
+        "groups": {
+          "commandUsage": "Commando's & Status",
+          "registration": "Handmatige Registratie & Verlenging",
+          "autoRenewal": "Automatische Verlenging & Waarschuwingen",
+          "errors": "Fouten & Beperkingen"
+        },
+        "labels": {
+          "system_disabled": "Systeem Uitgeschakeld",
+          "usage_help": "Gebruikshulp",
+          "no_permission": "Geen Machtiging",
+          "insufficient_funds": "Onvoldoende Saldo",
+          "disabled_success": "Abonnement Uitgeschakeld (Met resterend tegoed)",
+          "disabled_success_lifetime": "Persoonlijke webhook succesvol uitgeschakeld.",
+          "registered_success": "Abonnement geregistreerd voor {{days}} dagen! Geldig tot: {{expires_at}}. {{price}} punten afgeschreven.",
+          "registered_success_lifetime": "Persoonlijke webhook succesvol geregistreerd (Levenslang Plan)!",
+          "updated_success": "Webhook succesvol bijgewerkt! Geldig tot: {{expires_at}}.",
+          "updated_success_lifetime": "Persoonlijke webhook succesvol bijgewerkt!",
+          "renewed_success": "Abonnement verlengd met {{days}} dagen! Nieuwe verloopdatum: {{expires_at}}. {{price}} punten afgeschreven.",
+          "status_info": "Webhook: {{url}} | Geldigheid abonnement: {{expires_at}} {{remaining}}.",
+          "status_expired": "Webhook: {{url}} | Abonnement VERLOPEN op: {{expires_at}}.",
+          "status_no_subscription": "U hebt geen actief persoonlijk webhook-abonnement.",
+          "invalid_webhook": "Ongeldige webhook-URL. Gebruik een geldige Discord-URL.",
+          "database_error": "Interne fout bij het opslaan van webhook-instellingen.",
+          "auto_renew_success": "🔄 Uw raid-webhook-abonnement is automatisch verlengd met {{days}} dagen! Geldig tot: {{expires_at}}. {{price}} punten afgeschreven.",
+          "auto_renew_failed": "⚠️ Uw raid-webhook-abonnement is verlopen en kon niet automatisch worden verlengd wegens onvoldoende saldo (Prijs: {{price}} punten | Uw saldo: {{balance}}). Voeg punten toe om opnieuw te activeren.",
+          "expiry_warning_3_days": "📅 Herinnering: Uw raid-webhook-abonnement verloopt over 3 dagen ({{expires_at}}). Indien u voldoende saldo heeft, wordt het automatisch verlengd.",
+          "expiry_warning_1_day": "🚨 Let op: Uw raid-webhook-abonnement verloopt morgen ({{expires_at}}). Controleer of u voldoende saldo heeft voor de automatische verlenging."
+        },
+        "lifetimePlan": {
+          "title": "Levenslang Plan (Geen vervaldatum)",
+          "desc": "Stel in op 0 om de levenslange modus te activeren. De vervaldatum van de speler wordt opgeslagen als leeg (NULL), de webhook verloopt nooit en de achtergrond-scheduler voert geen kosten of deactivering uit."
+        }
+      },
+      "wantedBounty": {
+        "tabs": {
+          "variables": "Systeemvariabelen",
+          "alerts": "Waarschuwingen & Discord Integratie"
+        },
+        "fields": {
+          "enabled": "Systeem inschakelen",
+          "enabledDesc": "Schakel het beloningssysteem voor killstreaks in of uit",
+          "killstreakTrigger": "Killstreak Trigger (Min. Kills)",
+          "baseBounty": "Basispremie",
+          "incrementBounty": "Verhoging per Kill",
+          "cooldown": "Cooldown (Uren)",
+          "squadCooldown": "Cooldown Squad Verlaten (Uren)",
+          "chatColor": "In-game Chat Kleur",
+          "activationTemplate": "Activeringssjabloon",
+          "incrementTemplate": "Verhogingssjabloon (Nieuwe Kill)",
+          "claimedTemplate": "Claim-sjabloon (Premie uitbetaald)",
+          "placeholdersTitle": "Dynamische Platzhouders:",
+          "topKillersMsgId": "Top Killers Bericht ID",
+          "shameRankMsgId": "Shame Rank Bericht ID"
+        },
+        "placeholders": {
+          "player": "Naam van de gezochte speler",
+          "killer": "Naam van de premiejager",
+          "victim": "Naam van het slachtoffer",
+          "streak": "Huidige killstreak",
+          "points": "Waarde van de premie"
+        },
+        "tooltips": {
+          "msgId": "Automatisch ingevuld door de server. Wis dit om een nieuw bericht te forceren."
+        },
+        "validation": {
+          "triggerMin": "Killstreak trigger moet minimaal 1 zijn."
+        },
+        "saveSuccess": "Premie-configuraties succesvol bijgewerkt.",
+        "resetAll": {
+          "confirmTitle": "Weet u het zeker?",
+          "confirmText": "Dit wist de GEZOCHT-status van alle actieve spelers!",
+          "confirmButton": "Ja, alles resetten!",
+          "successText": "Alle gezochte spelers zijn gereset."
+        },
+        "resetPlayer": {
+          "confirmTitle": "Gezochte status resetten?",
+          "confirmText": "Wilt u de gezochte status van {{name}} verwijderen?",
+          "confirmButton": "Ja, resetten",
+          "successText": "Gezochte status van {{name}} gereset."
+        },
+        "monitoring": {
+          "title": "Actieve Gezochten",
+          "desc": "Real-time lijst van momenteel als gezocht gemarkeerde spelers",
+          "empty": "Momenteel geen gezochte spelers."
+        },
+        "actions": {
+          "resetAll": "Alles Resetten",
+          "triggerManual": "Handmatig Gezocht Instellen",
+          "resetPlayer": "Premie voor deze speler resetten",
+          "resetBtn": "Resetten"
+        },
+        "table": {
+          "status": "Status",
+          "player": "Speler",
+          "steamId": "Steam ID",
+          "streak": "Killstreak",
+          "bounty": "Premiewaarde",
+          "actions": "Acties"
+        },
+        "manualTrigger": {
+          "title": "Handmatig Gezocht Bepalen",
+          "searchLabel": "Speler Zoeken",
+          "searchPlaceholder": "Naam of Steam ID...",
+          "noPlayers": "Geen spelers gevonden.",
+          "startSearch": "Typ om te zoeken...",
+          "select": "Selecteren",
+          "selectedPlayer": "Geselecteerde Speler",
+          "valueLabel": "Premiewaarde (Punten)",
+          "submit": "Als Gezocht Markeren",
+          "successText": "Speler {{name}} succesvol als gezocht gemarkeerd."
+        }
+      }
+    },
+    "events": {
+      "title": "Evenementenplanner & Homologatie",
+      "subtitle": "Beheer aangepaste evenementen met meervoudige opdrachtuitvoering en beveiligde RCON-wachtrij.",
+      "homologationTitle": "RCON-opdracht Homologatie",
+      "showPanel": "Paneel tonen",
+      "hidePanel": "Paneel verbergen",
+      "customEvents": "Aangepaste Evenementen",
+      "newEvent": "Nieuw Evenement",
+      "eventName": "Naam Evenement",
+      "eventNamePlaceholder": "Bijv: Cargo Drop Supply",
+      "description": "Beschrijving",
+      "descriptionPlaceholder": "Optionele beschrijving van evenement...",
+      "startTime": "Starttijd",
+      "endTime": "Eindtijd",
+      "duration": "Duur",
+      "repeatEvent": "Evenement herhalen?",
+      "activate": "Activeren",
+      "coordinatesLabel": "Teleport Coördinaten (Spawn)",
+      "coordinatesPlaceholder": "Plak spelcoördinaten (bijv: {X=... Y=... Z=...})",
+      "add": "Toevoegen",
+      "cancel": "Annuleren",
+      "saveEvent": "Evenement Opslaan",
+      "noEvents": "Geen evenementen geregistreerd. Klik op \"Nieuw Evenement\" om te beginnen.",
+      "initialCommands": "Initiële Opdrachten",
+      "searchCommandPlaceholder": "Zoek gehomologeerde opdracht...",
+      "repeatCommand": "Opdracht herhalen?",
+      "every": "elke",
+      "minutesUnit": "min",
+      "spawnCoordinates": "Teleport Coördinaten (Spawn)",
+      "pointName": "Puntnaam",
+      "pointNamePlaceholder": "Bijv: Spawnpunt 1",
+      "telemetryCoordinate": "Telemetrie Coördinaat",
+      "telemetryPlaceholder": "Plak spawn-telemetrie...",
+      "pointLabel": "Punt {{num}}",
+      "allSaved": "Alle opdrachten en coördinaten zijn opgeslagen",
+      "unsavedChanges": "U hebt niet-opgeslagen wijzigingen in opdrachten of coördinaten",
+      "saveChanges": "Wijzigingen Opslaan",
+      "saving": "Opslaan...",
+      "successTitle": "Succes",
+      "successCreated": "Evenement succesvol aangemaakt!",
+      "invalidCoords": "Plak geldige coördinaten in spelformaat (bijv: met X, Y en Z).",
+      "invalidFormat": "Ongeldig Formaat",
+      "loadDetailsError": "Fout bij het laden van details",
+      "chooseDays": "Dagen Kiezen",
+      "start": "Starten",
+      "stop": "Stoppen",
+      "confirmDeleteTitle": "Evenement verwijderen?",
+      "confirmDeleteText": "Weet u zeker dat u het evenement \"{{name}}\" wilt verwijderen?",
+      "confirmDeleteBtn": "Verwijderen",
+      "deletedSuccess": "Evenement succesvol verwijderd!",
+      "dayLetter_0": "Z",
+      "dayLetter_1": "M",
+      "dayLetter_2": "D",
+      "dayLetter_3": "W",
+      "dayLetter_4": "D",
+      "dayLetter_5": "V",
+      "dayLetter_6": "Z",
+      "day_0": "Zo",
+      "day_1": "Ma",
+      "day_2": "Di",
+      "day_3": "Wo",
+      "day_4": "Do",
+      "day_5": "Vr",
+      "day_6": "Za",
+      "dayLong_0": "Zondag",
+      "dayLong_1": "Maandag",
+      "dayLong_2": "Dinsdag",
+      "dayLong_3": "Woensdag",
+      "dayLong_4": "Donderdag",
+      "dayLong_5": "Vrijdag",
+      "dayLong_6": "Zaterdag"
+    }
+  },
+  "home": {
+    "time": "Tijd",
+    "weatherMoon": "Weer/Maan",
+    "players": "Spelers",
+    "status": "Status",
+    "serverStatus": {
+      "online": "Online",
+      "offline": "Offline",
+      "stopping": "Stoppen"
+    },
+    "temperatures": "Temperaturen",
+    "weatherConditions": "Weersomstandigheden",
+    "astronomy": "Astronomie",
+    "astronomyAndClimate": "Astronomie | Klimaat",
+    "temp": {
+      "air": "Lucht",
+      "water": "Water"
+    },
+    "fog": {
+      "none": "Geen mist",
+      "light": "Lichte mist",
+      "moderate": "Matige mist",
+      "heavy": "Dichte mist",
+      "cumulonimbus": "Mist door Cumulonimbus"
+    },
+    "moon": {
+      "rotation": "Rotatie",
+      "new": "Nieuwe maan",
+      "waxingCrescent": "Wassende sikkel",
+      "firstQuarter": "Eerste kwartier",
+      "waxingGibbous": "Wassende maan",
+      "full": "Volle maan",
+      "waningGibbous": "Afnemende maan",
+      "lastQuarter": "Laatste kwartier",
+      "waningCrescent": "Afnemende sikkel"
+    },
+    "playerStats": {
+      "title": "Spelerstatistieken",
+      "total": "Totaal",
+      "average": "Gemiddelde",
+      "peak": "Piek",
+      "lowest": "Laagste",
+      "peakHour": "Piek uur",
+      "absolutePeak": "Absolute piek",
+      "totalPlayers": "Totaal spelers",
+      "onlineNow": "Nu online",
+      "activePlayers": "Actieve spelers",
+      "newPlayers": "Nieuwe spelers",
+      "activeSessions": "Actieve sessies",
+      "topPlayers": "Top spelers",
+      "sessions": "Sessies",
+      "playtime": "Speeltijd"
+    },
+    "peakHours": {
+      "title": "Piekuren",
+      "avgPlayers": "gem. spelers",
+      "peak": "Piek",
+      "collecting": "Gegevens verzamelen... Piekuren verschijnen binnenkort."
+    },
+    "map": {
+      "title": "Kaart (Canvas)",
+      "soon": "Binnenkort: bunkers, spelers, events",
+      "placeholder": "Kaartcanvas (placeholder)",
+      "controls": {
+        "scrollToggleLabel": "Scroll-zoom",
+        "scrollToggleOnTitle": "Scroll-zoom ingeschakeld",
+        "scrollToggleOffTitle": "Scroll-zoom uitgeschakeld",
+        "zoomOutTitle": "Uitzoomen (minimum 100%)",
+        "zoomInTitle": "Inzoomen",
+        "zoomDisabledTitle": "Schakel scroll-zoom in om de controls te gebruiken",
+        "resetTitle": "Zoom en positie resetten"
+      },
+      "input": {
+        "label": "Plak de spelcoordinaten:",
+        "placeholder": "Coordinaten (bv: {X=... Y=...}) of zoek op speler (kisten en vlaggen)",
+        "submit": "Zoeken"
+      },
+      "messages": {
+        "pasteCoords": "Plak de spelcoordinaten.",
+        "invalidFormat": "Ongeldig coordinatenformaat. Gebruik: {X=waarde Y=waarde ...}",
+        "invalidNumbers": "Ongeldige coordinaten. Controleer de X- en Y-waarden.",
+        "processError": "Kan de coordinaten niet verwerken."
+      },
+      "info": {
+        "title": "Positie-informatie",
+        "gameCoords": "Spelcoordinaten",
+        "mapPixels": "Kaartpositie (px)",
+        "quadrant": "Kwadrant"
+      },
+      "drag": {
+        "active": "Sleep om te verplaatsen"
+      }
+    }
+  },
+  "settings": {
+    "title": "Serverinstellingen",
+    "description": "Beheer het ServerSettings.ini-bestand van de SCUM-server. Bewerk instellingen, voeg aangepaste velden en mods toe.",
+    "tabs": {
+      "serverSettings": "ServerSettings.ini",
+      "config": "Config.json",
+      "discord": "Discord",
+      "shopNotifications": "RCON-notificaties",
+      "minePunishment": "Mijnen Straf",
+      "squadTkJail": "Squad TK Jail",
+      "killFeed": "Kill Feed",
+      "rconRoutines": "RCON-routines",
+      "users": "Gebruikers"
+    },
+    "shopNotifications": {
+      "title": "Shop RCON-notificaties",
+      "description": "Pas de berichten aan die spelers in-game via RCON ontvangen.",
+      "welcome_kit_delivered": "Welkomstkit / Kits levering",
+      "welcome_kit_delivered_help": "Bericht verzonden wanneer een kit succesvol is geleverd.",
+      "items_delivered": "Artikelen levering",
+      "items_delivered_help": "Bericht verzonden wanneer losse artikelen succesvol zijn geleverd.",
+      "insufficient_funds": "Onvoldoende Saldo",
+      "insufficient_funds_help": "Bericht verzonden wanneer een speler probeert te kopen maar onvoldoende saldo heeft. Gebruik {balance} toont het huidige saldo.",
+      "save_success": "Meldingsinstellingen succesvol opgeslagen!"
+    },
+    "minePunishment": {
+      "title": "Mijnen Straf Buiten Vlagbescherming",
+      "description": "Configureer het automatische monitoring- en strafsysteem voor spelers die mijnen/vallen plaatsen buiten de beschermingsstraal van hun vlaggen.",
+      "search": {
+        "placeholder": "Zoek strafconfiguraties..."
+      },
+      "save_success": "Instellingen opgeslagen!",
+      "save_error": "Fout bij het opslaan van instellingen",
+      "error_loading": "Fout bij het laden van gegevens",
+      "footer_warning": "Wijzigingen in instellingen worden in realtime toegepast op de volgende verwerkte logs.",
+      "teleport": {
+        "title": "Teleport (Death Carousel)",
+        "description": "Teleporteert de speler die de illegale mijn heeft geplaatst er direct bovenop.",
+        "delay": "Vertraging",
+        "delay_tooltip": "Tijd in seconden voor het teleporteren van de overtreder. Aanbevolen: 5 seconden.",
+        "message": "Teleport Bericht",
+        "message_tooltip": "Waarschuwingsbericht verzonden naar de speler bij bestraffing.",
+        "message_placeholder": "Bericht weergegeven op het scherm"
+      },
+      "wallet": {
+        "title": "Financiële Boete",
+        "description": "Brengt direct na plaatsing een bedrag in rekening op de portemonnee van de speler.",
+        "amount": "Boete Bedrag",
+        "amount_tooltip": "Brengt een bedrag in rekening op de portemonnee van de speler. Het saldo wordt afgeschreven, zelfs als het negatief wordt."
+      },
+      "radius": {
+        "title": "Beschermingsstraal",
+        "description": "Definieert de afstandslimieten van mijnen ten opzichte van vlaggen van spelers.",
+        "tooltip": "Afstandsinstellingen voor de legaliteit van mijnen ten opzichte van spelersvlaggen.",
+        "default_radius": "Standaard Vlagstraal",
+        "default_radius_tooltip": "Over het algemeen komt 10000 eenheden overeen met de standaardstraal van de vlagcirkel.",
+        "tolerance": "Straaltolerantie",
+        "tolerance_tooltip": "Margem de erro tolerado para além do círculo da bandeira (padrão 600 units)."
+      }
+    },
+    "squadTkJail": {
+      "title": "Team Kill Straf (Squad TK Jail)",
+      "description": "Configureer het automatische gevangenissysteem voor spelers die hun eigen squadleden elimineren.",
+      "search": {
+        "placeholder": "Zoek gevangenisconfiguraties..."
+      },
+      "save_success": "Instellingen succesvol opgeslagen!",
+      "save_error": "Fout bij het opslaan van configuraties",
+      "error_loading": "Fout bij het laden van gegevens",
+      "footer_warning": "Wijzigingen in instellingen worden onmiddellijk toegepast op volgende servergebeurtenissen.",
+      "coords": "Cel Coördinaten",
+      "radius": "Limietstraal (meters)",
+      "duration": "Duur (minuten)",
+      "use_colors": "Gebruik Aangepaste Kleuren in Chat",
+      "use_colors_help": "Stuurt waarschuwingen met een vooraf gedefinieerde kleur in plaats van standaard aankondigingen.",
+      "warning_color": "Waarschuwingskleur",
+      "general": {
+        "title": "Gevangenis Instellingen"
+      },
+      "validation": {
+        "radius_min": "Minimale celstraal is 1 meter.",
+        "duration_min": "Minimale gevangenisstraf is 1 minuut.",
+        "coords_required": "Celcoördinaten zijn verplicht."
+      },
+      "messages": {
+        "title": "Serverberichten",
+        "announcement": "Gevangenisaankondiging Bericht",
+        "escape": "Ontsnappingspoging Bericht",
+        "release": "Vrijlatingsbericht"
+      }
+    },
+    "killFeed": {
+      "title": "Kill Feed Instellingen",
+      "description": "Beheer de realtime uitzending van kills in de in-game chat met dynamische zinnen.",
+      "search": {
+        "placeholder": "Zoek kill feed instellingen..."
+      },
+      "enabled": "Kill Feed inschakelen",
+      "enabled_help": "Indien ingeschakeld, worden kill-meldingen naar de in-game chat gestuurd.",
+      "mode": "Weergavemodus",
+      "chat_type": "Chatkanaal (Kleur)",
+      "chat_type_help": "Selecteer het SCUM-kanaal waarin kill-berichten worden uitgezonden.",
+      "priority": "RCON-prioriteit",
+      "priority_help": "Prioriteitsvolgorde in de RCON-opdrachtenwachtrij (standaard: 15).",
+      "template": "Berichtsjabloon",
+      "template_description": "Definieer het tekstformaat voor kills. Gebruik de onderstaande sneltoetsen om gegevens in te voegen.",
+      "template_help": "Tekstformaat voor kills. Gebruik de onderstaande sneltoetsen.",
+      "preview": "In-Game Weergave (Simulatie)",
+      "phrases_title": "Willekeurige Kill Zinnen ({phrase})",
+      "phrases_description": "Zinnen die de tag {phrase} in kill-berichten willekeurig vervangen.",
+      "add_phrase_placeholder": "Voer een kill-zin in...",
+      "add_button": "Toevoegen",
+      "save_success": "Kill Feed-instellingen succesvol opgeslagen!",
+      "save_success_details": "De Kill Feed-instellingen en de zinnenlijst zijn succesvol opgeslagen.",
+      "restart_warning_title": "Herstart vereist",
+      "restart_warning": "Wijzigingen aan de RCON-instellingen vereisen dat u de SSM Backend handmatig herstart om effect te hebben. Stop de service, sluit de backend, open deze opnieuw en klik op 'Start'.",
+      "error_loading": "Fout bij het laden van Kill Feed-instellingen",
+      "footer_warning": "Wijzigingen in de zinnenlijst worden na het opslaan van kracht. Wijzigingen in kanaal en prioriteit vereisen een herstart.",
+      "modes": {
+        "chat": "Chat",
+        "hidden": "Verborgen"
+      },
+      "channels": {
+        "global": {
+          "name": "Globale Chat",
+          "desc": "Standaardkanaal dat voor iedereen zichtbaar is"
+        },
+        "admin": {
+          "name": "Admin / Aankondiging",
+          "desc": "Gele accentuering voor snelle aankondigingen"
+        },
+        "server": {
+          "name": "Serverbericht",
+          "desc": "Grijs/oranje systeembericht"
+        },
+        "alert": {
+          "name": "Waarschuwing / Fout",
+          "desc": "Opvallend rood waarschuwingskanaal"
+        },
+        "local": {
+          "name": "Lokale / Standaard Chat",
+          "desc": "Standaard witte in-game chat"
+        },
+        "squad": {
+          "name": "Squad-chat",
+          "desc": "Alleen zichtbaar voor groepsleden"
+        }
+      },
+      "phrases": {
+        "duplicate_title": "Dubbele zin",
+        "duplicate_text": "Deze zin bestaat al in de lijst.",
+        "empty": "Geen zinnen geregistreerd. Voeg hierboven zinnen toe om de kill feed te vullen.",
+        "total": "Totaal: {{count}} zinnen",
+        "tag_hint": "Bruikbare tag in sjabloon: {phrase}"
+      }
+    },
+    "rconRoutines": {
+      "title": "RCON-routines Planner",
+      "description": "Beheer periodieke RCON-opdrachten om automatisch op de server uit te voeren.",
+      "search": {
+        "placeholder": "RCON-routines zoeken..."
+      },
+      "new_button": "Nieuwe Routine",
+      "error_loading": "Fout bij het laden van RCON-routines",
+      "toggle_failed": "Fout bij het bijwerken van de routinestatus.",
+      "validation": {
+        "name_required": "Routinenaam is verplicht.",
+        "interval_min": "Minimaal interval is 1 minuut.",
+        "command_required": "Voeg ten minste één geldige opdracht toe.",
+        "warning_minutes_min": "Waarschuwing vooraf moet minimaal 1 minuut zijn.",
+        "warning_minutes_limit": "Waarschuwing vooraf moet korter zijn dan het routine-interval.",
+        "warning_message_required": "Voer de tekst van het waarschuwingsbericht in."
+      },
+      "save_success": "Routine succesvol opgeslagen!",
+      "create_success": "Routine succesvol aangemaakt!",
+      "save_failed": "Fout bij het opslaan van routine.",
+      "delete_confirm_title": "Routine verwijderen?",
+      "delete_confirm_text": "Weet u zeker dat u deze periodieke routine wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.",
+      "delete_success": "Routine succesvol verwijderd!",
+      "delete_failed": "Fout bij het verwijderen van routine.",
+      "test_failed_msg": "Fout tijdens routinetest.",
+      "never_run": "Nooit uitgevoerd",
+      "every_interval": "Elke {{minutes}} minuten",
+      "warning_active_badge": "Waarschuwing ({{minutes}}m): \"{{message}}\"",
+      "last_run_label": "Laatste Uitvoering:",
+      "last_warning_label": "Laatste Waarschuwing:",
+      "test_now": "Testen",
+      "edit_modal_title": "RCON-routine Bewerken",
+      "create_modal_title": "Nieuwe RCON-routine",
+      "form_name": "Routinenaam",
+      "form_name_placeholder": "Bijv. Grondvoorwerpen opruimen",
+      "form_interval": "Interval (Minuten)",
+      "form_enabled": "Routine Inschakelen",
+      "form_enabled_help": "Bepaalt of opdrachten periodiek worden uitgevoerd.",
+      "form_commands": "RCON-opdrachten (in volgorde)",
+      "add_command_btn": "Nieuwe Opdracht",
+      "warning_section_title": "Vroege Chatwaarschuwing",
+      "warning_section_desc": "Stel een bericht in om spelers te waarschuwen voordat opdrachten worden uitgevoerd.",
+      "warning_enabled": "Vroege Waarschuwing Verzenden",
+      "warning_enabled_help": "Indien ingeschakeld, waarschuwt chat {minutes} minuten van tevoren.",
+      "warning_minutes": "Waarschuwing Vooraf (Minuten)",
+      "warning_minutes_hint": "Moet korter zijn dan routine-interval ({{interval}}m).",
+      "warning_color": "Waarschuwingskleur (Hex)",
+      "warning_color_presets": "Voorgestelde kleuren voor RCON-chat:",
+      "warning_message": "Waarschuwingsbericht",
+      "warning_message_hint": "Tip: Gebruik {minutes} om de resterende tijd dynamisch te vervangen.",
+      "console_starting": "Routine-uitvoering starten... Wachten op RCON-reactie.",
+      "console_executing": "Opdrachten uitvoeren. Dit kan tot 25 seconden duren...",
+      "console_no_response": "(Geen consolereactie)",
+      "console_finished": "Routine volledig uitgevoerd.",
+      "colors": {
+        "red": "Rood",
+        "orange": "Oranje",
+        "yellow": "Geel",
+        "green": "Groen",
+        "cyan": "Cyaan/Lichtblauw",
+        "blue": "Blauw",
+        "purple": "Paars",
+        "white": "Wit"
+      }
+    },
+    "sections": {
+      "General": "Algemeen",
+      "World": "Wereld",
+      "Respawn": "Respawn",
+      "Vehicles": "Voertuigen",
+      "Damage": "Schade",
+      "Features": "Features"
+    },
+    "loading": "Instellingen laden...",
+    "empty": "Geen instellingen gevonden in deze sectie.",
+    "unsavedChanges": "Je hebt niet-opgeslagen wijzigingen",
+    "fieldsCount": "Toont {{count}} van {{total}} veld(en)",
+    "actions": {
+      "refresh": "Vernieuwen",
+      "addField": "Veld toevoegen",
+      "save": "Sectie opslaan",
+      "saving": "Opslaan...",
+      "removeField": "Veld verwijderen"
+    },
+    "search": {
+      "placeholder": "Zoek op sleutel of waarde...",
+      "noResults": "Geen resultaten gevonden",
+      "filtered": "gefilterd"
+    },
+    "field": {
+      "original": "Origineel"
+    },
+    "save": {
+      "success": "Instellingen opgeslagen",
+      "backup": "Backup"
+    },
+    "errors": {
+      "tryAgain": "Opnieuw proberen",
+      "loadFailed": "Fout bij het laden van instellingen",
+      "saveFailed": "Fout bij het opslaan",
+      "validationFailed": "Validatie mislukt",
+      "validationErrors": "Validatiefouten"
+    },
+    "discord": {
+      "title": "Discord Webhooks",
+      "description": "Beheer Discord-webhooks voor notificaties en integraties.",
+      "empty": "Geen webhooks geconfigureerd",
+      "unsavedChanges": "Je hebt niet-opgeslagen wijzigingen",
+      "urlPlaceholder": "https://discord.com/api/webhooks/...",
+      "noUrl": "Geen URL geconfigureerd",
+      "edit": "Bewerken",
+      "actions": {
+        "add": "Webhook toevoegen",
+        "refresh": "Vernieuwen",
+        "backups": "Backups",
+        "save": "Wijzigingen opslaan",
+        "saving": "Opslaan...",
+        "expand": "Uitklappen",
+        "collapse": "Inklappen"
+      },
+      "search": {
+        "placeholder": "Zoek op sleutel of waarde...",
+        "noResults": "Geen webhooks gevonden"
+      },
+      "save": {
+        "success": "Webhooks opgeslagen",
+        "backup": "Backup automatisch aangemaakt"
+      },
+      "test": {
+        "success": "Webhook getest",
+        "successText": "Webhook succesvol getest!",
+        "error": "Testfout",
+        "invalidUrl": "Ongeldige URL",
+        "emptyUrl": "Voer een URL in om te testen",
+        "testWebhook": "Test geconfigureerde webhook",
+        "testUrl": "Test URL voor opslaan"
+      },
+      "errors": {
+        "loadFailed": "Fout bij het laden van webhooks",
+        "saveFailed": "Fout bij het opslaan van webhooks",
+        "deleteFailed": "Fout bij het verwijderen van webhook",
+        "restoreFailed": "Fout bij het herstellen van backup",
+        "validationFailed": "Validatiefout",
+        "invalidUrl": "Ongeldige URL. Moet een geldige Discord-webhook zijn.",
+        "invalidUrls": "De volgende webhooks hebben ongeldige URL's: {{webhooks}}",
+        "requiredFields": "Alle velden zijn verplicht",
+        "webhookExists": "Deze webhook bestaat al"
+      },
+      "webhooks": {
+        "serverstatus": "Serverstatus",
+        "new_player": "Nieuwe speler",
+        "players_online": "Spelers online",
+        "vehicle_registration": "Voertuigregistratie",
+        "chat_in_game": "Chat in game",
+        "adminlog": "Adminlog",
+        "vehicle-log": "Voertuiglog",
+        "bunkers_status": "Bunkerstatus",
+        "timer": "Timer",
+        "commands": "Commando's",
+        "fishing_ranking": "Vissen ranking",
+        "kill_log": "Kill log",
+        "chest_events": "Kist-events",
+        "chest_vehicle_alerts": "Kist/voertuig alerts",
+        "log-ssm": "SSM log",
+        "lockpicking_events": "Lockpicking events",
+        "top20_lockpicking": "Top 20 lockpicking",
+        "top20_kills": "Top 20 kills",
+        "top20_snipers": "Top 20 snipers"
+      }
+    },
+    "users": {
+      "title": "Gebruikersbeheer",
+      "description": "Maak en beheer systeemgebruikers",
+      "empty": "Geen gebruikers gevonden",
+      "loading": "Gebruikers laden...",
+      "actions": {
+        "create": "Gebruiker maken",
+        "edit": "Bewerken",
+        "delete": "Verwijderen",
+        "activate": "Activeren",
+        "deactivate": "Deactiveren",
+        "refresh": "Vernieuwen"
+      },
+      "search": {
+        "placeholder": "Zoek gebruikers...",
+        "noResults": "Geen gebruikers gevonden"
+      },
+      "errors": {
+        "loadFailed": "Fout bij het laden van gebruikers",
+        "createFailed": "Fout bij het aanmaken van gebruiker",
+        "updateFailed": "Fout bij het bijwerken van gebruiker",
+        "deleteFailed": "Fout bij het verwijderen van gebruiker",
+        "usernameExists": "Gebruikersnaam bestaat al",
+        "invalidPassword": "Wachtwoord moet minimaal 8 tekens bevatten",
+        "cannotDeleteAdmin": "Kan admin-gebruiker niet verwijderen",
+        "userNotFound": "Gebruiker niet gevonden",
+        "adminRequired": "Alleen beheerders kunnen gebruikers beheren",
+        "searchPlayersFailed": "Fout bij het zoeken naar spelers"
+      },
+      "roles": {
+        "admin": "Beheerder",
+        "moderator": "Moderator"
+      }
+    }
+  },
+  "server": {
+    "title": "Scum Server",
+    "description": "Beheer de SCUM-server. Start, stop of herstart de server wanneer nodig.",
+    "errors": {
+      "nssmStartFailed": "Service starten via NSSM is mislukt. Controleer de Windows-service logs."
+    },
+    "status": {
+      "label": "Status",
+      "running": "Actief",
+      "stopped": "Gestopt"
+    },
+    "refreshStatus": "Status vernieuwen",
+    "fields": {
+      "service": "Service",
+      "port": "Poort",
+      "maxPlayers": "Max spelers",
+      "battlEye": "BattlEye",
+      "serviceStatus": "Service status"
+    },
+    "yes": "Ja",
+    "no": "Nee",
+    "loadingStatus": "Status laden...",
+    "actions": {
+      "success": "Succes",
+      "error": "Fout",
+      "started": "Gestart",
+      "stopped": "Gestopt",
+      "restarted": "Herstart",
+      "withSuccess": "succesvol",
+      "unknownError": "Onbekende fout",
+      "requestError": "Requestfout",
+      "restart": {
+        "initiated": "Herstart gestart",
+        "message": "Herstart gestart. Dit kan enkele minuten duren, vooral als er Elevated Users gesynchroniseerd moeten worden.",
+        "inProgress": "Herstart bezig",
+        "checking": "Serverstatus controleren",
+        "timeout": "Herstart bezig",
+        "timeoutMessage": "De herstart duurt langer dan verwacht. Controleer de serverstatus handmatig."
+      }
+    },
+    "buttons": {
+      "start": {
+        "label": "Start",
+        "loading": "Starten...",
+        "tooltip": "Server draait al"
+      },
+      "stop": {
+        "label": "Stop",
+        "loading": "Stoppen...",
+        "tooltip": "Server is al gestopt"
+      },
+      "restart": {
+        "label": "Herstart",
+        "loading": "Herstarten...",
+        "restarting": "Herstarten...",
+        "tooltip": "Server moet draaien om te herstarten"
+      }
+    },
+    "serverInfo": {
+      "title": "Serverinformatie",
+      "service": "Service",
+      "pid": "PID",
+      "uptime": "Uptime"
+    },
+    "scheduler": {
+      "title": "Planningssysteem",
+      "description": "Beheer automatische server-herstarts.",
+      "tabs": {
+        "status": "Status",
+        "config": "Configuratie",
+        "logs": "Logs"
+      },
+      "status": {
+        "enabled": "Ingeschakeld",
+        "disabled": "Uitgeschakeld",
+        "running": "Actief",
+        "stopped": "Gestopt",
+        "nextRestart": "Volgende herstart",
+        "noRestartScheduled": "Geen herstart ingepland",
+        "restartTimes": "Herstarttijden",
+        "scheduledJobs": "Ingeplande taken",
+        "logsCount": "Totaal logs",
+        "notificationMinutes": "Meldingen (minuten ervoor)"
+      },
+      "controls": {
+        "start": {
+          "label": "Scheduler starten",
+          "loading": "Starten...",
+          "tooltip": "Scheduler draait al"
+        },
+        "stop": {
+          "label": "Scheduler stoppen",
+          "loading": "Stoppen...",
+          "tooltip": "Scheduler is al gestopt"
+        },
+        "restart": {
+          "label": "Scheduler herstarten",
+          "loading": "Herstarten...",
+          "tooltip": "Herstart de scheduler met de huidige configuratie"
+        },
+        "forceRestart": {
+          "label": "Forceer herstart",
+          "loading": "Herstarten...",
+          "tooltip": "Forceer direct een server-herstart",
+          "confirm": {
+            "title": "Herstart bevestigen",
+            "message": "Weet je zeker dat je de server nu wilt forceren te herstarten? Deze actie kan niet ongedaan worden gemaakt.",
+            "confirmButton": "Ja, herstart",
+            "cancelButton": "Annuleren"
+          }
+        }
+      },
+      "config": {
+        "title": "Scheduler-configuratie",
+        "enabled": "Scheduler inschakelen",
+        "autoStart": "Automatisch starten",
+        "restartTimes": {
+          "label": "Herstarttijden",
+          "placeholder": "UU:MM",
+          "add": "Tijd toevoegen",
+          "remove": "Verwijderen",
+          "invalidFormat": "Ongeldig formaat. Gebruik UU:MM (bijv. 01:00)",
+          "empty": "Geen tijden geconfigureerd"
+        },
+        "notificationMinutes": {
+          "label": "Melding minuten",
+          "placeholder": "Bijv.: 10, 5, 1",
+          "help": "Minuten voor herstart om meldingen te sturen (komma-gescheiden)"
+        },
+        "timezone": {
+          "label": "Tijdzone",
+          "placeholder": "Bijv.: Europe/Amsterdam"
+        },
+        "save": {
+          "label": "Configuratie opslaan",
+          "loading": "Opslaan...",
+          "success": "Configuratie succesvol opgeslagen",
+          "error": "Fout bij het opslaan van configuratie"
+        }
+      },
+      "logs": {
+        "title": "Scheduler-logs",
+        "loading": "Logs laden...",
+        "empty": "Geen logs gevonden",
+        "limit": "Limiet",
+        "refresh": "Vernieuwen",
+        "filter": {
+          "label": "Filter op type",
+          "all": "Alle",
+          "notification": "Melding",
+          "restart": "Herstart",
+          "scheduler_started": "Scheduler gestart",
+          "scheduler_stopped": "Scheduler gestopt",
+          "config_updated": "Configuratie bijgewerkt",
+          "restart_scheduled": "Herstart ingepland",
+          "notification_scheduled": "Melding ingepland",
+          "restart_started": "Herstart gestart",
+          "restart_success": "Herstart succesvol",
+          "restart_failed": "Herstart mislukt",
+          "force_restart": "Forceer herstart"
+        },
+        "columns": {
+          "timestamp": "Datum/tijd",
+          "eventType": "Type",
+          "message": "Bericht",
+          "data": "Data"
+        }
+      },
+      "countdown": {
+        "hours": "u",
+        "minutes": "min",
+        "seconds": "s",
+        "passed": "Voorbij"
+      },
+      "errors": {
+        "loadStatus": "Fout bij het laden van schedulerstatus",
+        "loadConfig": "Fout bij het laden van configuratie",
+        "loadLogs": "Fout bij het laden van logs",
+        "startFailed": "Fout bij het starten van scheduler",
+        "stopFailed": "Fout bij het stoppen van scheduler",
+        "restartFailed": "Fout bij het herstarten van scheduler",
+        "saveFailed": "Fout bij het opslaan van configuratie",
+        "forceRestartFailed": "Fout bij het forceren van herstart",
+        "notInitialized": "RestartScheduler is niet geinitialiseerd",
+        "noTimesConfigured": "Geen herstarttijden geconfigureerd",
+        "invalidTimeFormat": "Ongeldig tijdformaat"
+      },
+      "success": {
+        "started": "Scheduler succesvol gestart",
+        "stopped": "Scheduler succesvol gestopt",
+        "restarted": "Scheduler succesvol herstart",
+        "configSaved": "Configuratie opgeslagen en scheduler herstart",
+        "forceRestart": "Server succesvol herstart"
+      }
+    },
+    "notifications": {
+      "title": "Notificatiesysteem",
+      "description": "Aangepaste notificaties direct naar het spel",
+      "loading": "Notificatiestatus laden...",
+      "tabs": {
+        "status": "Status",
+        "custom": "Snelle boodschap",
+        "admin": "Administratief bericht",
+        "tools": "Acties"
+      },
+      "errors": {
+        "loadStatus": "Fout bij het laden van notificatiestatus",
+        "sendFailed": "Notificatie verzenden mislukt",
+        "clearFailed": "Notificaties wissen mislukt",
+        "resetCooldownsFailed": "Cooldowns resetten mislukt",
+        "restartCreateFailed": "Herstartnotificaties aanmaken mislukt"
+      },
+      "scheduledLink": "Gepland",
+      "status": {
+        "enabled": "Ingeschakeld",
+        "disabled": "Uitgeschakeld",
+        "running": "Actief",
+        "stopped": "Gestopt",
+        "checkInterval": "Controle-interval",
+        "restartProtection": "Herstart-beschermingsvenster",
+        "minutesSuffix": "min",
+        "secondsSuffix": "s",
+        "lastRestart": "Laatste herstartpakket",
+        "disabledHint": "Het notificatiesysteem is uitgeschakeld op de backend.",
+        "notifier": {
+          "title": "SCUM Notifier",
+          "enabled": "Notifier ingeschakeld",
+          "file": "Notifications.json bestand",
+          "filePresent": "Gevonden",
+          "fileMissing": "Niet gevonden",
+          "currentCount": "Notificaties in bestand",
+          "highestPriority": "Hoogste prioriteit"
+        }
+      },
+      "cooldowns": {
+        "title": "Cooldowns",
+        "types": {
+          "restart": "Herstart",
+          "custom": "Aangepast",
+          "events": "Administratief"
+        },
+        "lastSent": "Laatst verzonden: {{value}}",
+        "ready": "Klaar",
+        "blocked": "Cooldown actief. Wacht {{time}}."
+      },
+      "forms": {
+        "custom": {
+          "title": "Snelle boodschap",
+          "message": "Bericht",
+          "placeholder": "Bijv.: Server herstart over 15 minuten.",
+          "duration": "Duur (seconden)",
+          "color": "Kleur (R-G-B)",
+          "submit": "Notificatie verzenden",
+          "help": "Gebruik voor korte waarschuwingen of urgente meldingen. Respecteer de cooldown om spam te voorkomen."
+        },
+        "admin": {
+          "title": "Administratief bericht",
+          "template": "Template",
+          "loading": "Templates laden...",
+          "select": "Selecteer een template",
+          "preview": "Voorbeeld",
+          "color": "Standaardkleur",
+          "duration": "Standaardduur",
+          "examples": "Voorbeelden",
+          "message": "Extra bericht (optioneel)",
+          "messagePlaceholder": "Extra tekst die met de template wordt weergegeven",
+          "grantedBy": "Toegekend door",
+          "notes": "Notities",
+          "submit": "Administratief bericht verzenden"
+        },
+        "restart": {
+          "title": "Herstartnotificaties",
+          "time": "Tijd (UU:MM)",
+          "date": "Datum (optioneel)",
+          "submit": "Notificaties genereren"
+        }
+      },
+      "actions": {
+        "title": "Administratieve acties",
+        "description": "Kritieke acties voor het notificatiesysteem.",
+        "refresh": "Status vernieuwen",
+        "cancel": "Annuleren",
+        "clear": {
+          "label": "Notificaties wissen",
+          "confirmTitle": "Notificaties wissen",
+          "confirmMessage": "Weet je zeker dat je alle wachtende notificaties wilt verwijderen?",
+          "confirmButton": "Ja, wissen"
+        },
+        "resetCooldowns": {
+          "label": "Cooldowns resetten",
+          "confirmTitle": "Cooldowns resetten",
+          "confirmMessage": "Alle cooldowns resetten? Deze actie kan niet ongedaan worden gemaakt.",
+          "confirmButton": "Ja, reset"
+        },
+        "restart": {
+          "confirmTitle": "Herstartnotificaties genereren",
+          "confirmMessage": "Notificaties genereren voor {{date}} om {{time}}?",
+          "confirmButton": "Ja, genereren",
+          "today": "vandaag"
+        }
+      },
+      "success": {
+        "sent": "Notificatie verzonden",
+        "customSent": "Snelle notificatie succesvol verzonden",
+        "adminSent": "Administratief bericht succesvol verzonden",
+        "cleared": "Notificaties succesvol gewist",
+        "cooldownsReset": "Cooldowns succesvol gereset",
+        "restartCreated": "Herstartnotificaties gegenereerd",
+        "restartCreatedDetails": "{{count}} notificaties aangemaakt met prioriteit {{priority}}."
+      },
+      "validation": {
+        "messageRequired": "Voer een bericht in voordat je verzendt.",
+        "durationInvalid": "Geef een geldige duur op (geheel getal groter dan nul).",
+        "colorInvalid": "Geef de kleur op in R-G-B formaat (0-255).",
+        "templateRequired": "Selecteer een template voordat je verzendt.",
+        "restartTimeInvalid": "Geef een geldige tijd op in UU:MM formaat.",
+        "restartDateInvalid": "Geef de datum op als JJJJ-MM-DD."
+      },
+      "lastSent": {
+        "never": "Nooit"
+      }
+    },
+    "scheduledNotifications": {
+      "title": "Geplande notificaties",
+      "description": "Maak, valideer en compileer geplande notificaties naar SCUM Notifications.json.",
+      "empty": "Geen geplande notificaties.",
+      "actions": {
+        "create": "Maken",
+        "edit": "Bewerken",
+        "validate": "Valideren",
+        "compile": "Compileren"
+      },
+      "form": {
+        "createTitle": "Geplande notificatie maken",
+        "editTitle": "Geplande notificatie bewerken",
+        "validated": "Gevalideerd",
+        "notValidated": "Niet gevalideerd"
+      },
+      "fields": {
+        "enabled": "Ingeschakeld",
+        "title": "Titel",
+        "titlePlaceholder": "(optioneel)",
+        "message": "Bericht",
+        "messagePlaceholder": "Bericht",
+        "duration": "Duur (minuten)",
+        "color": "Kleur (R-G-B)",
+        "schedule": "Planning",
+        "scheduleType": "Type",
+        "dailyTime": "Tijd (UU:MM)",
+        "onceDatetime": "Datum/tijd (ISO)",
+        "offsetMinutes": "Offset (minuten)",
+        "schedulePreview": "Gegenereerde planning:"
+      },
+      "scheduleTypes": {
+        "once": "Eenmalig",
+        "daily": "Dagelijks",
+        "relativeToRestart": "Relatief aan herstart"
+      },
+      "scheduleLabels": {
+        "once": "Eenmalig: {{value}}",
+        "daily": "Dagelijks: {{value}}",
+        "relativeToRestart": "Herstart {{value}} min"
+      },
+      "colors": {
+        "white": "Wit",
+        "red": "Rood",
+        "yellow": "Geel",
+        "green": "Groen",
+        "blue": "Blauw",
+        "purple": "Paars",
+        "orange": "Oranje"
+      },
+      "table": {
+        "enabled": "Ingeschakeld",
+        "title": "Titel",
+        "message": "Bericht",
+        "schedule": "Planning",
+        "duration": "Duur",
+        "durationValue": "{{value}} min",
+        "color": "Kleur",
+        "actions": "Acties"
+      },
+      "hints": {
+        "validateRequired": "Je moet op Valideren klikken voordat je kunt opslaan."
+      },
+      "validate": {
+        "ok": "Validatie OK. Je kunt nu opslaan.",
+        "failed": "Validatie mislukt.",
+        "conflictTitle": "Tijd gereserveerd door herstart",
+        "conflictRequested": "Aangevraagd: {{value}}",
+        "conflictRestart": "Herstart: {{value}}",
+        "conflictWindow": "Gereserveerd venster: {{start}} -> {{end}}"
+      },
+      "save": {
+        "failed": "Opslaan mislukt."
+      },
+      "delete": {
+        "failed": "Verwijderen mislukt.",
+        "confirmTitle": "Notificatie verwijderen?",
+        "confirmText": "Dit verwijdert de geplande notificatie en compileert Notifications.json opnieuw."
+      },
+      "compile": {
+        "noInfo": "Geen compile-informatie ontvangen.",
+        "failed": "Compileren mislukt.",
+        "ok": "Succesvol gecompileerd.",
+        "summary": "Totaal: {{total}} | Herstart: {{restart}} | Aangepast: {{custom}}"
+      }
+    }
+  },
+  "players": {
+    "title": "Spelers",
+    "description": "Wordt gebruikt om alles over spelers te tonen.",
+    "loading": "Spelergegevens laden...",
+    "refresh": "Vernieuwen",
+    "activeSessions": "Actieve sessies",
+    "topPlayers": "Top spelers",
+    "noActiveSessions": "Geen actieve sessies op dit moment",
+    "noTopPlayers": "Geen spelers in de ranking",
+    "noPlayers": "Geen spelers gevonden",
+    "status": {
+      "online": "Online",
+      "offline": "Offline"
+    },
+    "table": {
+      "playerName": "Spelernaam",
+      "playerId": "ID",
+      "steamId": "Steam ID",
+      "status": "Status",
+      "timer": "Timer",
+      "vehicles": "Voertuigen",
+      "sortByVehicles": "Klik om te sorteren op aantal voertuigen",
+      "loginTime": "Inlogtijd",
+      "duration": "Duur",
+      "totalPlaytime": "Totale speeltijd",
+      "totalSessions": "Totaal sessies"
+    },
+    "timer": {
+      "enable": "Schakel /tm-commando toestemming in",
+      "disable": "Schakel /tm-commando toestemming uit",
+      "updated": "Toestemming bijgewerkt",
+      "updateSuccess": "Toestemming succesvol bijgewerkt",
+      "updateError": "Fout bij het bijwerken van toestemming",
+      "error": "Fout"
+    },
+    "elevatedUser": {
+      "enable": "Schakel Elevated User in",
+      "disable": "Schakel Elevated User uit",
+      "updated": "Elevated user succesvol bijgewerkt!",
+      "scheduled": "Elevated user ingepland. Wordt gesynchroniseerd wanneer de server stopt.",
+      "success": "Succes",
+      "info": "Informatie",
+      "error": "Fout",
+      "updateError": "Fout bij het bijwerken van elevated user"
+    },
+    "permissions": {
+      "admin": "Admin",
+      "banned": "Verbannen",
+      "exclusive": "Exclusief",
+      "server_admin": "Config",
+      "silenced": "Gedempt",
+      "whitelisted": "Whitelist",
+      "raid_webhook_manage": "Raid Webhook",
+      "elevatedUser": "Elevated User",
+      "enable": "Schakel {{type}} toestemming in",
+      "disable": "Schakel {{type}} toestemming uit",
+      "updated": "Toestemming bijgewerkt",
+      "updateSuccess": "Toestemming succesvol bijgewerkt",
+      "updateError": "Fout bij het bijwerken van toestemming",
+      "error": "Fout",
+      "alreadyActive": "Toestemming is al actief",
+      "alreadyInactive": "Toestemming is al inactief",
+      "alreadyInState": "Toestemming is al in de gevraagde status",
+      "synchronized": "Toestemming gesynchroniseerd",
+      "messages": {
+        "adminActivated": "Admin-toestemming succesvol geactiveerd",
+        "adminDeactivated": "Admin-toestemming succesvol gedeactiveerd",
+        "bannedActivated": "Speler succesvol verbannen",
+        "bannedDeactivated": "Verbanning succesvol verwijderd",
+        "configActivated": "Config-toestemming succesvol geactiveerd",
+        "configDeactivated": "Config-toestemming succesvol gedeactiveerd",
+        "silencedActivated": "Speler succesvol gedempt",
+        "silencedDeactivated": "Demping succesvol verwijderd",
+        "whitelistedActivated": "Speler succesvol aan whitelist toegevoegd",
+        "whitelistedDeactivated": "Speler succesvol van whitelist verwijderd",
+        "raid_webhook_manageActivated": "Raid-webhook-toestemming succesvol geactiveerd",
+        "raid_webhook_manageDeactivated": "Raid-webhook-toestemming succesvol gedeactiveerd",
+        "elevatedUserActivated": "Elevated User succesvol geactiveerd",
+        "elevatedUserDeactivated": "Elevated User succesvol gedeactiveerd",
+        "timerActivated": "Timer-toestemming succesvol geactiveerd",
+        "timerDeactivated": "Timer-toestemming succesvol gedeactiveerd"
+      }
+    },
+    "search": {
+      "placeholder": "Zoek op spelernaam of Steam ID...",
+      "noResults": "Geen spelers gevonden"
+    },
+    "filters": {
+      "title": "Filter op toestemmingen:",
+      "active": "(Actief)",
+      "inactive": "(Inactief)",
+      "clear": "Filters wissen"
+    },
+    "pagination": {
+      "showing": "Toont {{start}}-{{end}} van {{total}} spelers",
+      "prev": "Vorige",
+      "next": "Volgende",
+      "page": "Pagina {{page}}",
+      "perPage": "{{count}} per pagina",
+      "limit": "Limiet"
+    },
+    "tabs": {
+      "permissions": "Toestemmingen",
+      "vehicles": "Voertuigen",
+      "players": "Spelers",
+      "squads": "Squads",
+      "adminLog": "Admin-log",
+      "chests": "Kisten",
+      "survival": "Overleving",
+      "ranking": "Ranking",
+      "analyses": "Analyses",
+      "bank": "Bank"
+    },
+    "vehicles": {
+      "loading": "Voertuigen laden...",
+      "total": "Totaal: {{count}} voertuigen",
+      "summary": {
+        "active": "Actief",
+        "inactive": "Inactief",
+        "disappeared": "Verdwenen",
+        "destroyed": "Vernietigd"
+      },
+      "filters": {
+        "all": "Alle",
+        "active": "Actief",
+        "inactive": "Inactief",
+        "disappeared": "Verdwenen",
+        "destroyed": "Vernietigd"
+      },
+      "empty": "Geen voertuigen gevonden",
+      "error": {
+        "loadError": "Fout bij het laden van voertuigen"
+      }
+    },
+    "chests": {
+      "refresh": "Kisten vernieuwen",
+      "loadError": "Fout bij het laden van kisten",
+      "synced": "{{count}} kisten gesynchroniseerd",
+      "withCoordinates": "Met coordinaten: {{count}}",
+      "inVehicles": "In voertuigen: {{count}}",
+      "type": "Type",
+      "empty": "Geen kisten gevonden voor deze speler."
+    },
+    "survival": {
+      "error": "Fout bij het laden van statistieken",
+      "loading": "Statistieken laden...",
+      "empty": "Geen gegevens."
+    },
+    "bank": {
+      "refresh": "Bank vernieuwen",
+      "loading": "Laden...",
+      "empty": "Geen spelers.",
+      "searchPlaceholder": "Zoek op spelernaam of Steam ID...",
+      "showing": "Toont {{start}}-{{end}} van {{total}} spelers",
+      "columns": {
+        "playerName": "Naam",
+        "steamId": "Steam ID",
+        "accountNumber": "Rekening",
+        "money": "Geld",
+        "gold": "Goud"
+      },
+      "errors": {
+        "loadFailed": "Bankrekeningen laden mislukt"
+      }
+    },
+    "squads": {
+      "refresh": "Squads vernieuwen",
+      "total": "{{count}} squads",
+      "syncedAt": "Gegevens gesynchroniseerd op {{date}}",
+      "syncedUnknown": "Synchronisatietijd niet beschikbaar",
+      "loading": "Squads laden...",
+      "empty": "Geen squads gevonden.",
+      "tryAgain": "Opnieuw proberen",
+      "errors": {
+        "loadFailed": "Squads laden mislukt."
+      },
+      "columns": {
+        "rank": "Rang",
+        "squad": "Squad",
+        "score": "Score",
+        "members": "Leden",
+        "vehicles": "Voertuigen",
+        "flags": "Vlaggen",
+        "activity": "Activiteit",
+        "message": "Bericht",
+        "information": "Informatie"
+      },
+      "placeholders": {
+        "noMessage": "Geen bericht"
+      },
+      "memberCountLimited": "{{count}} / {{limit}} leden",
+      "memberCount": "{{count}} leden",
+      "activity": {
+        "lastLogin": "Laatste login {{date}}",
+        "lastLogout": "Laatste logout {{date}}",
+        "noActivity": "Geen recente activiteit"
+      },
+      "members": {
+        "title": "Leden",
+        "summary": "{{count}} leden",
+        "summaryZero": "Geen leden gesynchroniseerd",
+        "loading": "Leden laden...",
+        "empty": "Geen leden gevonden.",
+        "loadMore": "Meer laden",
+        "errorLoad": "Squadleden laden mislukt.",
+        "notFound": "Squad niet gevonden.",
+        "rank": "Rang",
+        "rankUnknown": "Geen rang",
+        "fame": "Faam",
+        "playtime": "Speeltijd",
+        "lastLogin": "Laatste login",
+        "lastLogout": "Laatste logout",
+        "steamUnknown": "Steam ID niet beschikbaar",
+        "nameUnknown": "Naam niet beschikbaar"
+      },
+      "flags": {
+        "title": "Vlag-ID's:",
+        "total": "Totaal: {{count}} vlag(gen)"
+      }
+    },
+    "rankings": {
+      "refresh": "Rankings vernieuwen",
+      "loading": "Rankings laden...",
+      "empty": "Geen rankings gevonden",
+      "tryAgain": "Opnieuw proberen",
+      "searchPlaceholder": "Zoek op spelernaam...",
+      "itemsPerPage": "Items per pagina",
+      "showing": "Toont {{start}}-{{end}} van {{total}} spelers",
+      "columnsLabel": "Kolommen",
+      "columnsShort": "Kol.",
+      "selectColumns": "Kolommen selecteren",
+      "selectAll": "Alles selecteren",
+      "reset": "Reset",
+      "toggleAll": "Alle",
+      "sortBy": "Sorteren op",
+      "sortDesc": "Aflopend sorteren",
+      "sortAsc": "Oplopend sorteren",
+      "columns": {
+        "rank": "Rang",
+        "player": "Speler",
+        "kills": "Kills",
+        "deaths": "Deaths",
+        "kdr": "KDR",
+        "fame": "Faam",
+        "minutesSurvived": "Minuten",
+        "topSniper": "Top sniper",
+        "advancedLockpick": "Geavanceerd lockpicken",
+        "headshots": "Headshots",
+        "suicides": "Zelfmoorden",
+        "vehiclesDestroyed": "Voertuigen vernietigd",
+        "animalsKilled": "Dieren gedood",
+        "playersKnockedOut": "Spelers knockout",
+        "overdoses": "Overdoses",
+        "highestWeight": "Hoogste gewicht",
+        "highestDefecation": "Hoogste ontlasting",
+        "lockpickBasic": "Basis lockpicken",
+        "lockpickMedium": "Gemiddeld lockpicken",
+        "lockpickAdvanced": "Geavanceerd lockpicken",
+        "lockpickVeryEasy": "Heel makkelijk lockpicken",
+        "lockpickDiallock": "Dial lock"
+      },
+      "categories": {
+        "fixed": "Vast",
+        "main": "Hoofd",
+        "combat": "Gevecht",
+        "survival": "Overleving",
+        "lockpicking": "Sloten kraken"
+      }
+    },
+    "analyses": {
+      "players": "spelers"
+    }
+  },
+  "adminLogs": {
+    "title": "Recente admin-commando's",
+    "total": "Totaal",
+    "limit": "Limiet",
+    "refresh": "Vernieuwen",
+    "searchPlaceholder": "Zoek commando, admin of Steam ID...",
+    "loading": "Laden...",
+    "empty": "Geen logs.",
+    "admin": "Admin",
+    "command": "Commando",
+    "filters": {
+      "all": "Alle",
+      "teleport": "Teleport",
+      "spawnItem": "Spawn item",
+      "godMode": "God mode",
+      "playerInfo": "Spelerinfo",
+      "punishments": "Straffen",
+      "others": "Overig"
+    },
+    "errors": {
+      "loadFailed": "Admin logs laden mislukt"
+    }
+  },
+  "map": {
+    "filters": {
+      "title": "Filters",
+      "searchPlaceholder": "Typ om te zoeken...",
+      "itemsCount": "{{count}} items",
+      "empty": "Geen overeenkomende filters",
+      "labels": {
+        "chests": "Kisten",
+        "gps": "GPS",
+        "flags": "Vlaggen",
+        "wikiGeneral": "Algemeen (Wiki)",
+        "wikiPois": "Bezienswaardigheden",
+        "wikiBunkers": "Bunkers",
+        "wikiTraders": "Traders"
+      },
+      "descriptions": {
+        "chests": "Toon alle gesynchroniseerde kisten",
+        "gps": "Online spelers met GPS",
+        "flags": "Toon alle vlaggen op de kaart",
+        "wikiGeneral": "Markers van SCUM Wiki (General)",
+        "wikiPois": "Markers van SCUM Wiki (POIs)",
+        "wikiBunkers": "Markers van SCUM Wiki (Bunkers)",
+        "wikiTraders": "Markers van SCUM Wiki (Traders)"
+      }
+    },
+    "chests": {
+      "panelTitle": "Kisten op de kaart",
+      "loading": "Kisten laden...",
+      "error": "Kisten laden mislukt",
+      "markersCount": "{{count}} kisten weergegeven",
+      "noLocationCount": "{{count}} zonder coordinaten",
+      "lastSync": "Laatste snapshot {{time}} geleden",
+      "refresh": "Kisten vernieuwen",
+      "retry": "Opnieuw proberen",
+      "filter": {
+        "active": "Filter: {{query}}",
+        "clear": "Wissen",
+        "noMatches": "Geen kisten gevonden voor \"{{query}}\""
+      },
+      "vehicleList": {
+        "title": "Kisten opgeslagen in voertuigen",
+        "description": "Coordinaten zijn niet beschikbaar omdat de kisten in voertuigen zitten.",
+        "empty": "Geen kisten opgeslagen in voertuigen.",
+        "totalTitle": "Samenvatting",
+        "totalCount": "{{count}} kisten",
+        "groupTitle": "{{vehicle}}",
+        "unknownVehicle": "Onbekend voertuig",
+        "owner": "Speler",
+        "lastSeen": "Laatst gezien op {{date}}",
+        "chestsCount": "{{count}} kisten"
+      }
+    },
+    "gps": {
+      "panelTitle": "Spelers GPS",
+      "loading": "GPS laden...",
+      "error": "GPS laden mislukt",
+      "markersCount": "{{count}} spelers",
+      "markersCount_one": "{{count}} speler",
+      "lastSync": "Gesynchroniseerd {{time}} geleden",
+      "refresh": "GPS vernieuwen",
+      "retry": "Opnieuw proberen"
+    },
+    "flags": {
+      "error": "Vlaggen laden mislukt",
+      "noOwner": "Geen eigenaar",
+      "clickToOpen": "Klik om te openen op Scum Map"
+    },
+    "search": {
+      "noMatches": "Geen resultaten voor \"{{query}}\" (zoeken in kisten en vlaggen)"
+    }
+  },
+  "common": {
+    "success": "Succes",
+    "error": "Fout",
+    "info": "Info",
+    "loading": "Laden...",
+    "refresh": "Vernieuwen",
+    "yes": "Ja",
+    "no": "Nee",
+    "save": "Opslaan",
+    "saving": "Opslaan...",
+    "saved": "Opgeslagen.",
+    "saveError": "Opslaan mislukt.",
+    "revert": "Terugdraaien",
+    "noChanges": "Geen wijzigingen om op te slaan.",
+    "cancel": "Annuleren",
+    "delete": "Verwijderen",
+    "enabled": "Ingeschakeld",
+    "disabled": "Uitgeschakeld",
+    "confirm": "Bevestigen",
+    "continue": "Doorgaan"
+  }
+}

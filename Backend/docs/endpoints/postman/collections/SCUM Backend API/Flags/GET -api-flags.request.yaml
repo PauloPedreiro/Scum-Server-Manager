@@ -1,0 +1,8 @@
+$kind: http-request
+name: GET /api/flags
+description: GET /api/flags
+url: "{{baseUrl}}/api/flags"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+order: 1000

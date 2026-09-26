@@ -1,0 +1,8 @@
+$kind: http-request
+name: POST /api/auth/discord-link-code
+description: POST /api/auth/discord-link-code
+url: "{{baseUrl}}/api/auth/discord-link-code"
+method: POST
+headers:
+  Authorization: Bearer {{token}}
+order: 7000

@@ -1,0 +1,8 @@
+$kind: http-request
+name: GET /api/admin/base-material/jobs/<job_id>
+description: "GET /api/admin/base-material/jobs/<job_id> - Detalha um job e inclui result_json quando disponivel. Erros retornam code (ex.: INVALID_JOB_ID, JOB_NOT_FOUND)."
+url: "{{baseUrl}}/api/admin/base-material/jobs/<job_id>"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+order: 4000

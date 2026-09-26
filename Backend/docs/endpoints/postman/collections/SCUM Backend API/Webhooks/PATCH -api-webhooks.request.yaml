@@ -1,0 +1,54 @@
+$kind: http-request
+name: PATCH /api/webhooks
+description: |-
+  PATCH /api/webhooks
+
+  Atualizar múltiplos webhooks de uma vez. Mantém webhooks não especificados.
+
+  **Parâmetros:**
+  - `webhooks` (objeto, obrigatório): Objeto com pares nome: URL dos webhooks a atualizar
+  - `create_backup` (boolean, opcional): Criar backup antes de atualizar (padrão: true)
+
+  **Exemplo de Body:**
+  ```json
+  {
+    "webhooks": {
+      "serverstatus": "https://discord.com/api/webhooks/NOVA_URL",
+      "new_player": "https://discord.com/api/webhooks/OUTRA_URL"
+    },
+    "create_backup": true
+  }
+  ```
+
+  **Resposta de Sucesso (200):**
+  ```json
+  {
+    "success": true,
+    "message": "Webhooks atualizados com sucesso",
+    "data": {
+      "updated_webhooks": ["serverstatus", "new_player"]
+    },
+    "timestamp": 1701504000
+  }
+  ```
+
+  **Possíveis Erros:**
+  - 400: Body vazio, JSON inválido ou campo "webhooks" ausente/inválido
+  - 404: Webhook não existe (apenas atualização de webhooks existentes é permitida)
+  - 500: Erro interno do servidor
+url: "{{baseUrl}}/api/webhooks"
+method: PATCH
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+body:
+  type: json
+  content: |-
+    {
+      "webhooks": {
+        "serverstatus": "https://discord.com/api/webhooks/NOVA_URL",
+        "new_player": "https://discord.com/api/webhooks/OUTRA_URL"
+      },
+      "create_backup": true
+    }
+order: 5000

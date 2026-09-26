@@ -1,0 +1,14 @@
+# Use this workspace to collaborate
+workspace:
+  id: 389e2170-40b5-404d-8a52-2ece88a1ae5f
+
+localResources:
+  collections:
+    - ..\postman-collection.json
+
+# Each entry here maps a local resource to one or more corresponding objects in Postman Cloud
+
+cloudResources:
+  collections:
+    ..\postman\collections\NotaFacil NF-e Processor: a2250fdb-de86-4d5c-8760-a238889a06e6
+    ..\postman\collections\SCUM Backend API: 9e304f2c-0ac7-477c-8300-18c75ae865f5

@@ -1,0 +1,50 @@
+$kind: http-request
+name: PUT /api/config
+description: |-
+  Substituir configuração completa do config.json
+
+  **⚠️ ATENÇÃO:** Este endpoint substitui TODA a configuração. Use com cuidado!
+
+  **Campos obrigatórios:**
+  - `config` (objeto): Objeto com a configuração completa do config.json
+
+  **Campos opcionais:**
+  - `create_backup` (boolean): Criar backup antes de substituir (padrão: true)
+
+  **Exemplo de resposta de sucesso:**
+  ```json
+  {
+    "success": true,
+    "message": "Configuração substituída com sucesso",
+    "data": {
+      "backup": "C:\\...\\config.backup.20250115_120000.json"
+    },
+    "timestamp": 1701504000
+  }
+  ```
+
+  **Possíveis erros:**
+  - 400: JSON inválido ou campo "config" faltando
+  - 400: Campo "config" deve ser um objeto
+  - 500: Erro ao processar configuração
+url: "{{baseUrl}}/api/config"
+method: PUT
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+body:
+  type: json
+  content: |-
+    {
+      "config": {
+        "server": {
+          "port": 7002,
+          "max_players": 64
+        },
+        "scheduler": {
+          "enabled": true
+        }
+      },
+      "create_backup": true
+    }
+order: 6000

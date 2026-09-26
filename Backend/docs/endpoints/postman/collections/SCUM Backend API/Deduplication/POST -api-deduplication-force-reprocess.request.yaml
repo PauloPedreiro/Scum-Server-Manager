@@ -1,0 +1,9 @@
+$kind: http-request
+name: POST /api/deduplication/force-reprocess
+description: POST /api/deduplication/force-reprocess
+url: "{{baseUrl}}/api/deduplication/force-reprocess"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+order: 3000

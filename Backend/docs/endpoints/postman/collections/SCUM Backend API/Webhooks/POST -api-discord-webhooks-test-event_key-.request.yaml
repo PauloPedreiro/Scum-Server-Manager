@@ -1,0 +1,9 @@
+$kind: http-request
+name: POST /api/discord/webhooks/test/<event_key>
+description: "POST /api/discord/webhooks/test/<event_key> - Envia mensagem de teste para o webhook do event_key (ex.: cargo_drop, kill_log, lockpicking_events, chest_vehicle_alerts)"
+url: "{{baseUrl}}/api/discord/webhooks/test/<event_key>"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+order: 10000

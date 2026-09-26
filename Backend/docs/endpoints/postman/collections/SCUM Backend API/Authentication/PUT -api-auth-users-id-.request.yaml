@@ -1,0 +1,9 @@
+$kind: http-request
+name: PUT /api/auth/users/<id>
+description: PUT /api/auth/users/<id>
+url: "{{baseUrl}}/api/auth/users/<id>"
+method: PUT
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+order: 14000

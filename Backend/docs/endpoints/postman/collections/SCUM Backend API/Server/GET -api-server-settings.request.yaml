@@ -1,0 +1,8 @@
+$kind: http-request
+name: GET /api/server/settings
+description: GET /api/server/settings
+url: "{{baseUrl}}/api/server/settings"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+order: 2000

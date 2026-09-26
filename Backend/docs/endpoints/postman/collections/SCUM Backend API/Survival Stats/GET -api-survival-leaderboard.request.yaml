@@ -1,0 +1,8 @@
+$kind: http-request
+name: GET /api/survival/leaderboard
+description: GET /api/survival/leaderboard
+url: "{{baseUrl}}/api/survival/leaderboard"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+order: 1000

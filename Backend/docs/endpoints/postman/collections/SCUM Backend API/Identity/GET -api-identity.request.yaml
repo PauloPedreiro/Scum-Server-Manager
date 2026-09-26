@@ -1,0 +1,8 @@
+$kind: http-request
+name: GET /api/identity
+description: GET /api/identity
+url: "{{baseUrl}}/api/identity"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+order: 1000

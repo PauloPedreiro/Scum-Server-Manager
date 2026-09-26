@@ -1,0 +1,43 @@
+$kind: http-request
+name: POST /api/server/start
+description: |-
+  Iniciar servidor SCUM
+
+  **Parâmetros opcionais:**
+  - `force` (boolean): Forçar início mesmo se já estiver rodando (padrão: false)
+  - `wait_timeout` (number): Tempo em segundos para aguardar confirmação de início (padrão: 30, máximo: 10)
+
+  **Nota:** O body pode ser vazio `{}` - todos os parâmetros são opcionais.
+
+  **Exemplo de resposta de sucesso:**
+  ```json
+  {
+    "success": true,
+    "message": "Servidor iniciado com sucesso",
+    "data": {
+      "pid": 12345,
+      "uptime": 0
+    },
+    "final_status": {
+      "is_running": true
+    }
+  }
+  ```
+
+  **Possíveis erros:**
+  - 400: Servidor já está rodando (a menos que force=true)
+  - 400: JSON inválido
+  - 500: Erro ao iniciar servidor
+url: "{{baseUrl}}/api/server/start"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+body:
+  type: json
+  content: |-
+    {
+      "force": false,
+      "wait_timeout": 30
+    }
+order: 7000

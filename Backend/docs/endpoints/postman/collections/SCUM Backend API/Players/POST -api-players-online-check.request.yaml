@@ -1,0 +1,9 @@
+$kind: http-request
+name: POST /api/players/online/check
+description: POST /api/players/online/check
+url: "{{baseUrl}}/api/players/online/check"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+order: 12000

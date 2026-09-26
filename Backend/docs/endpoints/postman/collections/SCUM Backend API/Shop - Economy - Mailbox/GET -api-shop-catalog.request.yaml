@@ -1,0 +1,8 @@
+$kind: http-request
+name: GET /api/shop/catalog
+description: Lista catálogo comprável (somente itens com catalog.enabled=1 e offer.enabled=1).
+url: "{{baseUrl}}/api/shop/catalog"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+order: 12000

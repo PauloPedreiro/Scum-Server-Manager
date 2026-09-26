@@ -1,0 +1,8 @@
+$kind: http-request
+name: GET /api/notifications/status
+description: GET /api/notifications/status
+url: "{{baseUrl}}/api/notifications/status"
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+order: 2000

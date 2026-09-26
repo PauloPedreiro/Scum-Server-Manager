@@ -1,0 +1,15 @@
+$kind: http-request
+name: POST /api/remote/command
+description: POST /api/remote/command
+url: "{{baseUrl}}/api/remote/command"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+body:
+  type: json
+  content: |-
+    {
+      "command": "ShowPlayers"
+    }
+order: 1000

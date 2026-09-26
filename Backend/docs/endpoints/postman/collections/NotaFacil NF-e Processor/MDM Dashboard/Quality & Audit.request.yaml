@@ -1,0 +1,6 @@
+$kind: http-request
+url: "{{baseUrl}}/api/mdm/dashboard/quality/audit"
+method: GET
+headers:
+  Authorization: Bearer {{accessToken}}
+order: 4000

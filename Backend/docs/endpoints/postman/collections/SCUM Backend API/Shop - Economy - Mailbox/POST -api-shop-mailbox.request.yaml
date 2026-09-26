@@ -1,0 +1,16 @@
+$kind: http-request
+name: POST /api/shop/mailbox
+description: Registra/atualiza mailbox do jogador (steam_id -> chest_id).
+url: "{{baseUrl}}/api/shop/mailbox"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{token}}
+body:
+  type: json
+  content: |-
+    {
+      "steam_id": "{{steamId}}",
+      "chest_id": {{mailboxChestId}}
+    }
+order: 10000
