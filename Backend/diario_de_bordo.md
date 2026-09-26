@@ -562,6 +562,36 @@ Substituir o atalho antigo do site `scumsm.com` no cabeçalho da janela principa
 * **Build e Versão**:
   * Versão incrementada para `3.22.66`.
 
+---
+
+## 🌐 28. Estruturação e Publicação do Monorepo Open Source no GitHub
+
+### 1. Objetivo
+Unificar o ecossistema do **SSM 3.0** (Backend Python e Frontend React/Vite) em um único repositório público no GitHub ([PauloPedreiro/Scum-Server-Manager](https://github.com/PauloPedreiro/Scum-Server-Manager.git)), adotando arquitetura de Monorepo com licença de código aberto (MIT), documentação profissional e blindagem total contra vazamento de segredos, bancos de dados e credenciais de produção.
+
+### 2. Solução Implementada
+* **Novo Repositório Limpo na Raiz**:
+  * Inicializado o Git diretamente em `C:\Dev\SSM\SSM 3.0` como repositório monorepo (`main`).
+  * Repositórios `.git` internos antigos foram migrados com segurança para pastas de backup (`.git_old` e `.git_old_root`), evitando a criação indesejada de submódulos Git e eliminando históricos legados com artefatos pesados do `dist/`.
+* **Blindagem de Segurança com `.gitignore` Rigoroso**:
+  * Ignorados todos os bancos SQLite de produção e desenvolvimento (`*.db`, `*.db-wal`, `*.db-shm`), preservando apenas bancos template oficiais.
+  * Ignorados arquivos de segredos, senhas e credenciais (`config.json`, `webhooks.json`, `identity.json`, `license.json`, `.env*`).
+  * Ignoradas predefinições confidenciais do servidor (`default.ini` em `Backend/data/server_settings_presets/`).
+  * Ignorados diretórios de build e dependências (`dist/`, `build/`, `node_modules/`, `venv/`).
+* **Documentação e Licenciamento Aberto**:
+  * **`LICENSE`**: Criação da licença **MIT** oficial sob autoria de *Paulo Pedreiro (2026)*.
+  * **`README.md`**: Elaboração de documentação completa em inglês com visão geral, badges, arquitetura de pastas, destaques técnicos (RCON Prioritário, Discord Bot, Playtime Rewards, Bounty, Shop) e guias passo a passo de *Quick Start* para Backend e Frontend.
+* **Envio para o GitHub**:
+  * Configurada a identidade do autor (`Paulo Pedreiro`).
+  * Realizado o commit inicial e push com sucesso para `https://github.com/PauloPedreiro/Scum-Server-Manager.git`.
+
+### 3. Arquivos Criados e Modificados
+* `.gitignore`: Regras unificadas de exclusão para o ecossistema Python + Node.js.
+* `LICENSE`: Termo da Licença MIT.
+* `README.md`: Documentação oficial do projeto no GitHub.
+* `Backend/.gitignore`: Inclusão de `default.ini` e regras estritas de banco de dados.
+* `Backend/tools/setup_monorepo.ps1`: Script automatizado de criação e setup de ambientes monorepo.
+
 
 
 
