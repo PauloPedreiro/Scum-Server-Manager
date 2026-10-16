@@ -2,5 +2,5 @@
 Version do SSM Backend
 """
 
-__version__ = "3.22.66"
+__version__ = "3.22.67"
 VERSION = __version__

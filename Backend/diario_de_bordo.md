@@ -640,11 +640,37 @@ Disponibilizar os links oficiais dos canais de suporte e aprendizado do projeto 
 * `README.md` & `Backend/README.md`
 * `CONTRIBUTING.md` & `Backend/CONTRIBUTING.md`
 
+---
 
+## 🚀 31. Implementação do Gerenciador Nativo BSBR-SCUM, Versionamento Automático e Atualizador Seguro
 
+### 1. Objetivo
+Modernizar a arquitetura de comunicação e gerenciamento RCON do SSM 3.0, descontinuando a antiga seleção manual de múltiplos motores (como o `scum_rcon` legado) e estabelecendo o **BSBR-SCUM** (desenvolvido pelo Mazzotti com suporte a Source RCON na porta 28015 e API na porta 27100) como motor RCON nativo oficial. Implementar detecção automática de versão, fluxo de atualização com backup/rollback e trava de segurança contra processos em execução.
 
+### 2. Solução Implementada
+* **Detecção Robusta de Versões (`utils/rcon_mod_manager.py`)**:
+  * **Recursos Binários PE (Windows)**: Extração precisa da `FileVersion` em `main.dll` via Win32 API (`GetFileVersionInfoW` / `VerQueryValueW` com `ctypes`).
+  * **Fallback Estruturado**: Leitura da primeira linha de `version.txt` (`bsbr_scum X.Y.Z`), ignorando carimbos dinâmicos de runtime (como `carregado <timestamp>`).
+  * **Inspeção de Pacotes**: Comparação semver automática entre os pacotes novos descompactados em `data/mods/bsbr_scum` e os binários em `SCUM/Binaries/Win64`.
+* **Proteção Ativa e Atualizador Seguro**:
+  * **Trava de Processo**: Verificação em tempo real de `SCUMServer.exe`. Se o servidor estiver ativo, o botão de atualização na interface é travado para prevenir `PermissionError` e corrupção de DLLs em memória.
+  * **Backup Automático & Rollback**: Criação de snapshots em `data/mods/_backup/bsbr_scum_<versao>_<data>`, mantendo os últimos 5 backups e executando restauração automática em caso de falha de I/O.
+  * **Preservação de Configurações**: Preservação estrita do `config.ini` pré-existente do servidor durante atualizações, impedindo perda de senhas, portas ou configurações de jogadores.
+  * **Sincronização Cirúrgica de Credenciais**: Atualização direta da seção `[source]` do `config.ini` preservando comentários e outras seções.
+* **Cliente Source RCON Oficial (`utils/rcon_client.py`)**:
+  * Rota do `get_rcon_client_from_config` padronizada para o protocolo Source RCON nativo na porta padrão `28015`.
+  * Implementação da função `query_live_mod_version` para telemetria em tempo real do mod via comando `version`.
+* **Interface Gráfica Renovada (`gui/main_window.py`)**:
+  * Substituição do diálogo legado de seleção por um painel limpo e integrado.
+  * **Toggle Switch "Ativar RCON"**: Permite habilitar/desabilitar o mod dinamicamente no `mods.txt` (`bsbr_scum : 1/0`) e no `config.json`.
+  * **Painel de Versões e Status**: Badges indicando versão instalada, versão do pacote disponível e status de execução do servidor.
+  * **Botão Inteligente de Atualização**: Habilitado apenas quando o servidor está desligado e há nova versão disponível.
+  * Atalhos para a pasta de atualizações (`data/mods/bsbr_scum`) e pasta do mod no servidor.
+  * Limpeza de métodos obsoletos e duplicados no código da GUI.
 
-
-
-
-
+### 3. Arquivos Criados e Modificados
+* `Backend/utils/rcon_mod_manager.py`: Novo gerenciador nativo unificado com detecção PE, backups e sincronização INI.
+* `Backend/utils/rcon_client.py`: Roteamento padrão para Source RCON 28015 e consulta `query_live_mod_version`.
+* `Backend/gui/main_window.py`: Interface de controle de RCON remodelada e métodos obsoletos expurgados.
+* `Backend/data/mods/bsbr_scum/`: Inclusão do pacote da versão `0.3.0` fornecido pelo Mazzotti.
+* `Backend/diario_de_bordo.md`: Registro da Seção 31.

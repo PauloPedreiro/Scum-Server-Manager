@@ -1,6 +1,7 @@
 """
 RconClient - Cliente RCON para comunicação com o mod scum_rcon (protocolo Source RCON).
 """
+import re
 import socket
 import struct
 import time
@@ -444,31 +445,84 @@ def load_rcon_config_from_file(config_path: str = "data/config.json") -> dict:
         return {}
 
 
+def query_live_mod_version(client: RconClient) -> dict:
+    """
+    Envia o comando 'version' via RCON e analisa a resposta estruturada do BSBR-SCUM.
+    Exemplo de resposta do mod:
+        bsbr_scum 0.3.0
+        Source RCON on 28015, API on 27100
+        options: split_replies=0, elevate=1
+    """
+    try:
+        raw = client.send_command("version", origin="VERSION_CHECK")
+        if not raw:
+            return {"online": False, "raw": None}
+
+        info: dict = {
+            "online": True,
+            "raw": raw.strip(),
+            "version": None,
+            "elevate": None,
+            "split_replies": None,
+            "source_port": None,
+            "api_port": None,
+        }
+
+        lines = [line.strip() for line in raw.strip().splitlines() if line.strip()]
+        if lines:
+            # Linha 1: "bsbr_scum 0.3.0"
+            m_ver = re.search(r"(?:bsbr_scum|version)?\s*([0-9]+\.[0-9]+(?:\.[0-9]+)?)", lines[0], re.IGNORECASE)
+            if m_ver:
+                info["version"] = m_ver.group(1)
+
+        # Buscar portas e opções em todo o texto
+        m_ports = re.search(r"Source RCON on (\d+),\s*API on (\d+)", raw, re.IGNORECASE)
+        if m_ports:
+            info["source_port"] = int(m_ports.group(1))
+            info["api_port"] = int(m_ports.group(2))
+
+        m_elevate = re.search(r"elevate\s*=\s*(\d+)", raw, re.IGNORECASE)
+        if m_elevate:
+            info["elevate"] = int(m_elevate.group(1))
+
+        m_split = re.search(r"split_replies\s*=\s*(\d+)", raw, re.IGNORECASE)
+        if m_split:
+            info["split_replies"] = int(m_split.group(1))
+
+        return info
+    except Exception as e:
+        return {"online": False, "error": str(e), "raw": None}
+
+
 def get_rcon_client_from_config(config_path: str = "data/config.json") -> Optional[Any]:
     """
-    Retorna uma instância de cliente de comunicação (BsbrClient ou RconClient)
-    conforme configurado em config.json.
-    Retorna None se o RCON estiver desabilitado.
+    Retorna uma instância do RconClient conectada ao mod BSBR-SCUM
+    (protocolo Source RCON nativo, porta padrão 28015).
+    Retorna None se o RCON estiver desabilitado em config.json.
     """
     cfg = load_rcon_config_from_file(config_path)
     if not cfg.get("enabled", False):
         return None
 
-    provider = str(cfg.get("provider", "bsbr_scum") or "bsbr_scum").lower()
     ip = str(cfg.get("ip", "127.0.0.1") or "127.0.0.1")
+    port = int(cfg.get("port", 28015) or 28015)
     password = str(cfg.get("password", "") or "")
 
-    if provider == "bsbr_scum":
+    # Se a senha estiver vazia no config.json, tentar resgatar do config.ini do mod
+    if not password:
         try:
-            from utils.bsbr_client import BsbrClient
-            port = int(cfg.get("port", 27100) or 27100)
-            return BsbrClient(host=ip, port=port, password=password)
+            import json
+            with open(config_path, "r", encoding="utf-8") as f:
+                full_cfg = json.load(f)
+            bin_dir = full_cfg.get("paths", {}).get("scum_server", {}).get("binaries_directory", "")
+            if bin_dir:
+                from utils.rcon_mod_manager import RconModManager
+                mgr = RconModManager()
+                mod_cfg = mgr.get_installed_config(bin_dir)
+                if mod_cfg and mod_cfg.get("password"):
+                    password = mod_cfg["password"]
         except Exception:
-            port = int(cfg.get("port", 27100) or 27100)
-            return RconClient(ip, port, password)
-    else:
-        port = int(cfg.get("port", 28015) or 28015)
-        if not password:
-            return None
-        return RconClient(ip, port, password)
+            pass
+
+    return RconClient(ip, port, password)
 

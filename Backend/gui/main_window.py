@@ -2353,7 +2353,7 @@ class MainWindow(ctk.CTk):
             rcon_scroll = ctk.CTkScrollableFrame(rcon_page, fg_color="transparent")
             rcon_scroll.pack(fill="both", expand=True, padx=12, pady=12)
 
-            # ========== CARD 1: RCON ENGINE & CONNECTION (COMPACT) ==========
+            # ========== CARD 1: BSBR-SCUM NATIVE RCON & CONTROLS ==========
             rcon_card = ctk.CTkFrame(
                 rcon_scroll,
                 fg_color=card_color,
@@ -2363,7 +2363,7 @@ class MainWindow(ctk.CTk):
             )
             rcon_card.pack(fill="x", pady=(0, 12), padx=6)
 
-            # Header com Badge de Status do Motor à Direita
+            # Header com Título à Esquerda e Toggle Ativar RCON à Direita
             rcon_header = ctk.CTkFrame(rcon_card, fg_color="transparent")
             rcon_header.pack(fill="x", padx=15, pady=(15, 12))
 
@@ -2373,17 +2373,115 @@ class MainWindow(ctk.CTk):
 
             ctk.CTkLabel(
                 rcon_header,
-                text="RCON Engine & Connection",
+                text="BSBR-SCUM Mod & RCON Engine",
                 font=ctk.CTkFont(size=16, weight="bold"),
             ).pack(side="left")
 
-            self.rcon_mod_badge_label = ctk.CTkLabel(
+            # Toggle Switch para Ativar / Desativar o Mod
+            self.rcon_enabled_var = ctk.BooleanVar(value=True)
+            self.rcon_active_switch = ctk.CTkSwitch(
                 rcon_header,
+                text="Ativar RCON",
+                variable=self.rcon_enabled_var,
+                command=self._on_rcon_switch_toggled,
+                font=ctk.CTkFont(size=13, weight="bold"),
+                progress_color="#2E7D32",
+            )
+            self.rcon_active_switch.pack(side="right")
+
+            # Status & Version Banner Frame
+            version_panel = ctk.CTkFrame(rcon_card, fg_color=("gray90", "gray17"), corner_radius=8)
+            version_panel.pack(fill="x", padx=15, pady=(0, 12))
+
+            # Linha Superior do Banner: Versões e Badges
+            version_info_row = ctk.CTkFrame(version_panel, fg_color="transparent")
+            version_info_row.pack(fill="x", padx=12, pady=(10, 6))
+
+            self.rcon_installed_ver_label = ctk.CTkLabel(
+                version_info_row,
+                text="📦 Instalado: Verificando...",
+                font=ctk.CTkFont(size=12, weight="bold"),
+                text_color=("gray20", "gray85"),
+            )
+            self.rcon_installed_ver_label.pack(side="left", padx=(0, 15))
+
+            self.rcon_package_ver_label = ctk.CTkLabel(
+                version_info_row,
+                text="🚀 Pacote: Verificando...",
+                font=ctk.CTkFont(size=12),
+                text_color=("gray40", "gray70"),
+            )
+            self.rcon_package_ver_label.pack(side="left", padx=(0, 15))
+
+            self.rcon_mod_badge_label = ctk.CTkLabel(
+                version_info_row,
                 text="Checking...",
                 font=ctk.CTkFont(size=12, weight="bold"),
                 text_color="gray",
             )
             self.rcon_mod_badge_label.pack(side="right")
+
+            # Linha Inferior do Banner: Botões de Ação de Atualização e Pastas
+            version_actions_row = ctk.CTkFrame(version_panel, fg_color="transparent")
+            version_actions_row.pack(fill="x", padx=12, pady=(0, 10))
+
+            self.btn_update_rcon_mod = ctk.CTkButton(
+                version_actions_row,
+                text="⬆ Atualizar Mod",
+                command=self._do_update_rcon_mod,
+                width=160,
+                height=32,
+                fg_color="#1976D2",
+                hover_color="#1565C0",
+                font=ctk.CTkFont(size=12, weight="bold"),
+            )
+            self.btn_update_rcon_mod.pack(side="left", padx=(0, 8))
+
+            self.btn_refresh_rcon_status = ctk.CTkButton(
+                version_actions_row,
+                text="↻ Verificar",
+                command=self._refresh_rcon_mod_status,
+                width=100,
+                height=32,
+                fg_color=("gray75", "gray30"),
+                hover_color=("gray65", "gray40"),
+                font=ctk.CTkFont(size=12),
+            )
+            self.btn_refresh_rcon_status.pack(side="left", padx=(0, 8))
+
+            ctk.CTkButton(
+                version_actions_row,
+                text="📁 Pasta do Mod",
+                command=self._open_rcon_package_folder,
+                width=140,
+                height=32,
+                fg_color=("gray75", "gray30"),
+                hover_color=("gray65", "gray40"),
+                font=ctk.CTkFont(size=12),
+            ).pack(side="left", padx=(0, 8))
+
+            ctk.CTkButton(
+                version_actions_row,
+                text="📂 Pasta no Servidor",
+                command=self._open_server_mod_folder,
+                width=150,
+                height=32,
+                fg_color=("gray75", "gray30"),
+                hover_color=("gray65", "gray40"),
+                font=ctk.CTkFont(size=12),
+            ).pack(side="left", padx=(0, 8))
+
+            self.btn_uninstall_rcon_mod = ctk.CTkButton(
+                version_actions_row,
+                text="🗑️ Desinstalar",
+                command=self._uninstall_rcon_mod,
+                width=105,
+                height=32,
+                fg_color=("#C62828", "#B71C1C"),
+                hover_color=("#8E0000", "#7F0000"),
+                font=ctk.CTkFont(size=12),
+            )
+            self.btn_uninstall_rcon_mod.pack(side="right")
 
             # Credentials Row: IP, Port, Password
             rcon_fields_row = ctk.CTkFrame(rcon_card, fg_color="transparent")
@@ -2411,15 +2509,15 @@ class MainWindow(ctk.CTk):
             rcon_port_col.pack(side="left", padx=(0, 8))
             ctk.CTkLabel(
                 rcon_port_col,
-                text="Port",
+                text="Porta RCON",
                 font=ctk.CTkFont(size=12, weight="bold"),
                 anchor="w",
             ).pack(fill="x", pady=(0, 2))
             self.rcon_port_entry = ctk.CTkEntry(
                 rcon_port_col,
-                placeholder_text="27100",
+                placeholder_text="28015",
                 height=35,
-                width=90,
+                width=100,
                 font=ctk.CTkFont(size=12),
             )
             self.rcon_port_entry.pack()
@@ -2429,7 +2527,7 @@ class MainWindow(ctk.CTk):
             rcon_pass_col.pack(side="left", fill="x", expand=True)
             ctk.CTkLabel(
                 rcon_pass_col,
-                text="Password",
+                text="Senha RCON",
                 font=ctk.CTkFont(size=12, weight="bold"),
                 anchor="w",
             ).pack(fill="x", pady=(0, 2))
@@ -2464,7 +2562,6 @@ class MainWindow(ctk.CTk):
             ).pack(side="left")
 
             self.rcon_provider_var = ctk.StringVar(value="bsbr_scum")
-            self.rcon_enabled_var = ctk.BooleanVar(value=True)
 
             # Action Buttons Row
             rcon_actions_row = ctk.CTkFrame(rcon_card, fg_color="transparent")
@@ -2472,60 +2569,26 @@ class MainWindow(ctk.CTk):
 
             ctk.CTkButton(
                 rcon_actions_row,
-                text="💾 Save Settings",
+                text="💾 Salvar Configurações",
                 command=self._save_rcon_settings,
-                width=135,
+                width=160,
                 height=35,
                 fg_color="#2E7D32",
                 hover_color="#1B5E20",
                 font=ctk.CTkFont(size=12, weight="bold"),
-            ).pack(side="left", padx=(0, 6))
+            ).pack(side="left", padx=(0, 8))
 
             ctk.CTkButton(
                 rcon_actions_row,
-                text="⚡ Test Connection",
+                text="⚡ Testar Conexão",
                 command=self._test_rcon_connection,
-                width=135,
+                width=140,
                 height=35,
                 fg_color=("gray70", "gray30"),
                 hover_color=("gray60", "gray40"),
                 font=ctk.CTkFont(size=12),
-            ).pack(side="left", padx=(0, 6))
+            ).pack(side="left", padx=(0, 8))
 
-            self.btn_select_rcon_mod = ctk.CTkButton(
-                rcon_actions_row,
-                text="📦 Select Engine",
-                command=self._select_and_install_rcon_dialog,
-                width=145,
-                height=35,
-                fg_color=("#1565C0", "#1565C0"),
-                hover_color=("#0D47A1", "#0D47A1"),
-                font=ctk.CTkFont(size=12),
-            )
-            self.btn_select_rcon_mod.pack(side="left", padx=(0, 6))
-
-            ctk.CTkButton(
-                rcon_actions_row,
-                text="📁 RCON Folder",
-                command=self._open_rcon_mods_folder,
-                width=120,
-                height=35,
-                fg_color=("gray70", "gray30"),
-                hover_color=("gray60", "gray40"),
-                font=ctk.CTkFont(size=12),
-            ).pack(side="left", padx=(0, 6))
-
-            self.btn_uninstall_rcon_mod = ctk.CTkButton(
-                rcon_actions_row,
-                text="🗑️ Uninstall",
-                command=self._uninstall_rcon_mod,
-                width=100,
-                height=35,
-                fg_color=("#B71C1C", "#B71C1C"),
-                hover_color=("#7F0000", "#7F0000"),
-                font=ctk.CTkFont(size=12),
-            )
-            self.btn_uninstall_rcon_mod.pack(side="left")
 
             # ========== CARD 2: INTERACTIVE RCON CONSOLE & TESTER ==========
             console_card = ctk.CTkFrame(
@@ -3491,33 +3554,45 @@ class MainWindow(ctk.CTk):
         try:
             config = self._load_config() or {}
             rcon_cfg = config.get("rcon", {})
-            provider = rcon_cfg.get("provider", "bsbr_scum")
 
             if hasattr(self, "rcon_provider_var"):
-                self.rcon_provider_var.set(provider)
-                if hasattr(self, "provider_segmented"):
-                    if provider == "scum_rcon":
-                        self.provider_segmented.set("SCUM-RCON (Clássico)")
-                    else:
-                        self.provider_segmented.set("BSBR-SCUM (Mazzotti - Avançado)")
+                self.rcon_provider_var.set("bsbr_scum")
 
             if hasattr(self, "rcon_ip_entry"):
                 self.rcon_ip_entry.delete(0, "end")
                 self.rcon_ip_entry.insert(0, str(rcon_cfg.get("ip", "127.0.0.1") or "127.0.0.1"))
 
+            # Porta padrão Source RCON do BSBR-SCUM: 28015
             if hasattr(self, "rcon_port_entry"):
-                default_p = 27100 if provider == "bsbr_scum" else 28015
+                default_p = 28015
+                saved_p = rcon_cfg.get("port", default_p) or default_p
+                # Se ainda estiver com 27100 legado, migrar para 28015
+                if saved_p == 27100:
+                    saved_p = 28015
                 self.rcon_port_entry.delete(0, "end")
-                self.rcon_port_entry.insert(0, str(rcon_cfg.get("port", default_p) or default_p))
+                self.rcon_port_entry.insert(0, str(saved_p))
+
+            pwd = str(rcon_cfg.get("password", "") or "")
+            # Se a senha estiver vazia, tentar ler do config.ini do mod instalado
+            if not pwd:
+                try:
+                    binaries_dir = config.get("paths", {}).get("scum_server", {}).get("binaries_directory", "")
+                    if binaries_dir:
+                        from utils.rcon_mod_manager import RconModManager
+                        mgr = RconModManager(root_dir=str(self.EXE_DIR), logger=self.logger)
+                        mod_ini = mgr.get_installed_config(binaries_dir)
+                        if mod_ini and mod_ini.get("password"):
+                            pwd = mod_ini["password"]
+                except Exception:
+                    pass
 
             if hasattr(self, "rcon_password_entry"):
                 self.rcon_password_entry.delete(0, "end")
-                pwd = str(rcon_cfg.get("password", "") or "")
                 if pwd:
                     self.rcon_password_entry.insert(0, pwd)
 
             if hasattr(self, "rcon_enabled_var"):
-                self.rcon_enabled_var.set(bool(rcon_cfg.get("enabled", False)))
+                self.rcon_enabled_var.set(bool(rcon_cfg.get("enabled", True)))
 
             # Carregar configurações de logging
             logging_cfg = rcon_cfg.get("logging", {})
@@ -3529,20 +3604,21 @@ class MainWindow(ctk.CTk):
                 self.rcon_log_retention_entry.delete(0, "end")
                 self.rcon_log_retention_entry.insert(0, str(logging_cfg.get("retention_days", 7) or 7))
 
+            # Atualizar status dos badges e do pacote
+            self._refresh_rcon_mod_status()
+
         except Exception as e:
             if self.logger:
                 self.logger.error(f"Erro ao carregar configurações RCON: {e}")
 
     def _save_rcon_settings(self):
-        """Salva as configurações de RCON no config.json."""
+        """Salva as configurações de RCON no config.json e sincroniza com o config.ini do mod."""
         import json
         import tkinter.messagebox as messagebox
 
         try:
-            provider = (getattr(self, "rcon_provider_var", None) and self.rcon_provider_var.get()) or "bsbr_scum"
-            default_p = 27100 if provider == "bsbr_scum" else 28015
             ip = (getattr(self, "rcon_ip_entry", None) and self.rcon_ip_entry.get().strip()) or "127.0.0.1"
-            port_str = (getattr(self, "rcon_port_entry", None) and self.rcon_port_entry.get().strip()) or str(default_p)
+            port_str = (getattr(self, "rcon_port_entry", None) and self.rcon_port_entry.get().strip()) or "28015"
             password = (getattr(self, "rcon_password_entry", None) and self.rcon_password_entry.get().strip()) or ""
             enabled = bool(getattr(self, "rcon_enabled_var", None) and self.rcon_enabled_var.get())
 
@@ -3551,7 +3627,7 @@ class MainWindow(ctk.CTk):
                 if not (1 <= port <= 65535):
                     raise ValueError("Port out of range")
             except ValueError:
-                messagebox.showerror("Error", "Invalid RCON port. Must be a number between 1 and 65535.")
+                messagebox.showerror("Erro", "Porta RCON inválida. Deve ser um número entre 1 e 65535.")
                 return
 
             # Configurações de logging
@@ -3566,7 +3642,7 @@ class MainWindow(ctk.CTk):
             config = self._load_config() or {}
             if "rcon" not in config:
                 config["rcon"] = {}
-            config["rcon"]["provider"] = provider
+            config["rcon"]["provider"] = "bsbr_scum"
             config["rcon"]["enabled"] = enabled
             config["rcon"]["ip"] = ip
             config["rcon"]["port"] = port
@@ -3585,7 +3661,7 @@ class MainWindow(ctk.CTk):
             from utils.rcon_logger import RconLogger
             RconLogger.get_instance().load_config(config)
 
-            self._add_log_message("✅ RCON settings saved successfully.", "SUCCESS")
+            self._add_log_message("✅ Configurações de RCON salvas com sucesso.", "SUCCESS")
 
             # Se o mod já estiver instalado, atualizar o config.ini
             binaries_dir = ""
@@ -3597,18 +3673,17 @@ class MainWindow(ctk.CTk):
             if binaries_dir:
                 from utils.rcon_mod_manager import RconModManager
                 mgr = RconModManager(root_dir=str(self.EXE_DIR), logger=self.logger)
-                if mgr.is_installed(binaries_dir, provider=provider):
-                    ok, msg = mgr.update_config(
+                if mgr.is_installed(binaries_dir):
+                    ok, msg = mgr.update_source_credentials(
                         binaries_dir=binaries_dir,
-                        provider=provider,
-                        rcon_ip=ip,
-                        rcon_port=port,
-                        rcon_password=password,
+                        port=port,
+                        password=password,
                     )
                     if ok:
-                        self._add_log_message("📝 Mod config.ini updated with new credentials.", "INFO")
+                        self._add_log_message("📝 config.ini do mod sincronizado com as credenciais.", "INFO")
 
-            messagebox.showinfo("Saved", "RCON settings saved!\n\nRestart the SCUM server for changes to take effect.")
+            messagebox.showinfo("Salvo", "Configurações de RCON salvas com sucesso!\n\nSe o servidor estiver rodando, reinicie-o para aplicar alterações no config.ini.")
+            self._refresh_rcon_mod_status()
 
         except Exception as e:
             self._add_log_message(f"Failed to save RCON settings: {e}", "ERROR")
@@ -3650,50 +3725,54 @@ class MainWindow(ctk.CTk):
         """Test RCON connection in a separate thread and show the result to the user."""
         import threading
 
-        provider = (getattr(self, "rcon_provider_var", None) and self.rcon_provider_var.get()) or "bsbr_scum"
-        default_p = 27100 if provider == "bsbr_scum" else 28015
         ip = (getattr(self, "rcon_ip_entry", None) and self.rcon_ip_entry.get().strip()) or "127.0.0.1"
-        port_str = (getattr(self, "rcon_port_entry", None) and self.rcon_port_entry.get().strip()) or str(default_p)
+        port_str = (getattr(self, "rcon_port_entry", None) and self.rcon_port_entry.get().strip()) or "28015"
         password = (getattr(self, "rcon_password_entry", None) and self.rcon_password_entry.get().strip()) or ""
 
         try:
             port = int(port_str)
         except ValueError:
             import tkinter.messagebox as messagebox
-            messagebox.showerror("Error", "Invalid RCON port.")
+            messagebox.showerror("Error", "Porta RCON inválida.")
             return
 
-        if provider == "scum_rcon" and not password:
-            import tkinter.messagebox as messagebox
-            messagebox.showwarning("Warning", "Please enter the RCON password before testing SCUM-RCON.")
-            return
-
-        self._add_log_message(f"🔌 Testing connection to {provider} at {ip}:{port}...", "INFO")
+        self._add_log_message(f"🔌 Testando conexão RCON em {ip}:{port}...", "INFO")
 
         def _do_test():
             try:
-                if provider == "bsbr_scum":
-                    from utils.bsbr_client import BsbrClient
-                    client = BsbrClient(host=ip, port=port, password=password, timeout=5.0)
-                    resp = client.send_command("players", origin="TEST")
-                else:
-                    from utils.rcon_client import RconClient
-                    client = RconClient(host=ip, port=port, password=password, timeout=5.0)
-                    resp = client.send_command("players", origin="TEST")
+                from utils.rcon_client import RconClient, query_live_mod_version
+                with RconClient(ip, port, password, timeout=5.0) as client:
+                    live_info = query_live_mod_version(client)
+                    # Testar comando de players para verificar retorno funcional
+                    players_resp = client.send_command("players", origin="TEST")
 
                 def _show_result():
-                    from utils.rcon_mod_manager import PROVIDER_NAMES
-                    prov_title = PROVIDER_NAMES.get(provider, provider)
-                    if resp is not None:
-                        self._add_log_message(f"✅ RCON Connection successful! Response: {resp}", "SUCCESS")
-                        self._show_custom_message("RCON Connected", f"Connection successful!\n\nEngine: {prov_title}\nHost: {ip}:{port}\n\nResponse:\n{resp}")
-                    else:
-                        self._add_log_message("❌ Failed to connect to RCON.", "ERROR")
-                        self._show_custom_message("RCON Error", f"Failed to connect to {prov_title} at {ip}:{port}.\nCheck if the server is running and port is correct.", type_="error")
+                    ver_text = live_info.get("version") or "Carregado (Versão anterior)"
+                    msg = (
+                        f"✅ Conexão RCON estabelecida com sucesso!\n\n"
+                        f"• Host: {ip}:{port}\n"
+                        f"• Mod BSBR-SCUM: {ver_text}\n"
+                    )
+                    if live_info.get("elevate") is not None:
+                        msg += f"• Elevate (sudo): {'Ativo' if live_info['elevate'] else 'Inativo'}\n"
+                    if players_resp:
+                        msg += f"\nResposta do teste (players):\n{players_resp}"
+
+                    self._add_log_message(f"✅ RCON conectado com sucesso! Mod: {ver_text}", "SUCCESS")
+                    self._show_custom_message("RCON Conectado", msg, type_="ok")
 
                 self.after(0, _show_result)
-            except Exception:
-                pass
+            except Exception as e:
+                def _show_err():
+                    self._add_log_message(f"❌ Falha ao conectar ao RCON: {e}", "ERROR")
+                    self._show_custom_message(
+                        "Falha na Conexão RCON",
+                        f"Não foi possível conectar ao BSBR-SCUM em {ip}:{port}.\n\n"
+                        f"Detalhes do erro:\n{e}\n\n"
+                        "Verifique se o servidor SCUM está aberto e se a senha está correta.",
+                        type_="error",
+                    )
+                self.after(0, _show_err)
 
         threading.Thread(target=_do_test, daemon=True).start()
 
@@ -3823,257 +3902,278 @@ class MainWindow(ctk.CTk):
         return result[0]
 
 
+    def _on_rcon_switch_toggled(self):
+        """Disparado quando o usuário altera o switch 'Ativar RCON'."""
+        is_enabled = bool(self.rcon_enabled_var.get())
+        config = self._load_config() or {}
+        binaries_dir = config.get("paths", {}).get("scum_server", {}).get("binaries_directory", "")
+
+        # 1. Atualizar config.json
+        if "rcon" not in config:
+            config["rcon"] = {}
+        config["rcon"]["enabled"] = is_enabled
+        try:
+            cfg_path = self._get_rcon_config_path()
+            with open(cfg_path, "w", encoding="utf-8") as f:
+                json.dump(config, f, indent=2, ensure_ascii=False)
+        except Exception as e:
+            self.logger.error(f"Erro ao salvar config.json no toggle RCON: {e}")
+
+        # 2. Atualizar mods.txt no servidor se instalado
+        if binaries_dir and Path(binaries_dir).is_dir():
+            from utils.rcon_mod_manager import RconModManager
+            mgr = RconModManager(root_dir=str(self.EXE_DIR), logger=self.logger)
+            ok, msg = mgr.toggle_active(binaries_dir, enable=is_enabled)
+            status_text = "ativado" if is_enabled else "desativado"
+            if ok:
+                self._add_log_message(f"📡 Mod RCON {status_text} no mods.txt. Reinicie o servidor para aplicar.", "INFO")
+            else:
+                self._add_log_message(f"⚠️ Erro ao atualizar mods.txt: {msg}", "WARNING")
+
+        self._refresh_rcon_mod_status()
+
     def _refresh_rcon_mod_status(self):
-        """Atualiza o label de status e detalhes do mod RCON ativo na GUI."""
+        """Atualiza os badges, versões e estado dos botões de RCON na GUI."""
         try:
             config = self._load_config() or {}
             binaries_dir = config.get("paths", {}).get("scum_server", {}).get("binaries_directory", "")
 
-            if not binaries_dir:
+            if not binaries_dir or not Path(binaries_dir).is_dir():
                 if hasattr(self, "rcon_mod_badge_label"):
                     self.rcon_mod_badge_label.configure(
                         text="⚠️ Binaries not set",
                         text_color="orange",
                     )
+                if hasattr(self, "btn_update_rcon_mod"):
+                    self.btn_update_rcon_mod.configure(state="disabled", text="Configurar Binários")
                 return
 
-            from utils.rcon_mod_manager import RconModManager, PROVIDER_NAMES
+            from utils.rcon_mod_manager import RconModManager, is_scum_server_running
             mgr = RconModManager(root_dir=str(self.EXE_DIR), logger=self.logger)
-            installed_prov = mgr.get_installed_provider(binaries_dir)
+            status = mgr.check_update_status(binaries_dir)
+            inst = status["installed_info"]
+            pkg = status["package_info"]
+            server_running = status["server_running"]
 
-            if installed_prov:
-                prov_title = PROVIDER_NAMES.get(installed_prov, installed_prov.replace("_", " ").title())
+            # Atualizar labels de versão
+            if hasattr(self, "rcon_installed_ver_label"):
+                inst_ver_str = inst.get("version_display") or ("Sim" if inst.get("installed") else "Não instalado")
+                self.rcon_installed_ver_label.configure(
+                    text=f"📦 Instalado: {inst_ver_str}",
+                    text_color="#4CAF50" if inst.get("installed") else ("gray40", "gray70"),
+                )
+
+            if hasattr(self, "rcon_package_ver_label"):
+                pkg_ver_str = f"v{pkg['version']}" if pkg.get("version") else ("Disponível" if pkg.get("available") else "Nenhum")
+                self.rcon_package_ver_label.configure(
+                    text=f"🚀 Pacote: {pkg_ver_str}",
+                    text_color="#2196F3" if pkg.get("available") else ("gray40", "gray70"),
+                )
+
+            # Sincronizar switch de ativação se instalado
+            if inst.get("installed") and hasattr(self, "rcon_enabled_var"):
+                self.rcon_enabled_var.set(inst.get("enabled", False))
+
+            # Atualizar Botão de Atualizar e Badge de Status
+            pkg_ver = pkg.get("version") or "recente"
+            if server_running:
+                if hasattr(self, "btn_update_rcon_mod"):
+                    self.btn_update_rcon_mod.configure(
+                        state="disabled",
+                        text="⚠️ Servidor Aberto",
+                        fg_color=("gray60", "gray35"),
+                    )
                 if hasattr(self, "rcon_mod_badge_label"):
                     self.rcon_mod_badge_label.configure(
-                        text=f"🟢 {prov_title} • Active",
+                        text="🟡 Servidor em Execução",
+                        text_color="orange",
+                    )
+            elif status["update_available"]:
+                btn_txt = f"⬆ Atualizar para v{pkg_ver}" if inst.get("installed") else f"📦 Instalar v{pkg_ver}"
+                if hasattr(self, "btn_update_rcon_mod"):
+                    self.btn_update_rcon_mod.configure(
+                        state="normal",
+                        text=btn_txt,
+                        fg_color="#1976D2",
+                    )
+                if hasattr(self, "rcon_mod_badge_label"):
+                    badge_txt = f"🟡 Atualização (v{pkg_ver})" if inst.get("installed") else "⚪ Não Instalado"
+                    self.rcon_mod_badge_label.configure(
+                        text=badge_txt,
+                        text_color="orange" if inst.get("installed") else "#F44336",
+                    )
+            elif status["is_up_to_date"]:
+                if hasattr(self, "btn_update_rcon_mod"):
+                    self.btn_update_rcon_mod.configure(
+                        state="normal",
+                        text="✓ Reinstalar / Reparar",
+                        fg_color=("gray60", "gray35"),
+                    )
+                if hasattr(self, "rcon_mod_badge_label"):
+                    self.rcon_mod_badge_label.configure(
+                        text=f"🟢 Atualizado (v{inst.get('version') or pkg_ver})",
                         text_color="#4CAF50",
                     )
-                if hasattr(self, "rcon_provider_var"):
-                    self.rcon_provider_var.set(installed_prov)
             else:
+                if hasattr(self, "btn_update_rcon_mod"):
+                    self.btn_update_rcon_mod.configure(
+                        state="disabled" if not pkg.get("available") else "normal",
+                        text="📦 Instalar BSBR-SCUM",
+                        fg_color="#2E7D32",
+                    )
                 if hasattr(self, "rcon_mod_badge_label"):
                     self.rcon_mod_badge_label.configure(
-                        text="⚪ Not Installed",
+                        text="⚪ Não Instalado",
                         text_color="#F44336",
                     )
+
         except Exception as e:
             if hasattr(self, "rcon_mod_badge_label"):
                 self.rcon_mod_badge_label.configure(
-                    text=f"⚠️ Error: {e}",
+                    text=f"⚠️ Erro: {e}",
                     text_color="orange",
                 )
 
-    def _select_and_install_rcon_dialog(self):
-        """Abre o diálogo de seleção e instalação modular de provedores RCON."""
-        import customtkinter as ctk
-        import tkinter.messagebox as messagebox
-        from utils.rcon_mod_manager import (
-            RconModManager,
-            PROVIDER_BSBR,
-            PROVIDER_SCUM_RCON,
-            PROVIDER_NAMES,
-            DEFAULT_PORTS,
-        )
+    def _do_update_rcon_mod(self):
+        """Executa a instalação ou atualização do mod BSBR-SCUM com backup e validações."""
+        import threading
+        from utils.rcon_mod_manager import RconModManager, is_scum_server_running
+
+        if is_scum_server_running() or getattr(self, "server_running", False):
+            self._show_custom_message(
+                "Servidor em Execução",
+                "⚠️ O SCUM Server está aberto neste momento.\n\n"
+                "Para atualizar o mod RCON sem corromper as DLLs em uso,\n"
+                "por favor pare o servidor SCUM antes de prosseguir.",
+                type_="warning",
+            )
+            return
 
         config = self._load_config() or {}
         binaries_dir = config.get("paths", {}).get("scum_server", {}).get("binaries_directory", "")
         if not binaries_dir or not Path(binaries_dir).is_dir():
-            messagebox.showerror(
-                "Binaries Not Found",
-                "SCUM server binaries directory is not configured.\n"
-                "Please configure 'Binaries Directory' in General Settings first.",
-            )
+            self._show_custom_message("Erro", "Diretório de binários do SCUM não configurado.", type_="error")
             return
 
         mgr = RconModManager(root_dir=str(self.EXE_DIR), logger=self.logger)
-        current_prov = mgr.get_installed_provider(binaries_dir) or config.get("rcon", {}).get("provider", PROVIDER_BSBR)
-
-        dialog = ctk.CTkToplevel(self)
-        dialog.title("Select & Install RCON Engine")
-        dialog.geometry("540x480")
-        dialog.resizable(False, False)
-        dialog.transient(self)
-        dialog.grab_set()
-
-        try:
-            dialog.update_idletasks()
-            x = self.winfo_x() + (self.winfo_width() // 2) - (540 // 2)
-            y = self.winfo_y() + (self.winfo_height() // 2) - (480 // 2)
-            dialog.geometry(f"+{max(0, x)}+{max(0, y)}")
-        except Exception:
-            pass
-
-        content = ctk.CTkFrame(dialog, fg_color="transparent")
-        content.pack(fill="both", expand=True, padx=20, pady=20)
-
-        ctk.CTkLabel(
-            content,
-            text="📦 Select RCON Engine",
-            font=ctk.CTkFont(size=18, weight="bold"),
-        ).pack(anchor="w", pady=(0, 6))
-
-        ctk.CTkLabel(
-            content,
-            text="Choose which RCON provider to install and activate in your SCUM Server.",
-            font=ctk.CTkFont(size=12),
-            text_color="gray",
-        ).pack(anchor="w", pady=(0, 15))
-
-        selected_prov_var = ctk.StringVar(value=current_prov)
-
-        # Card 1: BSBR-SCUM
-        card_bsbr = ctk.CTkFrame(content, fg_color=("gray90", "gray20"), corner_radius=8)
-        card_bsbr.pack(fill="x", pady=(0, 10))
-
-        r_bsbr = ctk.CTkRadioButton(
-            card_bsbr,
-            text="BSBR-SCUM (Mazzotti - Advanced)",
-            variable=selected_prov_var,
-            value=PROVIDER_BSBR,
-            font=ctk.CTkFont(size=13, weight="bold"),
-        )
-        r_bsbr.pack(anchor="w", padx=12, pady=(10, 4))
-
-        ctk.CTkLabel(
-            card_bsbr,
-            text="• Port: 27100 (Local TCP socket, no password)\n"
-                 "• Direct deliveries with 'sudo' support for all players\n"
-                 "• Fast reflection command queries ('players', 'vehicles')\n"
-                 "• No chat spam for admins during automated syncs",
-            font=ctk.CTkFont(size=11),
-            text_color="gray",
-            justify="left",
-            anchor="w",
-        ).pack(anchor="w", padx=32, pady=(0, 10))
-
-        # Card 2: SCUM-RCON
-        card_rcon = ctk.CTkFrame(content, fg_color=("gray90", "gray20"), corner_radius=8)
-        card_rcon.pack(fill="x", pady=(0, 15))
-
-        r_rcon = ctk.CTkRadioButton(
-            card_rcon,
-            text="SCUM-RCON (Classic)",
-            variable=selected_prov_var,
-            value=PROVIDER_SCUM_RCON,
-            font=ctk.CTkFont(size=13, weight="bold"),
-        )
-        r_rcon.pack(anchor="w", padx=12, pady=(10, 4))
-
-        ctk.CTkLabel(
-            card_rcon,
-            text="• Port: 28015 (Source RCON Protocol with Password)\n"
-                 "• Full admin console execution\n"
-                 "• Compatible with external RCON tools (mcrcon, bot dashboards)",
-            font=ctk.CTkFont(size=11),
-            text_color="gray",
-            justify="left",
-            anchor="w",
-        ).pack(anchor="w", padx=32, pady=(0, 10))
-
-        btn_row = ctk.CTkFrame(content, fg_color="transparent")
-        btn_row.pack(fill="x", side="bottom")
-
-        def _do_install():
-            chosen = selected_prov_var.get()
-            port = DEFAULT_PORTS.get(chosen, 27100)
-            pwd = (getattr(self, "rcon_password_entry", None) and self.rcon_password_entry.get().strip()) or config.get("rcon", {}).get("password", "181917")
-            ip = (getattr(self, "rcon_ip_entry", None) and self.rcon_ip_entry.get().strip()) or "127.0.0.1"
-
-            ok, msg = mgr.install(
-                binaries_dir=binaries_dir,
-                provider=chosen,
-                rcon_ip=ip,
-                rcon_port=port,
-                rcon_password=pwd,
+        pkg = mgr.get_package_info()
+        if not pkg["available"]:
+            self._show_custom_message(
+                "Pacote Não Encontrado",
+                "Nenhum pacote novo foi encontrado na pasta 'data/mods/bsbr_scum/'.\n\n"
+                "Descompacte os arquivos do mod fornecidos pelo Mazzotti nessa pasta primeiro.",
+                type_="warning",
             )
+            return
 
+        target_ver = pkg.get("version") or "recente"
+        confirm = self._show_custom_message(
+            f"Atualizar BSBR-SCUM",
+            f"Deseja instalar/atualizar o BSBR-SCUM para a versão v{target_ver}?\n\n"
+            "• As configurações atuais (portas, senhas) do config.ini serão mantidas intactas.\n"
+            "• Um backup da versão anterior será salvo automaticamente em data/mods/_backup/.",
+            type_="yesno",
+        )
+        if not confirm:
+            return
+
+        self._add_log_message(f"📦 Iniciando atualização para BSBR-SCUM v{target_ver}...", "INFO")
+        if hasattr(self, "btn_update_rcon_mod"):
+            self.btn_update_rcon_mod.configure(state="disabled", text="Atualizando...")
+
+        port_str = (getattr(self, "rcon_port_entry", None) and self.rcon_port_entry.get().strip()) or "28015"
+        pwd = (getattr(self, "rcon_password_entry", None) and self.rcon_password_entry.get().strip()) or ""
+        try:
+            port = int(port_str)
+        except ValueError:
+            port = 28015
+
+        def _bg():
+            ok, msg = mgr.install_or_update(binaries_dir=binaries_dir, preserve_config=True)
             if ok:
-                cfg = self._load_config() or {}
-                if "rcon" not in cfg:
-                    cfg["rcon"] = {}
-                cfg["rcon"]["provider"] = chosen
-                cfg["rcon"]["port"] = port
-                cfg["rcon"]["enabled"] = True
-                cfg_path = self._get_rcon_config_path()
-                try:
-                    with open(cfg_path, "w", encoding="utf-8") as f:
-                        json.dump(cfg, f, indent=2, ensure_ascii=False)
-                except Exception:
-                    pass
+                # Sincronizar porta e senha se preenchidas
+                if pwd:
+                    mgr.update_source_credentials(binaries_dir=binaries_dir, port=port, password=pwd)
 
-                self._load_rcon_settings()
+            def _on_done():
                 self._refresh_rcon_mod_status()
-                dialog.destroy()
-                messagebox.showinfo("Success", f"{PROVIDER_NAMES.get(chosen, chosen)} installed successfully!\n\nPlease restart the SCUM Server to load the engine.")
-            else:
-                messagebox.showerror("Installation Error", msg)
+                if ok:
+                    self._add_log_message(f"✅ {msg}", "SUCCESS")
+                    self._show_custom_message("Atualização Concluída", f"✅ {msg}", type_="ok")
+                else:
+                    self._add_log_message(f"❌ Falha na atualização: {msg}", "ERROR")
+                    self._show_custom_message("Falha na Atualização", f"❌ {msg}", type_="error")
 
-        ctk.CTkButton(
-            btn_row,
-            text="Cancel",
-            command=dialog.destroy,
-            width=100,
-            height=35,
-            fg_color=("gray70", "gray30"),
-            hover_color=("gray60", "gray40"),
-        ).pack(side="left")
+            self.after(0, _on_done)
 
-        ctk.CTkButton(
-            btn_row,
-            text="🚀 Install / Activate",
-            command=_do_install,
-            width=160,
-            height=35,
-            fg_color="#2E7D32",
-            hover_color="#1B5E20",
-            font=ctk.CTkFont(size=12, weight="bold"),
-        ).pack(side="right")
+        threading.Thread(target=_bg, daemon=True).start()
 
-    def _open_rcon_mods_folder(self):
-        """Abre a pasta ue4ss/Mods no Windows Explorer."""
+    def _open_rcon_package_folder(self):
+        """Abre a pasta data/mods/bsbr_scum/ no Windows Explorer para o usuário descompactar novidades."""
         import os
-        import tkinter.messagebox as messagebox
+        pkg_dir = self.DATA_DIR / "mods" / "bsbr_scum" if self.IS_EXE else self.ROOT_DIR / "data" / "mods" / "bsbr_scum"
+        pkg_dir.mkdir(parents=True, exist_ok=True)
+        try:
+            os.startfile(str(pkg_dir))
+        except Exception as e:
+            self._show_custom_message("Erro", f"Não foi possível abrir a pasta: {e}", type_="error")
+
+    def _open_server_mod_folder(self):
+        """Abre a pasta ue4ss/Mods/bsbr_scum/ do servidor no Windows Explorer."""
+        import os
         config = self._load_config() or {}
         binaries_dir = config.get("paths", {}).get("scum_server", {}).get("binaries_directory", "")
         if not binaries_dir:
-            messagebox.showerror("Error", "Binaries directory not set in config.")
+            self._show_custom_message("Erro", "Diretório de binários não configurado.", type_="error")
             return
 
-        mods_dir = Path(binaries_dir) / "ue4ss" / "Mods"
-        if not mods_dir.is_dir():
-            mods_dir = Path(binaries_dir)
+        mod_dir = Path(binaries_dir) / "ue4ss" / "Mods" / "bsbr_scum"
+        if not mod_dir.is_dir():
+            mod_dir = Path(binaries_dir) / "ue4ss" / "Mods"
+        if not mod_dir.is_dir():
+            mod_dir = Path(binaries_dir)
 
         try:
-            os.startfile(str(mods_dir))
+            os.startfile(str(mod_dir))
         except Exception as e:
-            messagebox.showerror("Error", f"Failed to open folder: {e}")
+            self._show_custom_message("Erro", f"Não foi possível abrir a pasta do servidor: {e}", type_="error")
 
     def _uninstall_rcon_mod(self):
-        """Desinstala o mod RCON atualmente instalado."""
-        import tkinter.messagebox as messagebox
-        from utils.rcon_mod_manager import RconModManager
+        """Desinstala o mod BSBR-SCUM do servidor SCUM."""
+        import threading
+        from utils.rcon_mod_manager import RconModManager, is_scum_server_running
+
+        if is_scum_server_running() or getattr(self, "server_running", False):
+            self._show_custom_message(
+                "Servidor em Execução",
+                "⚠️ Pare o servidor SCUM antes de desinstalar o mod de RCON.",
+                type_="warning",
+            )
+            return
 
         config = self._load_config() or {}
         binaries_dir = config.get("paths", {}).get("scum_server", {}).get("binaries_directory", "")
         if not binaries_dir:
-            messagebox.showerror("Error", "Binaries directory not set in config.")
+            self._show_custom_message("Erro", "Diretório de binários não configurado.", type_="error")
             return
 
-        confirm = messagebox.askyesno(
-            "Uninstall RCON Mod",
-            "Are you sure you want to uninstall the active RCON mod from your SCUM server?\n\n"
-            "The server should be stopped before uninstalling.",
+        confirm = self._show_custom_message(
+            "Desinstalar Mod RCON",
+            "Tem certeza que deseja desinstalar o mod BSBR-SCUM do servidor?\n\n"
+            "Isso removerá a pasta do mod e desativará o RCON no mods.txt.",
+            type_="yesno",
         )
         if not confirm:
             return
 
         mgr = RconModManager(root_dir=str(self.EXE_DIR), logger=self.logger)
         ok, msg = mgr.uninstall(binaries_dir=binaries_dir)
+        self._refresh_rcon_mod_status()
         if ok:
-            self._refresh_rcon_mod_status()
-            messagebox.showinfo("Uninstalled", "RCON mod removed successfully.")
+            self._add_log_message("🗑️ Mod RCON desinstalado com sucesso.", "INFO")
+            self._show_custom_message("Desinstalado", "Mod RCON desinstalado com sucesso.", type_="ok")
         else:
-            messagebox.showerror("Uninstall Error", msg)
+            self._show_custom_message("Erro ao Desinstalar", msg, type_="error")
 
     def _execute_rcon_console_command(self, event=None):
         """Executa um comando RCON digitado no console de testes e exibe a resposta em tempo real."""
@@ -4101,14 +4201,13 @@ class MainWindow(ctk.CTk):
         self.rcon_cmd_entry.delete(0, "end")
 
         ip = (getattr(self, "rcon_ip_entry", None) and self.rcon_ip_entry.get().strip()) or "127.0.0.1"
-        port_str = (getattr(self, "rcon_port_entry", None) and self.rcon_port_entry.get().strip()) or "27100"
+        port_str = (getattr(self, "rcon_port_entry", None) and self.rcon_port_entry.get().strip()) or "28015"
         password = (getattr(self, "rcon_password_entry", None) and self.rcon_password_entry.get().strip()) or ""
-        provider = (getattr(self, "rcon_provider_var", None) and self.rcon_provider_var.get()) or "bsbr_scum"
 
         try:
             port = int(port_str)
         except ValueError:
-            port = 27100 if provider == "bsbr_scum" else 28015
+            port = 28015
 
         ts = datetime.now().strftime("%H:%M:%S")
         self.rcon_console_textbox.insert("end", f"[{ts}] > {cmd}\n")
@@ -4118,13 +4217,8 @@ class MainWindow(ctk.CTk):
             import time
             start = time.perf_counter()
             try:
-                if provider == "bsbr_scum":
-                    from utils.bsbr_client import BsbrClient
-                    client = BsbrClient(host=ip, port=port, timeout=5.0)
-                    resp = client.send_command(cmd, origin="CONSOLE")
-                else:
-                    from utils.rcon_client import RconClient
-                    client = RconClient(host=ip, port=port, password=password, timeout=5.0)
+                from utils.rcon_client import RconClient
+                with RconClient(ip, port, password, timeout=5.0) as client:
                     resp = client.send_command(cmd, origin="CONSOLE")
 
                 duration_ms = (time.perf_counter() - start) * 1000.0
@@ -4167,308 +4261,6 @@ class MainWindow(ctk.CTk):
 
 
 
-    def _open_rcon_mods_folder(self):
-        """Abre a pasta data/mods/rcon/ no Windows Explorer."""
-        import os, sys, subprocess
-        rcon_dir = self.DATA_DIR / "mods" / "rcon" if self.IS_EXE else self.ROOT_DIR / "data" / "mods" / "rcon"
-        rcon_dir.mkdir(parents=True, exist_ok=True)
-        try:
-            if sys.platform == "win32":
-                os.startfile(str(rcon_dir))
-            else:
-                subprocess.Popen(["xdg-open", str(rcon_dir)])
-        except Exception as e:
-            self._show_custom_message("Error", f"Failed to open folder: {e}", type_="error")
-
-    def _select_and_install_rcon_dialog(self):
-        """Abre uma janela para selecionar qual mod RCON instalar a partir de data/mods/rcon/ ou pasta customizada."""
-        from tkinter import filedialog
-        from utils.rcon_mod_manager import RconModManager, PROVIDER_NAMES, DEFAULT_PORTS
-
-        if getattr(self, "server_running", False) or getattr(self, "backend_running", False):
-            self._show_custom_message(
-                "Server is Running",
-                "⚠️ The SCUM Server is currently running.\n\n"
-                "Please STOP the server before installing or switching RCON mods.\n"
-                "This is required because the server locks the application files while running.",
-                type_="warning"
-            )
-            return
-
-        config = self._load_config() or {}
-        binaries_dir = config.get("paths", {}).get("scum_server", {}).get("binaries_directory", "")
-        if not binaries_dir:
-            self._show_custom_message(
-                "Error",
-                "Binaries directory is not configured.\n\n"
-                "Go to the General tab and set the 'Binaries Directory' path first.",
-                type_="error"
-            )
-            return
-
-        mgr = RconModManager(root_dir=str(self.EXE_DIR), logger=self.logger)
-        available_mods = mgr.get_available_providers()
-
-        dialog = ctk.CTkToplevel(self)
-        dialog.title("Select RCON Engine to Install")
-        dialog.geometry("520x420")
-        dialog.resizable(False, False)
-        dialog.transient(self)
-        dialog.grab_set()
-
-        try:
-            x = self.winfo_x() + (self.winfo_width() // 2) - 260
-            y = self.winfo_y() + (self.winfo_height() // 2) - 210
-            dialog.geometry(f"+{max(0, x)}+{max(0, y)}")
-        except Exception:
-            pass
-
-        ctk.CTkLabel(
-            dialog,
-            text="📦 Select RCON Engine",
-            font=ctk.CTkFont(size=18, weight="bold"),
-        ).pack(padx=20, pady=(20, 5), anchor="w")
-
-        ctk.CTkLabel(
-            dialog,
-            text="Choose one of the available engines from data/mods/rcon/ or select an external folder:",
-            font=ctk.CTkFont(size=12),
-            text_color=("gray40", "gray70"),
-            wraplength=480,
-            justify="left",
-        ).pack(padx=20, pady=(0, 15), anchor="w")
-
-        selected_provider_var = ctk.StringVar(value=available_mods[0]["id"] if available_mods else "bsbr_scum")
-        custom_path_var = ctk.StringVar(value="")
-
-        mods_list_frame = ctk.CTkScrollableFrame(dialog, height=160, fg_color=("gray90", "gray20"), corner_radius=8)
-        mods_list_frame.pack(fill="x", padx=20, pady=(0, 12))
-
-        for mod in available_mods:
-            mod_id = mod["id"]
-            mod_name = mod["name"]
-            port = mod.get("default_port", 27100)
-
-            row = ctk.CTkFrame(mods_list_frame, fg_color="transparent")
-            row.pack(fill="x", pady=4, padx=5)
-
-            rb = ctk.CTkRadioButton(
-                row,
-                text=f"{mod_name}  (Default port: {port})",
-                variable=selected_provider_var,
-                value=mod_id,
-                font=ctk.CTkFont(size=12, weight="bold"),
-            )
-            rb.pack(side="left", padx=5)
-
-        # Opção de selecionar pasta externa
-        browse_row = ctk.CTkFrame(dialog, fg_color="transparent")
-        browse_row.pack(fill="x", padx=20, pady=(0, 15))
-
-        def _on_browse():
-            rcon_base = self.DATA_DIR / "mods" / "rcon" if self.IS_EXE else self.ROOT_DIR / "data" / "mods" / "rcon"
-            chosen = filedialog.askdirectory(
-                title="Select Custom RCON Mod Folder",
-                initialdir=str(rcon_base) if rcon_base.is_dir() else str(self.ROOT_DIR),
-            )
-            if chosen:
-                custom_path_var.set(chosen)
-                folder_name = Path(chosen).name
-                selected_provider_var.set(folder_name)
-                lbl_custom.configure(text=f"📁 {folder_name}")
-
-        btn_browse = ctk.CTkButton(
-            browse_row,
-            text="📁 Browse Another Folder...",
-            command=_on_browse,
-            width=180,
-            height=32,
-            fg_color=("gray70", "gray30"),
-            hover_color=("gray60", "gray40"),
-            font=ctk.CTkFont(size=12),
-        )
-        btn_browse.pack(side="left")
-
-        lbl_custom = ctk.CTkLabel(
-            browse_row,
-            text="",
-            font=ctk.CTkFont(size=11),
-            text_color=("gray40", "gray70"),
-        )
-        lbl_custom.pack(side="left", padx=(10, 0))
-
-        # Bottom buttons
-        btn_frame = ctk.CTkFrame(dialog, fg_color="transparent")
-        btn_frame.pack(fill="x", padx=20, pady=(10, 20), side="bottom")
-
-        def _confirm_install():
-            choice = selected_provider_var.get()
-            dialog.destroy()
-            self._do_install_chosen_rcon(choice, custom_dir=custom_path_var.get() or None)
-
-        ctk.CTkButton(
-            btn_frame,
-            text="Install & Activate",
-            command=_confirm_install,
-            width=150,
-            height=36,
-            fg_color=("#1565C0", "#1565C0"),
-            hover_color=("#0D47A1", "#0D47A1"),
-            font=ctk.CTkFont(size=12, weight="bold"),
-        ).pack(side="right", padx=(8, 0))
-
-        ctk.CTkButton(
-            btn_frame,
-            text="Cancel",
-            command=dialog.destroy,
-            width=100,
-            height=36,
-            fg_color=("gray70", "gray30"),
-            hover_color=("gray60", "gray40"),
-            font=ctk.CTkFont(size=12),
-        ).pack(side="right")
-
-    def _do_install_chosen_rcon(self, provider: str, custom_dir: Optional[str] = None):
-        """Instala o mod RCON selecionado pelo usuário."""
-        import threading
-        from utils.rcon_mod_manager import PROVIDER_NAMES, DEFAULT_PORTS
-
-        config = self._load_config() or {}
-        binaries_dir = config.get("paths", {}).get("scum_server", {}).get("binaries_directory", "")
-        if not binaries_dir:
-            return
-
-        ip = (getattr(self, "rcon_ip_entry", None) and self.rcon_ip_entry.get().strip()) or "127.0.0.1"
-        default_p = DEFAULT_PORTS.get(provider, 27100)
-        password = (getattr(self, "rcon_password_entry", None) and self.rcon_password_entry.get().strip()) or ""
-
-        # Auto-update port field to match selected mod's default port
-        if hasattr(self, "rcon_port_entry"):
-            self.rcon_port_entry.delete(0, "end")
-            self.rcon_port_entry.insert(0, str(default_p))
-            port = default_p
-        else:
-            port = default_p
-
-        prov_title = PROVIDER_NAMES.get(provider, provider.replace("_", " ").title())
-        self._add_log_message(f"📦 Installing {prov_title}...", "INFO")
-
-        if hasattr(self, "btn_select_rcon_mod"):
-            self.btn_select_rcon_mod.configure(state="disabled", text="Installing...")
-
-        def _bg():
-            from utils.rcon_mod_manager import RconModManager
-            mgr = RconModManager(root_dir=str(self.EXE_DIR), logger=self.logger)
-            success, message = mgr.install(
-                binaries_dir=binaries_dir,
-                provider=provider,
-                rcon_ip=ip,
-                rcon_port=port,
-                rcon_password=password,
-            )
-
-            if success:
-                try:
-                    cfg = self._load_config() or {}
-                    if "rcon" not in cfg:
-                        cfg["rcon"] = {}
-                    cfg["rcon"]["provider"] = provider
-                    cfg["rcon"]["port"] = port
-                    import json
-                    cfg_path = self._get_rcon_config_path()
-                    with open(cfg_path, "w", encoding="utf-8") as f:
-                        json.dump(cfg, f, indent=2, ensure_ascii=False)
-                except Exception:
-                    pass
-
-            def _on_done():
-                if hasattr(self, "btn_select_rcon_mod"):
-                    self.btn_select_rcon_mod.configure(state="normal", text="📦 Select Engine")
-
-
-                if success:
-                    self._add_log_message(f"✅ {message}", "SUCCESS")
-                    self._show_custom_message("RCON Installed", f"✅ {message}", type_="ok")
-                else:
-                    self._add_log_message(f"❌ Installation failed: {message}", "ERROR")
-                    self._show_custom_message("Installation Failed", f"❌ {message}", type_="error")
-
-                self._refresh_rcon_mod_status()
-
-            try:
-                self.after(0, _on_done)
-            except Exception:
-                pass
-
-        threading.Thread(target=_bg, daemon=True).start()
-
-    def _uninstall_rcon_mod(self):
-        """Remove o provedor RCON ativo do servidor SCUM."""
-        import threading
-
-        if getattr(self, "server_running", False) or getattr(self, "backend_running", False):
-            self._show_custom_message(
-                "Server is Running",
-                "⚠️ The SCUM Server is currently running.\n\n"
-                "Please STOP the server before uninstalling mods.\n"
-                "This is required because the server locks the application files while running.",
-                type_="warning"
-            )
-            return
-
-        config = self._load_config() or {}
-        binaries_dir = config.get("paths", {}).get("scum_server", {}).get("binaries_directory", "")
-
-        if not binaries_dir:
-            self._show_custom_message("Error", "Binaries directory is not configured.", type_="error")
-            return
-
-        from utils.rcon_mod_manager import RconModManager, PROVIDER_NAMES
-        mgr = RconModManager(root_dir=str(self.EXE_DIR), logger=self.logger)
-        installed_prov = mgr.get_installed_provider(binaries_dir)
-
-        if not installed_prov:
-            self._show_custom_message("Info", "No RCON engine is currently installed.", type_="info")
-            return
-
-        prov_title = PROVIDER_NAMES.get(installed_prov, installed_prov)
-
-        confirm = self._show_custom_message(
-            f"Uninstall {prov_title}",
-            f"This will uninstall {prov_title} from the SCUM server.\n\n"
-            "Are you sure?",
-            type_="yesno"
-        )
-        if not confirm:
-            return
-
-        self._add_log_message(f"🗑️ Uninstalling {prov_title}...", "INFO")
-
-        if hasattr(self, "btn_uninstall_rcon_mod"):
-            self.btn_uninstall_rcon_mod.configure(state="disabled", text="Uninstalling...")
-
-        def _do_uninstall():
-            success, message = mgr.uninstall(binaries_dir=binaries_dir, provider=installed_prov)
-
-            def _on_done():
-                if hasattr(self, "btn_uninstall_rcon_mod"):
-                    self.btn_uninstall_rcon_mod.configure(state="normal", text="🗑️ Uninstall Engine")
-
-                if success:
-                    self._add_log_message(f"✅ {message}", "SUCCESS")
-                    self._show_custom_message("Engine Uninstalled", f"✅ {message}", type_="ok")
-                else:
-                    self._add_log_message(f"❌ Uninstall failed: {message}", "ERROR")
-                    self._show_custom_message("Uninstall Failed", f"❌ {message}", type_="error")
-
-                self._refresh_rcon_mod_status()
-
-            try:
-                self.after(0, _on_done)
-            except Exception:
-                pass
-
-        threading.Thread(target=_do_uninstall, daemon=True).start()
 
 
     # ================================================================
