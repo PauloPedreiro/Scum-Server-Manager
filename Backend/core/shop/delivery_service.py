@@ -111,7 +111,9 @@ def _sanitize_asset_name(asset_name: str) -> str:
 def _build_spawnitem_cmd(raw_setup: str, qty: int, steam_id: str) -> str:
     """
     Sanitiza o setup de um item (removendo sufixo _ES, corrigindo typos conhecidos
-    e posicionando corretamente a quantidade quando há StackCount embutido) e monta o comando RCON.
+    e posicionando corretamente a quantidade quando há StackCount embutido) e monta o comando RCON
+    usando o prefixo nativo 'as <SteamID>' do bsbr_scum para executar diretamente no
+    AConZPlayerController real do comprador (evitando o executor sintético 'fantasma' sem Pawn).
     """
     clean_setup = str(raw_setup).strip()
     if clean_setup.upper().endswith("_ES"):
@@ -126,10 +128,10 @@ def _build_spawnitem_cmd(raw_setup: str, qty: int, steam_id: str) -> str:
     if m_stack:
         asset_name = _sanitize_asset_name(m_stack.group(1))
         stack_part = m_stack.group(2).strip()
-        return f'spawnitem {asset_name} {int(qty)} {stack_part} Location "{steam_id}"'
+        return f"as {steam_id} spawnitem {asset_name} {int(qty)} {stack_part}"
 
     clean_setup = _sanitize_asset_name(clean_setup)
-    return f'spawnitem {clean_setup} {int(qty)} Location "{steam_id}"'
+    return f"as {steam_id} spawnitem {clean_setup} {int(qty)}"
 
 
 def _wait_inter_order_cooldown() -> None:
@@ -261,7 +263,7 @@ class ShopDeliveryService:
                     if raw_response and ("sem resposta" in raw_response.lower() or "tick do jogo" in raw_response.lower()):
                         rcon_q.trip_circuit(cooldown=20.0, reason=raw_response)
                         return DeliveryJobResult(0, 0, 0)
-                    online_steam_ids = set(_parse_steam_ids_from_listplayers(raw_response))
+                    online_steam_ids = set(_parse_steam_ids_from_listplayers(raw_response, exclude_lobby=True))
                 except Exception as e:
                     if self.logger:
                         self.logger.warn(f"ShopDelivery: não foi possível listar jogadores via RCON: {e}")
@@ -583,7 +585,7 @@ class ShopDeliveryService:
                             if _is_vehicle(sub_setup):
                                 rem_veh = sub_qty - already_sub_del
                                 for _v in range(rem_veh):
-                                    cmd = f'spawnvehicle {sub_setup.strip()} 1 Location "{steam_id}"'
+                                    cmd = f"as {steam_id} spawnvehicle {sub_setup.strip()} 1"
                                     ok_cmd, resp_or_err = self._execute_rcon_spawn(rcon_q, cmd, delay_sec)
                                     if not ok_cmd:
                                         _mark_rcon_delivery_finished()
@@ -632,7 +634,7 @@ class ShopDeliveryService:
                     )
                     if _is_vehicle(setup):
                         for _ in range(remaining):
-                            cmd = f'spawnvehicle {setup.strip()} 1 Location "{steam_id}"'
+                            cmd = f"as {steam_id} spawnvehicle {setup.strip()} 1"
                             ok_cmd, resp_or_err = self._execute_rcon_spawn(rcon_q, cmd, delay_sec)
                             if not ok_cmd:
                                 _mark_rcon_delivery_finished()

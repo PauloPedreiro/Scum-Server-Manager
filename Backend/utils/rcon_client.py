@@ -63,6 +63,10 @@ def is_rcon_error_response(response: Optional[str], allow_empty: bool = False) -
         "circuit_breaker_open",
         "not online",
         "player not found",
+        "nao encontrado",
+        "desconectado",
+        "nenhum jogador",
+        "uso: ",
         "server still starting",
         "unknown command",
         "failed to",
@@ -299,7 +303,7 @@ class RconClient:
 
     def spawn_item(self, item_class: str, qty: int, steam_id: str) -> str:
         """
-        Spawna um item nos pés de um jogador via SteamID.
+        Spawna um item na frente de um jogador via SteamID usando o contexto nativo ('as <SteamID>').
 
         Args:
             item_class: Classe do item. Ex: "Hiking_Backpack_01_03"
@@ -309,12 +313,12 @@ class RconClient:
         Returns:
             Resposta do servidor RCON.
         """
-        cmd = f"spawnitem {item_class} {int(qty)} Location {steam_id}"
+        cmd = f"as {steam_id} spawnitem {item_class} {int(qty)}"
         return self.send_command(cmd)
 
     def spawn_vehicle(self, vehicle_class: str, steam_id: str) -> str:
         """
-        Spawna um veículo próximo de um jogador via SteamID.
+        Spawna um veículo na frente de um jogador via SteamID usando o contexto nativo ('as <SteamID>').
 
         Args:
             vehicle_class: Classe do veículo. Ex: "BPC_RIS"
@@ -323,7 +327,7 @@ class RconClient:
         Returns:
             Resposta do servidor RCON.
         """
-        cmd = f"spawnvehicle {vehicle_class} 1 Location {steam_id}"
+        cmd = f"as {steam_id} spawnvehicle {vehicle_class} 1"
         return self.send_command(cmd)
 
     # ------------------------------------------------------------------
@@ -377,27 +381,29 @@ class RconClient:
 # Utilitário de parsing
 # ------------------------------------------------------------------
 
-def _parse_steam_ids_from_listplayers(response: str) -> List[str]:
-    """Parseia a resposta do ListPlayers e extrai apenas os SteamIDs."""
-    return [p["steam_id"] for p in parse_listplayers_response(response)]
+def _parse_steam_ids_from_listplayers(response: str, exclude_lobby: bool = False) -> List[str]:
+    """
+    Parseia a resposta do ListPlayers e extrai apenas os SteamIDs.
+    Quando exclude_lobby=True, ignora jogadores que ainda estão em 'Pos: Lobby'
+    (cujo Pawn/personagem ainda não nasceu no mundo 3D).
+    """
+    parsed = parse_listplayers_response(response)
+    if exclude_lobby:
+        return [p["steam_id"] for p in parsed if not p.get("in_lobby", False)]
+    return [p["steam_id"] for p in parsed]
 
 
 def parse_listplayers_response(response: str) -> List[dict]:
     """
     Parseia a resposta completa do comando ListPlayers.
 
-    Formato confirmado do mod scum_rcon (UE4SS):
-
-        1. Pedreiro
-        Steam: Pedreiro (76561198040636105)
-        Fame: 4
-        Account balance: 0
-        Gold balance: 0
-        Location: X=-326764.000 Y=7495.000 Z=35788.141
+    Suporta tanto o formato multilinhas legado quanto o formato single-line do bsbr_scum 0.3.0:
+        1. Pedreiro | Steam: Pedreiro (76561198040636105) | Fame: 4 | Balance: 0 | Gold: 0 | Pos: X=-326764.0 Y=7495.0 Z=35788.1
+        2. 76561199654075899:LORDLAG (1) | Steam: Lord (76561199654075899) | Fame: 0 | Balance: 0 | Gold: 0 | Pos: Lobby
 
     Returns:
         Lista de dicts com: index, name, steam_id, fame,
-        account_balance, gold_balance, location_x, location_y, location_z
+        account_balance, gold_balance, location_x, location_y, location_z, in_lobby
     """
     import re
 
@@ -424,13 +430,14 @@ def parse_listplayers_response(response: str) -> List[dict]:
             "location_x": None,
             "location_y": None,
             "location_z": None,
+            "in_lobby": False,
         }
 
         # Linha de índice: "1. Pedreiro"
         m_index = re.match(r"^\s*(\d+)\.\s+(.+)", block)
         if m_index:
             player["index"] = int(m_index.group(1))
-            player["name"] = m_index.group(2).strip()
+            player["name"] = m_index.group(2).split("|")[0].strip()
 
         # Steam: Nome (SteamID)
         m_steam = re.search(r"Steam:\s+.*\((\d{17})\)", block)
@@ -445,19 +452,23 @@ def parse_listplayers_response(response: str) -> List[dict]:
         if m_fame:
             player["fame"] = int(m_fame.group(1))
 
-        # Account balance: N
-        m_bal = re.search(r"Account balance:\s*(\d+)", block)
+        # Account balance / Balance: N
+        m_bal = re.search(r"(?:Account balance|Balance):\s*(\-?\d+)", block)
         if m_bal:
             player["account_balance"] = int(m_bal.group(1))
 
-        # Gold balance: N
-        m_gold = re.search(r"Gold balance:\s*(\d+)", block)
+        # Gold balance / Gold: N
+        m_gold = re.search(r"(?:Gold balance|Gold):\s*(\-?\d+)", block)
         if m_gold:
             player["gold_balance"] = int(m_gold.group(1))
 
-        # Location: X=... Y=... Z=...
+        # Location / Pos: Lobby
+        if re.search(r"(?:Location|Pos):\s*Lobby\b", block, re.IGNORECASE):
+            player["in_lobby"] = True
+
+        # Location / Pos: X=... Y=... Z=...
         m_loc = re.search(
-            r"Location:\s*X=([\-\d.]+)\s+Y=([\-\d.]+)\s+Z=([\-\d.]+)",
+            r"(?:Location|Pos):\s*X=([\-\d.]+)\s+Y=([\-\d.]+)\s+Z=([\-\d.]+)",
             block,
         )
         if m_loc:

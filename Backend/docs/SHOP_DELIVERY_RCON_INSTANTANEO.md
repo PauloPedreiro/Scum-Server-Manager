@@ -76,7 +76,7 @@ No arquivo `core/shop/delivery_service.py`:
 - Como o pedido veio de uma mensagem no chat enviada milissegundos antes, a presença do jogador é garantida:
   $$\text{Origem} = \text{Chat In-Game} \implies \text{Status do Jogador} = \text{Online Garantido}$$
 - Os comandos de entrega são despachados sem esperar o ciclo do `ListPlayers`:
-  1. `spawnitem <ItemClass> <Qty> Location "<SteamID>"`
+  1. `as <SteamID> spawnitem <ItemClass> <Qty>` (ou `as <SteamID> spawnvehicle <VehicleClass> 1`)
   2. `SendChat 6 "[SSM] Seus itens foram entregues com sucesso!" <SteamID>`
 
 ### 2.3 Fila Instantânea com Thread Event
@@ -85,30 +85,32 @@ No arquivo `core/shop/shop_buy_job_worker.py`:
 - Assim que o `enqueue_buy_job` insere o pedido na tabela `shop_buy_job`, ele aciona `_global_wake_event.set()`.
 - O worker acorda no mesmo milissegundo, processa a ordem e despacha a entrega unitária imediata.
 
-### 2.4 Blindagem Anti-Crash para Entregas Simultâneas em Massa (v3.22.70 – v3.22.72)
+### 2.4 Blindagem Anti-Crash para Entregas Simultâneas em Massa (v3.22.70 – v3.22.73)
 Para evitar que múltiplos jogadores entrando ao mesmo tempo e pedindo kits de boas-vindas (`/register` e `/kit`) sobrecarreguem ou congelem a **Game Thread** da Unreal Engine (`"erro: sem resposta em 4s - o tick do jogo pode estar parado"`):
 
-1. **Serialização Estrita com `_delivery_lock` e Cooldown Inter-Pedidos (`2.5s`)**:
+1. **Execução Direta no Controller do Comprador via `as <SteamID>` (Causa Raiz no `bsbr_scum 0.3.0`)**:
+   - Na versão `0.3.0` do `bsbr_scum` (`main.dll`), usar `spawnitem Weapon_MP5 1 Location "<SteamID>"` deixa `g_target_controller` (`[0xa0f68]`) como `NULL`. Em `0x383a0` (`exec_admin_cmd`), quando nenhum administrador do `AdminUsers.ini` está online (`IsUserAdmin == false`), o mod instancia e utiliza o `g_fantasma_controller` (`0x30ae0`) — um `BP_ConZPlayerController_C` sintético criado via `StaticConstructObject_Internal` com `Pawn == NULL`. Instanciar armas (`Weapon_*` / `AWeapon`) no `UAdminCommand_SpawnItem` usando esse controller fantasma sem `Pawn` causa deadlock imediato na Game Thread do `SCUMServer.exe`.
+   - Ao utilizar **`as <SteamID> spawnitem <Item> <Qty>`** e **`as <SteamID> spawnvehicle <Vehicle> 1`**, a função `0x45420` define `g_target_controller ([0xa0f68]) = buyer_controller` e a verificação em `0x383f8` (`test rax, rax; jne 0x38549`) pula completamente o `IsUserAdmin` e o `g_fantasma_controller`, executando o spawn diretamente no `AConZPlayerController` real do comprador (com `sudo` automático via `elevate = 1`).
+2. **Serialização Estrita com `_delivery_lock` e Cooldown Inter-Pedidos (`2.5s`)**:
    - Tanto `run_once()` quanto `deliver_single_order_now()` (usado por `/buy`, `/kit` e `/register`) adquirem o mesmo `_delivery_lock` global.
    - Isso impede que dois kits sejam entregues ao mesmo tempo ou intercalem comandos `spawnitem` na fila RCON.
    - Entre o término de um pedido e o início do próximo, o helper `_wait_inter_order_cooldown()` aplica uma pausa de `2.5s` para o coletor de lixo e replicação da Unreal Engine estabilizarem.
-2. **Ordenação Inteligente de Sub-Itens em Kits (`Weapon_*` Primeiro) e Pausa por Lote**:
-   - O `bsbr_scum` converte `Location "<SteamID>"` para a coordenada exata `{X, Y, Z}` do cápsula do jogador. Instanciar uma arma complexa (`Weapon_MP5`) como 10º/11º item em cima de uma pilha de 15 objetos físicos recém-spawnados no mesmo milímetro `(X, Y, Z)` causava deadlock na Game Thread (`UAdminCommand_SpawnItem`).
-   - O helper `_kit_subitem_priority()` reordena automaticamente a execução de qualquer kit para spawnar **Armas (`Weapon_*`) primeiro** (quando há `0` itens empilhados no chão), seguidas dos itens comuns e **Veículos (`BPC_*` / `BP_*`) por último**.
+3. **Ordenação Inteligente de Sub-Itens em Kits (`Weapon_*` Primeiro) e Pausa por Lote**:
+   - O helper `_kit_subitem_priority()` reordena automaticamente a execução de qualquer kit para spawnar **Armas (`Weapon_*`) primeiro**, seguidas dos itens comuns e **Veículos (`BPC_*` / `BP_*`) por último**.
    - A cada **4 itens** spawnados em um kit (`_KIT_BATCH_SIZE = 4`), o SSM aplica uma pausa de respiro de `2.5s` (`_KIT_BATCH_PAUSE_SEC`) para a física da UE4 assentar os itens antes do próximo lote.
-3. **Cadência Adaptativa por Complexidade do Ator (*Throttling*)**:
+4. **Cadência Adaptativa por Complexidade do Ator (*Throttling*)**:
    - Itens comuns utilizam `delay_after = 0.8s`.
    - Atores pesados (`_is_heavy_actor`: armas `Weapon_*` e veículos `BPC_*` / `BP_*`) utilizam `delay_after = 2.0s`.
-4. **Detecção de Congelamento de Tick, *Circuit Breaker* e Prevenção de Loop de Crash Pós-Reinício**:
+5. **Detecção de Congelamento de Tick, *Circuit Breaker* e Prevenção de Loop de Crash Pós-Reinício**:
    - Funções `is_rcon_tick_frozen()` e `is_rcon_error_response()` inspecionam o retorno de cada comando RCON.
    - Se o servidor reportar congelamento de tick ou timeout, o `RconQueueManager` reinicializa o socket e abre o **Circuit Breaker** por `15s` a `45s`, abortando comandos de spawn/listagem subsequentes em `0ms` (mas mantendo `SendChat` como `/sd` liberado).
    - Se um pedido causar `RCON_TICK_FROZEN`, `_revert_or_fail_order()` marca o pedido como `failed` (`retry_requested = 0`) em vez de `pending`, impedindo que um pedido problemático volte a rodar automaticamente 30 segundos após cada reinício do `SCUMServer.exe`.
-5. **Eliminação Total de `ListPlayers` Desnecessário**:
+6. **Eliminação Total de `ListPlayers` Desnecessário e Filtro de `Pos: Lobby`**:
    - Comandos digitados no chat (`/register`, `/kit`, `/buy`) nunca executam `ListPlayers`, pois o jogador comprovadamente já está online no jogo.
-   - O worker periódico `run_once()` verifica primeiro no SQLite se há pedidos aguardando na fila (`attempt_count > 0` ou `created_at <= -15s`) antes de chamar `ListPlayers`, evitando qualquer corrida com `deliver_single_order_now()` ou chamadas RCON quando a fila está vazia.
-6. **Sanitização Automática de `StackCount` e Typos (`_build_spawnitem_cmd`)**:
+   - O worker periódico `run_once()` verifica primeiro no SQLite se há pedidos aguardando na fila (`attempt_count > 0` ou `created_at <= -15s`) antes de chamar `ListPlayers`, e filtra jogadores que ainda estão em `Pos: Lobby` (`exclude_lobby=True`, sem `Pawn` no mundo).
+7. **Sanitização Automática de `StackCount` e Typos (`_build_spawnitem_cmd`)**:
    - Corrige automaticamente typos conhecidos como `Water_051` -> `Water_05l` e `Emergency_bandage_Big_S` / `Emergency_bandage_Big_ES` -> `Emergency_bandage_Big`.
-   - Quando um item possui `StackCount` embutido no cadastro (ex.: `Cash 1 StackCount 5000` com `qty=2`), posiciona a quantidade corretamente antes de `StackCount` (`spawnitem Cash 2 StackCount 5000 Location "<SteamID>"`).
+   - Quando um item possui `StackCount` embutido no cadastro (ex.: `Cash 1 StackCount 5000` com `qty=2`), posiciona a quantidade corretamente antes de `StackCount` (`as <SteamID> spawnitem Cash 2 StackCount 5000`).
 
 ---
 
