@@ -1,6 +1,8 @@
 from core.database.connector import DatabaseConnector
 import json
+import re
 import sqlite3
+import time
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Tuple
@@ -9,11 +11,24 @@ import threading
 import requests
 
 from utils.logger import StructuredLogger
+from utils.rcon_client import is_rcon_error_response, is_rcon_tick_frozen
 
 from core.shop.db import ssm_tx
 from core.shop.scum_delivery import ScumChestSpawner
 
 _delivery_lock = threading.Lock()
+_last_rcon_delivery_ts: float = 0.0
+
+# Intervalos de proteção da Game Thread da Unreal Engine (anti-crash)
+_INTER_ORDER_COOLDOWN_SEC: float = 2.5
+_DELAY_NORMAL_ITEM_SEC: float = 0.8
+_DELAY_HEAVY_ITEM_SEC: float = 1.5
+_MAX_TRANSIENT_ATTEMPTS: int = 8
+
+# Correções automáticas de typos comuns em nomes de classes do SCUM
+_CLASS_TYPO_FIXES: Dict[str, str] = {
+    "water_051": "Water_05l",
+}
 
 
 @dataclass
@@ -53,10 +68,54 @@ def _is_rcon_enabled(rcon_cfg: Optional[dict] = None) -> bool:
 
 
 def _is_vehicle(item_class: str) -> bool:
-
     """Heurística: classes de veículos no SCUM começam com BP_ ou BPC_."""
     cls = str(item_class).strip()
     return cls.startswith("BPC_") or cls.startswith("BP_")
+
+
+def _is_heavy_actor(item_class: str) -> bool:
+    """Identifica atores complexos (veículos e armas) que exigem maior intervalo de tick na UE4."""
+    cls = str(item_class).strip()
+    return _is_vehicle(cls) or cls.lower().startswith("weapon_")
+
+
+def _build_spawnitem_cmd(raw_setup: str, qty: int, steam_id: str) -> str:
+    """
+    Sanitiza o setup de um item (removendo sufixo _ES, corrigindo typos conhecidos
+    e posicionando corretamente a quantidade quando há StackCount embutido) e monta o comando RCON.
+    """
+    clean_setup = str(raw_setup).strip()
+    if clean_setup.endswith("_ES"):
+        clean_setup = clean_setup[:-3].strip()
+
+    # Verificar se há StackCount embutido (ex: "Cash 1 StackCount 5000" ou "Cash StackCount 5000")
+    m_stack = re.match(
+        r"^(\S+?)(?:\s+\d+)?\s+(StackCount\s+\d+.*)$",
+        clean_setup,
+        flags=re.IGNORECASE,
+    )
+    if m_stack:
+        asset_name = m_stack.group(1)
+        stack_part = m_stack.group(2).strip()
+        asset_name = _CLASS_TYPO_FIXES.get(asset_name.lower(), asset_name)
+        return f'spawnitem {asset_name} {int(qty)} {stack_part} Location "{steam_id}"'
+
+    clean_setup = _CLASS_TYPO_FIXES.get(clean_setup.lower(), clean_setup)
+    return f'spawnitem {clean_setup} {int(qty)} Location "{steam_id}"'
+
+
+def _wait_inter_order_cooldown() -> None:
+    """Garante um intervalo mínimo entre o término de um pedido RCON e o início do próximo."""
+    global _last_rcon_delivery_ts
+    if _last_rcon_delivery_ts > 0:
+        elapsed = time.time() - _last_rcon_delivery_ts
+        if elapsed < _INTER_ORDER_COOLDOWN_SEC:
+            time.sleep(_INTER_ORDER_COOLDOWN_SEC - elapsed)
+
+
+def _mark_rcon_delivery_finished() -> None:
+    global _last_rcon_delivery_ts
+    _last_rcon_delivery_ts = time.time()
 
 
 class ShopDeliveryService:
@@ -135,53 +194,66 @@ class ShopDeliveryService:
             delivered = 0
             failed = 0
 
+            # Decidir modo de entrega
+            rcon_cfg = _load_rcon_config()
+            rcon_enabled = _is_rcon_enabled(rcon_cfg)
+            online_steam_ids = set()
+
+            if rcon_enabled:
+                from core.rcon_queue_manager import RconQueueManager
+                rcon_q = RconQueueManager.get_instance()
+                cb_open, cb_rem = rcon_q.is_circuit_open()
+                if cb_open:
+                    if self.logger:
+                        self.logger.debug(
+                            f"ShopDelivery: RCON Circuit Breaker ativo ({cb_rem:.1f}s) — ciclo adiado."
+                        )
+                    return DeliveryJobResult(0, 0, 0)
+
+                try:
+                    from utils.rcon_client import _parse_steam_ids_from_listplayers
+                    raw_response = rcon_q.execute_command_sync("ListPlayers", delay_after=0.5, priority=10, origin="SHOP")
+                    if raw_response and ("sem resposta" in raw_response.lower() or "tick do jogo" in raw_response.lower()):
+                        rcon_q.trip_circuit(cooldown=20.0, reason=raw_response)
+                        return DeliveryJobResult(0, 0, 0)
+                    online_steam_ids = set(_parse_steam_ids_from_listplayers(raw_response))
+                except Exception as e:
+                    if self.logger:
+                        self.logger.warn(f"ShopDelivery: não foi possível listar jogadores via RCON: {e}")
+                    return DeliveryJobResult(0, 0, 0)
+
             with DatabaseConnector.get_connection(self.ssm_db_path, timeout=30.0) as conn_ro:
                 conn_ro.row_factory = sqlite3.Row
                 cur = conn_ro.cursor()
-                cur.execute(
-                    """
+                if rcon_enabled and online_steam_ids:
+                    placeholders = ",".join("?" for _ in online_steam_ids)
+                    sql = f"""
                     SELECT order_id
                     FROM shop_order
                     WHERE status = 'pending'
                        OR (status = 'failed' AND retry_requested = 1)
-                    ORDER BY created_at ASC
+                    ORDER BY CASE WHEN steam_id IN ({placeholders}) THEN 0 ELSE 1 END, created_at ASC
                     LIMIT ?
-                    """,
-                    (int(limit),),
-                )
+                    """
+                    cur.execute(sql, (*online_steam_ids, int(limit)))
+                else:
+                    cur.execute(
+                        """
+                        SELECT order_id
+                        FROM shop_order
+                        WHERE status = 'pending'
+                           OR (status = 'failed' AND retry_requested = 1)
+                        ORDER BY created_at ASC
+                        LIMIT ?
+                        """,
+                        (int(limit),),
+                    )
                 order_ids = [str(r[0]) for r in cur.fetchall()]
 
             if not order_ids:
                 return DeliveryJobResult(0, 0, 0)
 
-            # Decidir modo de entrega
-            rcon_cfg = _load_rcon_config()
-            rcon_enabled = _is_rcon_enabled(rcon_cfg)
-
             if rcon_enabled:
-                # Entrega via RCON
-                from core.rcon_queue_manager import RconQueueManager
-                rcon_q = RconQueueManager.get_instance()
-
-                # Buscar jogadores online uma vez para toda a rodada
-                online_steam_ids = set()
-                try:
-                    provider = str(rcon_cfg.get("provider", "bsbr_scum")).lower()
-                    if provider == "bsbr_scum":
-                        from utils.bsbr_client import BsbrClient
-                        host = rcon_cfg.get("ip", "127.0.0.1")
-                        port = int(rcon_cfg.get("port", 27100))
-                        bsbr = BsbrClient(host=host, port=port, timeout=5.0)
-                        online_players = bsbr.list_players()
-                        online_steam_ids = {p["steam_id"] for p in online_players if p.get("steam_id")}
-                    else:
-                        from utils.rcon_client import _parse_steam_ids_from_listplayers
-                        raw_response = rcon_q.execute_command_sync("ListPlayers", delay_after=0.5, priority=10)
-                        online_steam_ids = set(_parse_steam_ids_from_listplayers(raw_response))
-                except Exception as e:
-                    if self.logger:
-                        self.logger.warn(f"ShopDelivery: não foi possível listar jogadores via RCON: {e}")
-
                 for order_id in order_ids:
                     processed += 1
                     ok, err = self._deliver_order_rcon(
@@ -192,7 +264,15 @@ class ShopDeliveryService:
                         delivered += 1
                     else:
                         failed += 1
-
+                        if err and (
+                            err.startswith("RCON_TICK_FROZEN")
+                            or err.startswith("RCON_CIRCUIT_OPEN")
+                        ):
+                            if self.logger:
+                                self.logger.warn(
+                                    f"ShopDelivery: interrompendo lote de entregas para proteger o servidor ({err})."
+                                )
+                            break
             else:
                 # Entrega legada via SCUM.db (baú/mailbox)
                 spawner = ScumChestSpawner(self.scum_db_path, logger=self.logger)
@@ -214,18 +294,93 @@ class ShopDeliveryService:
     # RCON delivery
     # ------------------------------------------------------------------
 
+    def deliver_single_order_now(self, order_id: str) -> Tuple[bool, Optional[str]]:
+        """
+        Entrega imediata de um pedido específico sem consultar ListPlayers,
+        protegida por _delivery_lock para evitar concorrência e sobrecarga do RCON.
+        """
+        with _delivery_lock:
+            rcon_cfg = _load_rcon_config()
+            rcon_enabled = _is_rcon_enabled(rcon_cfg)
+
+            if rcon_enabled:
+                return self._deliver_order_rcon(
+                    order_id=order_id,
+                    online_steam_ids=set(),
+                    bypass_online_check=True,
+                )
+            else:
+                # Fallback para baú/mailbox caso RCON esteja desativado
+                spawner = ScumChestSpawner(self.scum_db_path, logger=self.logger)
+                return self._deliver_order(order_id, spawner)
+
+    def _execute_rcon_spawn(
+        self,
+        rcon_q: Any,
+        cmd: str,
+        delay_after: float,
+    ) -> Tuple[bool, str]:
+        """
+        Executa um comando spawnitem/spawnvehicle via RCON e valida se o servidor
+        processou com sucesso (detectando congelamento de tick ou erros).
+        """
+        cb_open, cb_rem = rcon_q.is_circuit_open()
+        if cb_open:
+            return False, f"RCON_CIRCUIT_OPEN:{cb_rem:.1f}s"
+
+        resp = rcon_q.execute_command_sync(cmd, delay_after=delay_after, priority=5, origin="SHOP")
+        if is_rcon_tick_frozen(resp):
+            rcon_q.trip_circuit(cooldown=20.0, reason=resp or "RCON timeout during spawn")
+            return False, f"RCON_TICK_FROZEN:{resp or 'timeout'}"
+
+        if is_rcon_error_response(resp, allow_empty=False):
+            return False, f"RCON_ERROR:{resp}"
+
+        return True, str(resp)
+
+    def _revert_or_fail_order(self, order_id: str, attempt_count: int, err_msg: str) -> None:
+        """
+        Em caso de falha transitória do RCON (ex: tick do servidor travado),
+        devolve o pedido para 'pending' (até o limite de tentativas) para não perder o kit do jogador.
+        """
+        new_status = "pending" if int(attempt_count) < _MAX_TRANSIENT_ATTEMPTS else "failed"
+        try:
+            with ssm_tx(self.ssm_db_path) as conn_rev:
+                conn_rev.execute(
+                    """
+                    UPDATE shop_order
+                    SET status=?, error=?, last_attempt_at=datetime('now')
+                    WHERE order_id=? AND status != 'delivered'
+                    """,
+                    (new_status, err_msg, order_id),
+                )
+        except Exception:
+            pass
+
     def _deliver_order_rcon(
         self,
         order_id: str,
-        online_steam_ids: set,
+        online_steam_ids: Optional[set] = None,
+        bypass_online_check: bool = False,
     ) -> Tuple[bool, Optional[str]]:
-        """Tenta entregar um pedido via RCON. Se o jogador estiver offline, mantém 'pending'."""
+        """Tenta entregar um pedido via RCON. Se o jogador estiver offline ou o RCON falhar, preserva o progresso."""
+        attempt_count = 1
         try:
+            from core.rcon_queue_manager import RconQueueManager
+            rcon_q = RconQueueManager.get_instance()
+            cb_open, cb_rem = rcon_q.is_circuit_open()
+            if cb_open:
+                if self.logger:
+                    self.logger.warn(
+                        f"ShopDelivery RCON: Circuit Breaker aberto ({cb_rem:.1f}s) — pedido {order_id} aguarda."
+                    )
+                return False, f"RCON_CIRCUIT_OPEN:{cb_rem:.1f}s"
+
             with DatabaseConnector.get_connection(self.ssm_db_path, timeout=30.0) as conn_ro:
                 conn_ro.row_factory = sqlite3.Row
                 cur = conn_ro.cursor()
                 cur.execute(
-                    "SELECT steam_id, status, player_name FROM shop_order WHERE order_id = ?",
+                    "SELECT steam_id, status, player_name, attempt_count FROM shop_order WHERE order_id = ?",
                     (order_id,),
                 )
                 row = cur.fetchone()
@@ -236,19 +391,20 @@ class ShopDeliveryService:
             steam_id = str(row["steam_id"])
             status = str(row["status"])
             order_player_name = row["player_name"] if "player_name" in row.keys() else None
+            attempt_count = int(row["attempt_count"] or 0) + 1
 
             if status == "delivered":
                 return True, None
 
             # Se o jogador não está online, manter pending (será entregue depois)
-            if steam_id not in online_steam_ids:
+            if not bypass_online_check and (not online_steam_ids or steam_id not in online_steam_ids):
                 if self.logger:
                     self.logger.debug(
                         f"ShopDelivery RCON: jogador {steam_id} offline — pedido {order_id} aguarda."
                     )
                 return True, None  # True = não é um erro, apenas adiado
 
-            # Buscar itens pendentes
+            # Buscar itens pendentes e progresso parcial de sub-itens de kits
             with DatabaseConnector.get_connection(self.ssm_db_path, timeout=30.0) as conn_items:
                 conn_items.row_factory = sqlite3.Row
                 cur2 = conn_items.cursor()
@@ -264,6 +420,18 @@ class ShopDeliveryService:
                     (order_id,),
                 )
                 items = cur2.fetchall()
+
+                cur2.execute(
+                    """
+                    SELECT code, qty_delivered
+                    FROM shop_delivery_item
+                    WHERE order_id = ? AND code < 0
+                    """,
+                    (order_id,),
+                )
+                partial_kit_progress: Dict[int, int] = {
+                    int(r["code"]): int(r["qty_delivered"] or 0) for r in cur2.fetchall()
+                }
 
             # Marcar como entregando
             with ssm_tx(self.ssm_db_path) as conn_upd:
@@ -282,10 +450,9 @@ class ShopDeliveryService:
                         )
                     return True, None
 
-            # Enviar itens via RCON
-            from core.rcon_queue_manager import RconQueueManager
-            rcon_q = RconQueueManager.get_instance()
-            
+            # Respeitar intervalo entre pedidos consecutivos para não afogar a Game Thread
+            _wait_inter_order_cooldown()
+
             for it in items:
                 code = int(it["code"])
                 setup = str(it["setup"])
@@ -319,44 +486,112 @@ class ShopDeliveryService:
                         if self.logger:
                             self.logger.error(f"Erro ao buscar sub-itens do kit (setup {setup}): {e}")
 
-                # Comandos de entrega universais via RCON (compatível com BSBR e SCUM-RCON)
+                # Comandos de entrega universais via RCON (com verificação de resposta e cadência segura)
                 if is_kit:
+                    sub_step = 0
                     for _ in range(remaining):
                         for sub_setup, sub_qty in kit_items:
+                            sub_step += 1
+                            synth_code = -(abs(code) * 10000 + sub_step)
+                            already_sub_del = partial_kit_progress.get(synth_code, 0)
+                            if already_sub_del >= sub_qty:
+                                continue
+
+                            delay_sec = (
+                                _DELAY_HEAVY_ITEM_SEC
+                                if _is_heavy_actor(sub_setup)
+                                else _DELAY_NORMAL_ITEM_SEC
+                            )
+
                             if _is_vehicle(sub_setup):
-                                for _v in range(sub_qty):
-                                    cmd = f'spawnvehicle {sub_setup} 1 Location "{steam_id}"'
-                                    resp = rcon_q.execute_command_sync(cmd, delay_after=0.5, priority=5)
+                                rem_veh = sub_qty - already_sub_del
+                                for _v in range(rem_veh):
+                                    cmd = f'spawnvehicle {sub_setup.strip()} 1 Location "{steam_id}"'
+                                    ok_cmd, resp_or_err = self._execute_rcon_spawn(rcon_q, cmd, delay_sec)
+                                    if not ok_cmd:
+                                        _mark_rcon_delivery_finished()
+                                        self._revert_or_fail_order(order_id, attempt_count, resp_or_err)
+                                        if self.logger:
+                                            self.logger.warn(
+                                                f"ShopDelivery RCON abortado em spawnvehicle ({sub_setup}) do pedido {order_id}: {resp_or_err}"
+                                            )
+                                        return False, resp_or_err
                                     if self.logger:
-                                        self.logger.debug(f"Kit RCON spawnvehicle {sub_setup} → {resp}")
+                                        self.logger.debug(f"Kit RCON spawnvehicle {sub_setup} → {resp_or_err}")
                             else:
-                                clean_sub_setup = sub_setup
-                                if clean_sub_setup.endswith("_ES"):
-                                    clean_sub_setup = clean_sub_setup[:-3]
-                                cmd = f'spawnitem {clean_sub_setup} {int(sub_qty)} Location "{steam_id}"'
-                                resp = rcon_q.execute_command_sync(cmd, delay_after=0.5, priority=5)
+                                cmd = _build_spawnitem_cmd(sub_setup, sub_qty, steam_id)
+                                ok_cmd, resp_or_err = self._execute_rcon_spawn(rcon_q, cmd, delay_sec)
+                                if not ok_cmd:
+                                    _mark_rcon_delivery_finished()
+                                    self._revert_or_fail_order(order_id, attempt_count, resp_or_err)
+                                    if self.logger:
+                                        self.logger.warn(
+                                            f"ShopDelivery RCON abortado em spawnitem ({sub_setup}) do pedido {order_id}: {resp_or_err}"
+                                        )
+                                    return False, resp_or_err
                                 if self.logger:
-                                    self.logger.debug(f"Kit RCON spawnitem {clean_sub_setup} x{sub_qty} → {resp}")
+                                    self.logger.debug(f"Kit RCON {cmd} → {resp_or_err}")
+
+                            # Persistir progresso individual do sub-item do kit
+                            with ssm_tx(self.ssm_db_path) as conn_sub:
+                                conn_sub.execute(
+                                    """
+                                    INSERT INTO shop_delivery_item(order_id, code, qty_delivered, last_delivered_at)
+                                    VALUES(?, ?, ?, datetime('now'))
+                                    ON CONFLICT(order_id, code) DO UPDATE SET
+                                        qty_delivered = excluded.qty_delivered,
+                                        last_delivered_at = datetime('now')
+                                    """,
+                                    (order_id, synth_code, int(sub_qty)),
+                                )
+                            partial_kit_progress[synth_code] = int(sub_qty)
                 else:
+                    delay_sec = (
+                        _DELAY_HEAVY_ITEM_SEC
+                        if _is_heavy_actor(setup)
+                        else _DELAY_NORMAL_ITEM_SEC
+                    )
                     if _is_vehicle(setup):
-                        # Para veículos, spawna 1 de cada vez pois não há "quantidade" no comando
                         for _ in range(remaining):
-                            cmd = f'spawnvehicle {setup} 1 Location "{steam_id}"'
-                            resp = rcon_q.execute_command_sync(cmd, delay_after=0.5, priority=5)
+                            cmd = f'spawnvehicle {setup.strip()} 1 Location "{steam_id}"'
+                            ok_cmd, resp_or_err = self._execute_rcon_spawn(rcon_q, cmd, delay_sec)
+                            if not ok_cmd:
+                                _mark_rcon_delivery_finished()
+                                self._revert_or_fail_order(order_id, attempt_count, resp_or_err)
+                                if self.logger:
+                                    self.logger.warn(
+                                        f"ShopDelivery RCON abortado em spawnvehicle ({setup}) do pedido {order_id}: {resp_or_err}"
+                                    )
+                                return False, resp_or_err
                             if self.logger:
-                                self.logger.debug(f"spawnvehicle {setup} → {resp}")
+                                self.logger.debug(f"spawnvehicle {setup} → {resp_or_err}")
+                            with ssm_tx(self.ssm_db_path) as conn_v:
+                                conn_v.execute(
+                                    """
+                                    INSERT INTO shop_delivery_item(order_id, code, qty_delivered, last_delivered_at)
+                                    VALUES(?, ?, 1, datetime('now'))
+                                    ON CONFLICT(order_id, code) DO UPDATE SET
+                                        qty_delivered = MIN(?, shop_delivery_item.qty_delivered + 1),
+                                        last_delivered_at = datetime('now')
+                                    """,
+                                    (order_id, code, qty),
+                                )
+                        continue
                     else:
-                        # Limpar sufixo _ES do item para spawn via RCON
-                        clean_setup = setup
-                        if clean_setup.endswith("_ES"):
-                            clean_setup = clean_setup[:-3]
-
-                        cmd = f'spawnitem {clean_setup} {int(remaining)} Location "{steam_id}"'
-                        resp = rcon_q.execute_command_sync(cmd, delay_after=0.5, priority=5)
+                        cmd = _build_spawnitem_cmd(setup, remaining, steam_id)
+                        ok_cmd, resp_or_err = self._execute_rcon_spawn(rcon_q, cmd, delay_sec)
+                        if not ok_cmd:
+                            _mark_rcon_delivery_finished()
+                            self._revert_or_fail_order(order_id, attempt_count, resp_or_err)
+                            if self.logger:
+                                self.logger.warn(
+                                    f"ShopDelivery RCON abortado em spawnitem ({setup}) do pedido {order_id}: {resp_or_err}"
+                                )
+                            return False, resp_or_err
                         if self.logger:
-                            self.logger.debug(f"spawnitem {clean_setup} (original: {setup}) x{remaining} → {resp}")
+                            self.logger.debug(f"{cmd} (original: {setup}) → {resp_or_err}")
 
-                # Registrar entrega do item no banco local
+                # Registrar entrega do item (e limpar marcadores temporários negativos se for kit)
                 with ssm_tx(self.ssm_db_path) as conn_del:
                     conn_del.execute(
                         """
@@ -368,14 +603,19 @@ class ShopDeliveryService:
                         """,
                         (order_id, code, remaining, qty),
                     )
+                    if is_kit:
+                        conn_del.execute(
+                            "DELETE FROM shop_delivery_item WHERE order_id = ? AND code < 0",
+                            (order_id,),
+                        )
+
+            _mark_rcon_delivery_finished()
 
             # Enviar notificacao de sucesso via RCON
             try:
-                # Carregar mensagens customizadas do config.json
-                welcome_kit_msg = "Seu kit foi entregue com sucesso!"
-                items_msg = "Seus itens foram entregues com sucesso!"
+                welcome_kit_msg = "Your kit has been successfully delivered!"
+                items_msg = "Your items have been successfully delivered!"
                 try:
-                    import json
                     import sys
                     from pathlib import Path
                     config_file = "data/config.json"
@@ -395,17 +635,18 @@ class ShopDeliveryService:
 
                 has_kit = any(str(it["setup"]).startswith("KIT:") for it in items)
                 msg_success = welcome_kit_msg if has_kit else items_msg
-                
-                # Envia Tipo 4 (HUD) e Tipo 1 (Toast) direcionado ao SteamID
-                rcon_q.execute_command_sync(f'SendNotification 4 0 "{msg_success}" {steam_id}', delay_after=0.2, priority=5)
-                rcon_q.execute_command_sync(f'SendNotification 1 0 "{msg_success}" {steam_id}', delay_after=0.2, priority=5)
+
+                # Envia mensagem colorida e limpa no chat do jogador (SendChat tipo 6)
+                rcon_q.execute_command_sync(
+                    f'SendChat 6 "[SSM] {msg_success}" {steam_id}',
+                    delay_after=0.3,
+                    priority=5,
+                    origin="SHOP",
+                )
 
             except Exception as notify_err:
                 if self.logger:
                     self.logger.error(f"Erro ao enviar notificacao de sucesso RCON para {steam_id}: {notify_err}")
-
-
-
 
             # Marcar pedido como entregue
             with ssm_tx(self.ssm_db_path) as conn_done:
@@ -454,14 +695,7 @@ class ShopDeliveryService:
 
         except Exception as e:
             err_msg = f"RCON_DELIVERY_EXCEPTION:{e}"
-            try:
-                with ssm_tx(self.ssm_db_path) as conn_err:
-                    conn_err.execute(
-                        "UPDATE shop_order SET status='failed', error=? WHERE order_id=?",
-                        (err_msg, order_id),
-                    )
-            except Exception:
-                pass
+            self._revert_or_fail_order(order_id, attempt_count, err_msg)
             if self.logger:
                 self.logger.error(f"ShopDelivery RCON: {err_msg}")
             return False, err_msg
@@ -767,7 +1001,7 @@ class ShopDeliveryWorker:
                 # Carregar RCON config para verificar se está ativo
                 rcon_cfg = _load_rcon_config()
                 rcon_enabled = _is_rcon_enabled(rcon_cfg)
-                
+
                 # Só processamos entregas em tempo real se o RCON estiver ativo
                 if rcon_enabled:
                     svc = ShopDeliveryService(
@@ -780,7 +1014,6 @@ class ShopDeliveryWorker:
             except Exception as e:
                 if self.logger:
                     self.logger.error(f"Erro no loop do ShopDeliveryWorker: {e}")
-            
+
             # Dormir usando o stop_event para desligamento rápido
             self._stop_event.wait(self.poll_interval_seconds)
-

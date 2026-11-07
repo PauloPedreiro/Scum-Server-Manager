@@ -306,8 +306,13 @@ class LogFileMonitor:
         # logger.debug("Polling loop iniciado")
         while self.running:
             try:
+                try:
+                    all_files = os.listdir(self.log_directory)
+                except Exception:
+                    all_files = []
+
                 # 1) Monitorar apenas o login_*.log mais recente
-                login_files = [f for f in os.listdir(self.log_directory) if f.startswith('login_') and f.endswith('.log')]
+                login_files = [f for f in all_files if f.startswith('login_') and f.endswith('.log')]
                 if login_files:
                     def file_key(name: str) -> str:
                         try:
@@ -319,31 +324,30 @@ class LogFileMonitor:
                     file_path = os.path.join(self.log_directory, latest_login_name)
                     self._check_file_changes(file_path)
 
-                # 2) Continuar monitorando chat_*.log (todos, pois podem existir dois ativos em janelas
-                #    diferentes durante reinício)
-                for filename in os.listdir(self.log_directory):
+                # 2) Continuar monitorando chat_*.log (todos, pois podem existir dois ativos em janelas diferentes)
+                for filename in all_files:
                     if filename.startswith('chat_') and filename.endswith('.log'):
                         self._check_file_changes(os.path.join(self.log_directory, filename))
 
                 # 3) chest_ownership_*.log agora é processado em thread separada (cópia periódica)
                 
                 # 4) Monitorar admin_*.log (todos)
-                for filename in os.listdir(self.log_directory):
+                for filename in all_files:
                     if filename.startswith('admin_') and filename.endswith('.log'):
                         self._check_file_changes(os.path.join(self.log_directory, filename))
                 
                 # 5) Monitorar vehicle_destruction_*.log (todos)
-                for filename in os.listdir(self.log_directory):
+                for filename in all_files:
                     if filename.startswith('vehicle_destruction_') and filename.endswith('.log'):
                         self._check_file_changes(os.path.join(self.log_directory, filename))
                 
                 # 6) Monitorar kill_*.log (todos)
-                for filename in os.listdir(self.log_directory):
+                for filename in all_files:
                     if filename.startswith('kill_') and filename.endswith('.log'):
                         self._check_file_changes(os.path.join(self.log_directory, filename))
                 
                 # 7) Monitorar famepoints_*.log (todos)
-                for filename in os.listdir(self.log_directory):
+                for filename in all_files:
                     if filename.startswith('famepoints_') and filename.endswith('.log'):
                         self._check_file_changes(os.path.join(self.log_directory, filename))
                 

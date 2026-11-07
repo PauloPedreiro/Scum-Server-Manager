@@ -73,6 +73,7 @@ class ServiceRegistry:
         self.elevated_users_manager = None
         self.gestao_sync_service = None
         self.scum_logs_cleanup_service = None
+        self.database_maintenance_service = None
 
         # Rankings
         self.rankings_update_service = None

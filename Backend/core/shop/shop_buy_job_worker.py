@@ -29,11 +29,12 @@ class BuyJob:
 
 
 class ShopBuyJobWorker:
+    _global_wake_event = threading.Event()
     def __init__(
         self,
         ssm_db_path: str,
         logger: Optional[StructuredLogger] = None,
-        poll_interval_seconds: float = 1.0,
+        poll_interval_seconds: float = 2.0,
         lock_retry_max_seconds: int = 600,
         per_player_limit: int = 5,
     ):
@@ -59,6 +60,7 @@ class ShopBuyJobWorker:
 
     def stop(self) -> None:
         self._stop_event.set()
+        ShopBuyJobWorker._global_wake_event.set()
 
     def _load_shop_log_webhook(self) -> str:
         try:
@@ -172,20 +174,31 @@ class ShopBuyJobWorker:
             except sqlite3.IntegrityError:
                 return False, "DUPLICATE"
 
+        ShopBuyJobWorker._global_wake_event.set()
         return True, "ENQUEUED"
 
     def _run_loop(self) -> None:
+        last_requeue_check = 0.0
         while not self._stop_event.is_set():
             try:
-                self._requeue_stale_processing_jobs(max_age_seconds=120)
+                now = time.time()
+                if now - last_requeue_check >= 60.0:
+                    last_requeue_check = now
+                    self._requeue_stale_processing_jobs(max_age_seconds=120)
+
                 job = self._claim_next_job()
                 if not job:
-                    time.sleep(self.poll_interval_seconds)
+                    # Acorda imediatamente quando um novo job e enfileirado ou a cada poll_interval
+                    ShopBuyJobWorker._global_wake_event.wait(self.poll_interval_seconds)
+                    ShopBuyJobWorker._global_wake_event.clear()
+                    if self._stop_event.is_set():
+                        break
                     continue
                 self._process_job(job)
             except Exception as e:
                 self.logger.error(f"ShopBuyJobWorker loop error: {e}")
-                time.sleep(2.0)
+                if self._stop_event.wait(2.0):
+                    break
 
     def _requeue_stale_processing_jobs(self, max_age_seconds: int) -> None:
         try:
@@ -328,12 +341,11 @@ class ShopBuyJobWorker:
         try:
             from core.rcon_queue_manager import RconQueueManager
             rcon_q = RconQueueManager.get_instance()
-            # Enviar Tipo 4 (HUD) e Tipo 1 (Toast) direcionado ao SteamID
-            rcon_q.execute_command_sync(f'SendNotification 4 0 "{message}" {steam_id}', delay_after=0.2, priority=5)
-            rcon_q.execute_command_sync(f'SendNotification 1 0 "{message}" {steam_id}', delay_after=0.2, priority=5)
+            # Enviar mensagem colorida no chat do jogador (SendChat tipo 6)
+            rcon_q.execute_command_sync(f'SendChat 6 "[SSM] {message}" {steam_id}', delay_after=0.2, priority=5)
         except Exception as e:
             try:
-                self.logger.error(f"Erro ao enviar notificacao combo RCON para {steam_id}: {e}")
+                self.logger.error(f"Erro ao enviar notificacao RCON para {steam_id}: {e}")
             except Exception:
                 pass
 
@@ -368,7 +380,7 @@ class ShopBuyJobWorker:
                     
                     from core.shop.delivery_service import ShopDeliveryService
                     svc = ShopDeliveryService(self.ssm_db_path, scum_db_path, logger=self.logger)
-                    svc.run_once(limit=10)
+                    svc.deliver_single_order_now(res.order_id)
                 except Exception as e:
                     try:
                         self.logger.error(f"Erro ao disparar entrega imediata: {e}")

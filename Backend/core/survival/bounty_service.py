@@ -79,10 +79,19 @@ class BountyService:
         except Exception as e:
             self.logger.error(f"Error ensuring BountyService tables: {e}")
 
-    def log_squad_leave(self, steam_id: str, squad_id: int):
+    def log_squad_leave(self, steam_id: str, squad_id: int, conn: Optional[sqlite3.Connection] = None):
         """Record that a player left a squad (used for ex-member exploit prevention)."""
         try:
             now_iso = datetime.utcnow().isoformat()
+            if conn is not None:
+                cursor = conn.cursor()
+                cursor.execute(
+                    "INSERT INTO squad_leave_history (steam_id, squad_id, left_at) VALUES (?, ?, ?)",
+                    (steam_id, squad_id, now_iso)
+                )
+                self.logger.info(f"Squad leave recorded for player {steam_id} from squad {squad_id}.")
+                return
+
             with DatabaseConnector.get_connection(self.ssm_db_path, timeout=30.0, write_mode=True) as conn:
                 cursor = conn.cursor()
                 cursor.execute(

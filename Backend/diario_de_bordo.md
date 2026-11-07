@@ -674,3 +674,68 @@ Modernizar a arquitetura de comunicação e gerenciamento RCON do SSM 3.0, desco
 * `Backend/gui/main_window.py`: Interface de controle de RCON remodelada e métodos obsoletos expurgados.
 * `Backend/data/mods/bsbr_scum/`: Inclusão do pacote da versão `0.3.0` fornecido pelo Mazzotti.
 * `Backend/diario_de_bordo.md`: Registro da Seção 31.
+
+
+---
+
+## ⚡ 32. Otimização e Entrega Instantânea de Compras da Loja via Chat In-Game (/buy) e RCON
+
+### 1. Diagnóstico e Causa Raiz
+* **Sintoma Relatado**: Jogadores digitavam `/buy <code>` no chat do SCUM para comprar um item e a entrega física não acontecia de imediato. Quando digitavam um segundo comando (frequentemente improvisando com `/sd` para ver o saldo), o item era subitamente entregue.
+* **Diagnóstico Aprofundado nos Logs**:
+  1. **Estrutura de Linha do Logger da Unreal Engine (Causa Principal)**: No logger do `SCUMServer.exe`, a quebra de linha `\n` é gravada no **início** de cada nova entrada de log (`b'\n\x002\x000\x002\x006...'`), enquanto o final da linha fecha com aspas simples (`'Canal: Mensagem'`) e **não possui `\n` ao final**. No `ChatCommandMonitor`, a condição `if not text.endswith("\n"):` sempre avaliava como verdadeira para o último comando digitado, empurrando a linha para `_pending_chat_text`. Somente quando um próximo comando chegava (como `/sd`), seu `\n` inicial fechava a linha anterior, liberando o `/buy` represado e retendo o `/sd`.
+  2. **Sobrecarga de `ListPlayers` síncrono no RCON**: O `ShopDeliveryService` executava `ListPlayers` no RCON antes de entregar qualquer pedido. Se o retorno atrasasse ou falhasse, o pedido permanecia como `pending`. Em compras feitas pelo chat in-game, essa consulta era totalmente redundante, pois quem acabou de digitar no chat está comprovadamente online.
+  3. **Latência de Polling no Worker**: O `ShopBuyJobWorker` operava com polling a cada 2 segundos (`poll_interval_seconds = 2.0`) e chamava `run_once(limit=10)`, concorrendo com a trava global de entregas periódicas offline.
+
+### 2. Solução Implementada
+* **Correção no Parsing de Linhas do Monitor de Chat (`core/logs/chat_command_monitor.py`)**:
+  * Removida a exigência de `\n` no fim do buffer de texto.
+  * O monitor agora analisa individualmente as linhas separadas por `\n`. Se o fragmento final terminar com aspas simples `'` ou for validado com sucesso por `_parse_chat_line()`, ele é processado imediatamente sem qualquer retenção. Linhas só são mantidas em `_pending_chat_text` se estiverem genuinamente truncadas.
+* **Entrega Direta sem `ListPlayers` (`core/shop/delivery_service.py`)**:
+  * Implementado o método `deliver_single_order_now(order_id)`.
+  * Adicionado o parâmetro `bypass_online_check=True` em `_deliver_order_rcon`.
+  * Para compras originadas no chat in-game, a chamada pesada de `ListPlayers` foi eliminada, disparando os comandos `spawnitem` e `SendChat` diretamente via RCON na mesma hora.
+* **Fila de Execução Instantânea (`core/shop/shop_buy_job_worker.py`)**:
+  * Introduzido sinalizador de evento entre threads (`_global_wake_event = threading.Event()`).
+  * No momento em que `enqueue_buy_job` insere o pedido no SQLite, o worker é acordado instantaneamente no mesmo milissegundo (zero espera).
+  * O processamento assíncrono agora invoca `svc.deliver_single_order_now(res.order_id)` em vez do batch genérico `run_once(limit=10)`.
+
+### 3. Arquivos Modificados
+* `Backend/core/logs/chat_command_monitor.py`: Suporte ao formato nativo de logs do SCUM (linhas terminadas em aspas simples sem `\n` final), entregando comandos de chat instantaneamente.
+* `Backend/core/shop/delivery_service.py`: Criação de `deliver_single_order_now` e bypass de `ListPlayers`.
+* `Backend/core/shop/shop_buy_job_worker.py`: Despertar instantâneo com `_global_wake_event` e entrega unitária imediata.
+* `Backend/docs/SHOP_DELIVERY_RCON_INSTANTANEO.md`: Documentação técnica detalhada no padrão Obsidian.
+* `Backend/docs/SHOP_ECONOMY_SYSTEM.md`: Atualização do fluxo de entrega do shop.
+
+---
+
+## 🛡️ 33. Blindagem Anti-Crash de Entregas RCON em Massa (Circuit Breaker, Serialização e Progresso por Sub-Item)
+
+### 1. Diagnóstico do Incidente em Produção
+* **Sintoma**: Quando múltiplos jogadores entravam no servidor simultaneamente e solicitavam kits de boas-vindas (`/register` e `/kit`), o servidor SCUM congelava a Game Thread (`"erro: sem resposta em 4s - o tick do jogo pode estar parado"`).
+* **Causas Raiz Identificadas nos Logs (`rcon_2026-11-06.log` e `scum_backend.log`)**:
+  1. **Concorrência sem Lock**: `deliver_single_order_now()` não adquiria o `_delivery_lock`, fazendo com que o `ShopDeliveryWorker`, o `ShopBuyJobWorker` e a thread do `/register` disparassem kits de vários jogadores em paralelo, intercalando dezenas de comandos `spawnitem` e `spawnvehicle` simultaneamente na Unreal Engine.
+  2. **Cegueira de Erros do RCON**: O `RconClient` e o `ShopDeliveryService` tratavam qualquer texto retornado pelo socket (incluindo `"erro: sem resposta em 4s - o tick do jogo pode estar parado"`) como sucesso (`200 OK`). O SSM continuava metralhando o servidor travado por 30 minutos e ainda marcava os pedidos no banco como `delivered`, fazendo o jogador perder o kit único sem ter recebido os itens.
+  3. **Sobrecarga da Game Thread**: Atores pesados (`Weapon_*` e veículos `BPC_*` / `BP_*`) eram instanciados a cada `0.5s` sem intervalo entre um kit e outro no momento crítico em que múltiplos jogadores estavam carregando o mapa.
+  4. **Comandos Malformados Cadastrados em Kits**: Presença de typos como `Water_051` (número `1` no lugar da letra `l` de `Water_05l`, forçando varredura síncrona de Blueprints inexistentes na UE4) e `Cash 1 StackCount 5000 2` (duplicidade de quantidade quando `StackCount` estava embutido no `setup`).
+
+### 2. Solução Implementada
+* **Serialização Global e Cooldown entre Pedidos (`core/shop/delivery_service.py` & `core/logs/chat_command_monitor.py`)**:
+  * `deliver_single_order_now()` agora adquire `_delivery_lock`, e o `/register` também utiliza `deliver_single_order_now(order_res.order_id)`.
+  * Adicionado `_wait_inter_order_cooldown()` (`2.5s` obrigatórios entre o término de um pedido RCON e o início do próximo).
+* **Detecção de Congelamento de Tick + *Circuit Breaker* (`utils/rcon_client.py` & `core/rcon_queue_manager.py`)**:
+  * Implementadas `is_rcon_tick_frozen()` e `is_rcon_error_response()` para identificar travamentos da Game Thread e falhas de execução.
+  * Implementado disjuntor automático (`is_circuit_open` / `trip_circuit` de `15s` a `45s`) no `RconQueueManager`. Quando o tick do servidor congela, comandos de spawn subsequentes são abortados em `0ms` sem sobrecarregar o socket do servidor.
+* **Persistência Granular Sub-Item a Sub-Item em Kits (`core/shop/delivery_service.py`)**:
+  * Cada sub-item de um kit (`KIT:...`) tem seu progresso salvo individualmente em `shop_delivery_item` (usando códigos sintéticos negativos durante a entrega).
+  * Se o servidor travar no meio de um kit (ex.: no 11º item), a entrega é **abortada imediatamente**, o pedido retorna para `status='pending'` (via `_revert_or_fail_order`) e, quando o servidor recupera o tick, a entrega retoma exatamente do sub-item onde parou, sem perder o kit e sem duplicar itens ou veículos já entregues.
+* **Cadência Segura (*Throttling*) e Sanitização de Comandos (`core/shop/delivery_service.py`)**:
+  * Intervalo ajustado para `0.8s` em itens comuns e `1.5s` em atores pesados (`_is_heavy_actor`: armas `Weapon_*` e veículos `BPC_*` / `BP_*`).
+  * Helper `_build_spawnitem_cmd()` corrige automaticamente `Water_051` -> `Water_05l` e reposiciona a quantidade corretamente antes de `StackCount`.
+
+### 3. Arquivos Modificados
+* `Backend/utils/rcon_client.py`: Funções `is_rcon_tick_frozen` e `is_rcon_error_response`, além de marcação precisa de `success` nos logs RCON.
+* `Backend/core/rcon_queue_manager.py`: *Circuit Breaker* automático para proteção da Game Thread do SCUM Server.
+* `Backend/core/shop/delivery_service.py`: Lock global unificado, cooldown entre pedidos, cadência por peso de ator, sanitização de `StackCount`/typos e persistência sub-item a sub-item de kits.
+* `Backend/core/logs/chat_command_monitor.py`: Unificação do disparo do Welcome Pack no `/register` via `deliver_single_order_now`.
+* `Backend/docs/SHOP_DELIVERY_RCON_INSTANTANEO.md` & `Backend/docs/SHOP_ECONOMY_SYSTEM.md`: Atualização da documentação técnica e seção Obsidian.

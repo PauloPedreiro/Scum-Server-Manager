@@ -509,18 +509,23 @@ class DiscordBotService:
                 member = None
 
             if member is None:
-
                 return False, "member_not_found"
 
+            # O Discord proíbe por arquitetura (HTTP 403 / 50013) que qualquer bot altere cargos do Dono do Servidor (Server Owner).
+            if member.id == guild.owner_id:
+                self._log_info(f"DiscordBotService: Usuário {discord_user_id} é o Dono do Servidor (Owner). O Discord não permite alteração de cargos no Owner por bots.")
+                return True, "owner_bypass"
 
+            bot_member = guild.me
+            if bot_member and not (bot_member.guild_permissions.manage_roles or bot_member.guild_permissions.administrator):
+                self._log_error("DiscordBotService: O bot não possui a permissão 'Gerenciar Cargos' (Manage Roles) ou 'Administrador' no servidor!")
+                return False, "bot_missing_manage_roles_permission"
 
             try:
-
                 await member.add_roles(role, reason="SSM register")
-
-            except Exception:
-
-                return False, "add_roles_failed"
+            except Exception as e:
+                self._log_error(f"DiscordBotService: add_roles falhou para user={discord_user_id} cargo={role.name} ({role.id}): {e}")
+                return False, f"add_roles_failed: {e}"
 
 
 
@@ -1078,25 +1083,11 @@ class DiscordBotService:
 
 
 
-    def _db_connect(self) -> sqlite3.Connection:
+    def _db_connect(self, write_mode: bool = False, timeout: float = 30.0):
 
-        conn = sqlite3.connect(self.ssm_db_path, timeout=30.0)
+        from core.database.connector import DatabaseConnector
 
-        try:
-
-            conn.execute("PRAGMA busy_timeout = 30000")
-
-            conn.execute("PRAGMA foreign_keys = ON")
-
-            conn.execute("PRAGMA journal_mode = WAL")
-
-            conn.execute("PRAGMA synchronous = NORMAL")
-
-        except Exception:
-
-            pass
-
-        return conn
+        return DatabaseConnector.get_connection(self.ssm_db_path, timeout=timeout, write_mode=write_mode)
 
 
 
@@ -1136,7 +1127,7 @@ class DiscordBotService:
 
 
 
-        with self._db_connect() as conn:
+        with self._db_connect(write_mode=True) as conn:
 
             conn.execute(
 
@@ -1185,8 +1176,6 @@ class DiscordBotService:
                 ),
 
             )
-
-            conn.commit()
 
 
 
@@ -1276,13 +1265,14 @@ class DiscordBotService:
 
                     selected_value = self.values[0]
 
-
+                    # Defer imediato para evitar timeout de 3 segundos do Discord ("não respondeu a tempo")
+                    await interaction.response.defer(ephemeral=True)
 
                     if selected_value == "register_account":
 
                         if self.service._discord_already_linked(discord_user_id):
 
-                            await interaction.response.send_message(
+                            await interaction.followup.send(
 
                                 "You already have a linked account. Contact an admin to unregister.",
 
@@ -1298,7 +1288,7 @@ class DiscordBotService:
 
 
 
-                        await interaction.response.send_message(
+                        await interaction.followup.send(
 
                             "🔑 **Registration Protocol Initiated!**\n\n"
 
@@ -1316,9 +1306,7 @@ class DiscordBotService:
 
                     elif selected_value == "check_balance":
 
-                        with self.service._db_connect() as conn:
-
-                            conn.row_factory = sqlite3.Row
+                        with self.service._db_connect(write_mode=False) as conn:
 
                             cur = conn.execute(
 
@@ -1334,7 +1322,7 @@ class DiscordBotService:
 
                         if not row:
 
-                            await interaction.response.send_message(
+                            await interaction.followup.send(
 
                                 "❌ **Your Discord account is not registered.**\n"
 
@@ -1398,7 +1386,7 @@ class DiscordBotService:
 
 
 
-                        await interaction.response.send_message(
+                        await interaction.followup.send(
 
                             f"💰 Hello, **{player_name}**!\n\n"
 
@@ -1420,13 +1408,25 @@ class DiscordBotService:
 
                         self.service._log_warn(f"Select menu callback failed: {e}")
 
-                        await interaction.response.send_message(
+                        if interaction.response.is_done():
 
-                            "An error occurred while processing your request. Please try again.",
+                            await interaction.followup.send(
 
-                            ephemeral=True
+                                "An error occurred while processing your request. Please try again.",
 
-                        )
+                                ephemeral=True,
+
+                            )
+
+                        else:
+
+                            await interaction.response.send_message(
+
+                                "An error occurred while processing your request. Please try again.",
+
+                                ephemeral=True,
+
+                            )
 
                     except Exception:
 

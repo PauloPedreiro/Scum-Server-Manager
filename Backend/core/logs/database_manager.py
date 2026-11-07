@@ -1427,35 +1427,49 @@ class DatabaseManager:
             )
             return False
 
+        ownership_type = vehicle_data.get('ownership_type', 'claimed')
+        is_transfer = ownership_type == 'changed'
+        steam_id = vehicle_data['steam_id']
+
         for attempt in range(self.max_retries):
             try:
                 with self._connect() as conn:
-                    # Inserir no histórico
-                    conn.execute('''
-                        INSERT INTO vehicle_ownership_history 
-                        (entity_id, steam_id, player_id, player_name, ownership_type,
-                         previous_owner_steam_id, previous_owner_name, location_x, location_y, location_z,
-                         timestamp, log_file, log_line, container_class, vehicle_class, vehicle_asset_id, is_vehicle_functional)
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                    ''', (
-                        vehicle_data['entity_id'],
-                        vehicle_data['steam_id'],
-                        vehicle_data.get('player_id'),
-                        vehicle_data['player_name'],
-                        vehicle_data['ownership_type'],
-                        vehicle_data.get('previous_owner_steam_id'),
-                        vehicle_data.get('previous_owner_name'),
-                        vehicle_data.get('location_x'),
-                        vehicle_data.get('location_y'),
-                        vehicle_data.get('location_z'),
-                        vehicle_data['timestamp'],
-                        vehicle_data.get('source_file'),
-                        vehicle_data.get('log_line'),
-                        vehicle_data.get('container_class'),
-                        vehicle_data.get('vehicle_class'),
-                        vehicle_data.get('vehicle_asset_id'),
-                        vehicle_data.get('is_vehicle_functional')
-                    ))
+                    # Verificar se o veículo já existe e se o dono é o mesmo
+                    cur = conn.execute(
+                        "SELECT steam_id FROM vehicle_current_ownership WHERE vehicle_entity_id = ?",
+                        (vehicle_entity_id,)
+                    )
+                    row = cur.fetchone()
+                    owner_changed = (row is None) or (row[0] != steam_id) or is_transfer
+
+                    # Inserir no histórico SOMENTE se for veículo novo ou se houve mudança de dono
+                    if owner_changed:
+                        conn.execute('''
+                            INSERT INTO vehicle_ownership_history 
+                            (entity_id, vehicle_entity_id, steam_id, player_id, player_name, ownership_type,
+                             previous_owner_steam_id, previous_owner_name, location_x, location_y, location_z,
+                             timestamp, log_file, log_line, container_class, vehicle_class, vehicle_asset_id, is_vehicle_functional)
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                        ''', (
+                            vehicle_data['entity_id'],
+                            vehicle_entity_id,
+                            steam_id,
+                            vehicle_data.get('player_id'),
+                            vehicle_data['player_name'],
+                            ownership_type,
+                            vehicle_data.get('previous_owner_steam_id'),
+                            vehicle_data.get('previous_owner_name'),
+                            vehicle_data.get('location_x'),
+                            vehicle_data.get('location_y'),
+                            vehicle_data.get('location_z'),
+                            vehicle_data['timestamp'],
+                            vehicle_data.get('source_file'),
+                            vehicle_data.get('log_line'),
+                            vehicle_data.get('container_class'),
+                            vehicle_data.get('vehicle_class'),
+                            vehicle_data.get('vehicle_asset_id'),
+                            vehicle_data.get('is_vehicle_functional')
+                        ))
 
                     # Atualizar propriedade atual por vehicle_entity_id (identidade estável do veículo)
                     conn.execute(
@@ -1577,47 +1591,48 @@ class DatabaseManager:
                                     print(f"AVISO: Registro duplicado ignorado no histórico - Entity ID: {entity_id}, Timestamp: {vehicle_data['timestamp']}, Type: {ownership_type}")
                                 continue
                             
-                            # Verificar proprietário anterior em vehicle_current_ownership para transferências
-                            previous_owner_in_db = None
-                            if is_transfer and vehicle_entity_id:
-                                cursor = conn.execute('''
-                                    SELECT steam_id, player_name FROM vehicle_current_ownership 
-                                    WHERE vehicle_entity_id = ?
-                                ''', (vehicle_entity_id,))
-                                
-                                row = cursor.fetchone()
-                                if row:
-                                    previous_owner_in_db = {'steam_id': row[0], 'player_name': row[1]}
-                                    if previous_owner_in_db['steam_id'] != vehicle_data.get('previous_owner_steam_id'):
-                                        print(f"AVISO: Proprietário anterior no DB ({previous_owner_in_db['player_name']}) difere do log ({previous_owner})")
+                            # Verificar proprietário em vehicle_current_ownership
+                            cursor = conn.execute('''
+                                SELECT steam_id, player_name FROM vehicle_current_ownership 
+                                WHERE vehicle_entity_id = ?
+                            ''', (vehicle_entity_id,))
                             
-                            # Inserir no histórico (sempre, se não for duplicado)
-                            conn.execute('''
-                                INSERT INTO vehicle_ownership_history 
-                                (entity_id, vehicle_entity_id, steam_id, player_id, player_name, ownership_type,
-                                 previous_owner_steam_id, previous_owner_name, location_x, location_y, location_z,
-                                 timestamp, log_file, log_line, container_class, vehicle_class, vehicle_asset_id, is_vehicle_functional)
-                                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                            ''', (
-                                entity_id,
-                                vehicle_entity_id,
-                                vehicle_data['steam_id'],
-                                vehicle_data.get('player_id'),
-                                vehicle_data['player_name'],
-                                ownership_type,
-                                vehicle_data.get('previous_owner_steam_id'),
-                                vehicle_data.get('previous_owner_name'),
-                                vehicle_data.get('location_x'),
-                                vehicle_data.get('location_y'),
-                                vehicle_data.get('location_z'),
-                                vehicle_data['timestamp'],
-                                vehicle_data.get('source_file'),
-                                vehicle_data.get('log_line'),
-                                vehicle_data.get('container_class'),
-                                vehicle_data.get('vehicle_class'),
-                                vehicle_data.get('vehicle_asset_id'),
-                                vehicle_data.get('is_vehicle_functional')
-                            ))
+                            row = cursor.fetchone()
+                            owner_changed = (row is None) or (row[0] != steam_id) or is_transfer
+
+                            if is_transfer and row:
+                                previous_owner_in_db = {'steam_id': row[0], 'player_name': row[1]}
+                                if previous_owner_in_db['steam_id'] != vehicle_data.get('previous_owner_steam_id'):
+                                    print(f"AVISO: Proprietário anterior no DB ({previous_owner_in_db['player_name']}) difere do log ({previous_owner})")
+                            
+                            # Inserir no histórico SOMENTE se for veículo novo ou se houve mudança de dono/transferência
+                            if owner_changed:
+                                conn.execute('''
+                                    INSERT INTO vehicle_ownership_history 
+                                    (entity_id, vehicle_entity_id, steam_id, player_id, player_name, ownership_type,
+                                     previous_owner_steam_id, previous_owner_name, location_x, location_y, location_z,
+                                     timestamp, log_file, log_line, container_class, vehicle_class, vehicle_asset_id, is_vehicle_functional)
+                                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                                ''', (
+                                    entity_id,
+                                    vehicle_entity_id,
+                                    vehicle_data['steam_id'],
+                                    vehicle_data.get('player_id'),
+                                    vehicle_data['player_name'],
+                                    ownership_type,
+                                    vehicle_data.get('previous_owner_steam_id'),
+                                    vehicle_data.get('previous_owner_name'),
+                                    vehicle_data.get('location_x'),
+                                    vehicle_data.get('location_y'),
+                                    vehicle_data.get('location_z'),
+                                    vehicle_data['timestamp'],
+                                    vehicle_data.get('source_file'),
+                                    vehicle_data.get('log_line'),
+                                    vehicle_data.get('container_class'),
+                                    vehicle_data.get('vehicle_class'),
+                                    vehicle_data.get('vehicle_asset_id'),
+                                    vehicle_data.get('is_vehicle_functional')
+                                ))
                             
                             # Atualizar propriedade atual
                             # Importante: vehicle_entity_id é a identidade estável do veículo.

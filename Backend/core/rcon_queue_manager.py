@@ -4,7 +4,11 @@ import time
 from typing import Any, Dict, Optional, Tuple
 from concurrent.futures import Future
 
-from utils.rcon_client import get_rcon_client_from_config, RconClient
+from utils.rcon_client import (
+    get_rcon_client_from_config,
+    is_rcon_tick_frozen,
+    RconClient,
+)
 
 class RconQueueItem:
     def __init__(self, command: str, delay_after: float, priority: int, future: Future, origin: str = "SYSTEM"):
@@ -39,6 +43,26 @@ class RconQueueManager:
         self._thread: Optional[threading.Thread] = None
         self._rcon_client: Optional[RconClient] = None
         self._client_lock = threading.Lock()
+        self._circuit_open_until: float = 0.0
+        self._consecutive_tick_failures: int = 0
+
+    def is_circuit_open(self) -> Tuple[bool, float]:
+        """Verifica se o disjuntor (circuit breaker) anti-crash do RCON está aberto."""
+        now = time.time()
+        if now < self._circuit_open_until:
+            return True, self._circuit_open_until - now
+        return False, 0.0
+
+    def trip_circuit(self, cooldown: float = 15.0, reason: str = "") -> None:
+        """Abre o disjuntor do RCON por `cooldown` segundos para aliviar a Game Thread."""
+        now = time.time()
+        new_until = now + max(1.0, float(cooldown))
+        if new_until > self._circuit_open_until:
+            self._circuit_open_until = new_until
+        if self.logger:
+            self.logger.warn(
+                f"RconQueueManager: Circuit Breaker ativado por {cooldown:.1f}s — motivo: {reason}"
+            )
 
     def start(self):
         with self._lock:
@@ -123,7 +147,18 @@ class RconQueueManager:
                 break
 
             response = ""
+            skip_delay = False
             try:
+                cmd_lower = item.command.strip().lower()
+                is_lp = cmd_lower == "listplayers"
+                cb_open, cb_rem = self.is_circuit_open()
+                if cb_open and cmd_lower.startswith(("spawnitem", "spawnvehicle", "sendchat")):
+                    skip_delay = True
+                    item.future.set_result(
+                        f"erro: circuit_breaker_open ({cb_rem:.1f}s restantes - protegendo tick do servidor)"
+                    )
+                    continue
+
                 with self._client_lock:
                     if not self._rcon_client:
                         self._rcon_client = get_rcon_client_from_config(self.config_path)
@@ -137,7 +172,20 @@ class RconQueueManager:
                     
                     response = self._rcon_client.send_command(item.command, delay_after=0.0, origin=item.origin)
 
-                
+                # Verificar se o tick do servidor congelou
+                tick_frozen = (
+                    ("sem resposta" in response.lower() or "tick do jogo" in response.lower())
+                    if is_lp
+                    else is_rcon_tick_frozen(response)
+                )
+                if tick_frozen:
+                    self._consecutive_tick_failures += 1
+                    cooldown = min(45.0, 15.0 * self._consecutive_tick_failures)
+                    self.trip_circuit(cooldown=cooldown, reason=response or "RCON socket timeout")
+                else:
+                    self._consecutive_tick_failures = 0
+                    self._circuit_open_until = 0.0
+
                 # Resolve future outside the lock
                 item.future.set_result(response)
             except Exception as e:
@@ -156,5 +204,5 @@ class RconQueueManager:
             finally:
                 self._queue.task_done()
                 # Aplica o delay após a execução, liberando o lock e evitando stress no RCON
-                if item.delay_after > 0:
+                if not skip_delay and item.delay_after > 0:
                     time.sleep(item.delay_after)

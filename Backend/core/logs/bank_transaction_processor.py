@@ -613,7 +613,7 @@ class BankTransactionProcessor:
                 current_size = int(os.path.getsize(file_path))
                 current_mtime = float(os.path.getmtime(file_path))
 
-                with self._connect_db(timeout=10.0) as conn:
+                with self._connect_db(timeout=10.0, write_mode=False) as conn:
                     cursor = conn.cursor()
                     cursor.execute(
                         "SELECT last_line, last_size FROM log_cursors WHERE file_path = ?",
@@ -624,12 +624,6 @@ class BankTransactionProcessor:
                         last_line, last_size = int(row[0] or 0), int(row[1] or 0)
                         if current_size < last_size: # Rotação
                             last_line = 0
-                    else:
-                        cursor.execute(
-                            "INSERT OR IGNORE INTO log_cursors(file_path, last_line, last_size, last_mtime) VALUES (?, 0, 0, 0)",
-                            (file_path,),
-                        )
-                        conn.commit()
 
                 if last_line >= len(lines):
                     return stats
@@ -720,10 +714,17 @@ class BankTransactionProcessor:
                         
                         # Atualizar cursor dentro da mesma transação
                         cursor.execute(
-                            "UPDATE log_cursors SET last_line = ?, last_size = ?, last_mtime = ?, updated_at = CURRENT_TIMESTAMP WHERE file_path = ?",
-                            (last_line + processed_count, current_size, current_mtime, file_path),
+                            """
+                            INSERT INTO log_cursors (file_path, last_line, last_size, last_mtime, updated_at)
+                            VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)
+                            ON CONFLICT(file_path) DO UPDATE SET
+                                last_line = excluded.last_line,
+                                last_size = excluded.last_size,
+                                last_mtime = excluded.last_mtime,
+                                updated_at = CURRENT_TIMESTAMP
+                            """,
+                            (file_path, last_line + processed_count, current_size, current_mtime),
                         )
-                        conn.commit()
                     
                     # 5. Notificar Discord FORA da transação de banco (evita segurar lock durante I/O de rede)
                     for txn, inserted_id in to_notify:
@@ -736,10 +737,17 @@ class BankTransactionProcessor:
                     with self._connect_db(timeout=10.0, write_mode=True) as conn:
                         cursor = conn.cursor()
                         cursor.execute(
-                            "UPDATE log_cursors SET last_line = ?, last_size = ?, last_mtime = ?, updated_at = CURRENT_TIMESTAMP WHERE file_path = ?",
-                            (last_line + processed_count, current_size, current_mtime, file_path),
+                            """
+                            INSERT INTO log_cursors (file_path, last_line, last_size, last_mtime, updated_at)
+                            VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)
+                            ON CONFLICT(file_path) DO UPDATE SET
+                                last_line = excluded.last_line,
+                                last_size = excluded.last_size,
+                                last_mtime = excluded.last_mtime,
+                                updated_at = CURRENT_TIMESTAMP
+                            """,
+                            (file_path, last_line + processed_count, current_size, current_mtime),
                         )
-                        conn.commit()
 
                 stats['lines_processed'] = processed_count
                 stats['transactions_found'] = stats['transactions_inserted']

@@ -1075,7 +1075,7 @@ class LogProcessor:
             if not sid:
                 return None
 
-            with DatabaseConnector.get_connection(self.db_path, write_mode=True) as conn:
+            with DatabaseConnector.get_connection(self.db_path, write_mode=False) as conn:
                 cur = conn.execute(
                     "SELECT discord_user_id FROM players WHERE steam_id = ? LIMIT 1",
                     (sid,),
@@ -1597,8 +1597,8 @@ class LogProcessor:
             for idx, line in enumerate(lines, 1):
                 raw = (line or "").strip()
                 if raw:
-                    # Executar comandos (/vbuy) usando o MESMO fluxo que já leu as linhas
-                    if self.chat_command_monitor:
+                    # Executar comandos apenas se o ChatCommandMonitor não estiver rodando seu próprio loop em background
+                    if self.chat_command_monitor and not getattr(self.chat_command_monitor, "is_running", False):
                         try:
                             self.chat_command_monitor._process_chat_line(
                                 line=raw,

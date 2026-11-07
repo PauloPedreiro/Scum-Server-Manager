@@ -310,16 +310,22 @@ class ChatCommandMonitor:
                 text = self._pending_chat_text + text
                 self._pending_chat_text = ""
 
-            # Se o último pedaço não termina em newline, guardar para próxima iteração.
-            if not text.endswith("\n"):
-                last_nl = text.rfind("\n")
-                if last_nl == -1:
-                    self._pending_chat_text = text
-                    return
-                self._pending_chat_text = text[last_nl + 1 :]
-                text = text[: last_nl + 1]
+            # No log do SCUM Server (Unreal Engine), cada nova linha inicia com \n,
+            # e a linha fecha com aspas simples ('Canal: Mensagem'). A última linha não termina em \n.
+            raw_lines = [ln.strip("\r") for ln in text.split("\n")]
+            lines = []
+            for idx, raw_line in enumerate(raw_lines):
+                line = raw_line.strip()
+                if not line:
+                    continue
+                is_last = (idx == len(raw_lines) - 1)
+                # Se for o último fragmento e a linha não estiver completa (não fecha em aspas simples e não parseia),
+                # guardamos em pending para completar na próxima leitura.
+                if is_last and not line.endswith("'") and self._parse_chat_line(line) is None:
+                    self._pending_chat_text = raw_line
+                    break
+                lines.append(line)
 
-            lines = [ln.strip("\r") for ln in text.split("\n") if ln.strip()]
             if not lines:
                 return
 
@@ -796,7 +802,7 @@ class ChatCommandMonitor:
                                 
                                 from core.shop.delivery_service import ShopDeliveryService
                                 svc = ShopDeliveryService(self.ssm_db_path, scum_db_path, logger=self.logger)
-                                svc.run_once(limit=10)
+                                svc.deliver_single_order_now(order_res.order_id)
                             except Exception as e:
                                 try:
                                     self.logger.error(f"Erro ao disparar entrega imediata do Welcome Pack: {e}")

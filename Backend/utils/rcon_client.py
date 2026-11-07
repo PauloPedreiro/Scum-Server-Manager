@@ -25,6 +25,52 @@ class RconAuthError(RconError):
     pass
 
 
+def is_rcon_tick_frozen(response: Optional[str]) -> bool:
+    """
+    Detecta se a resposta do RCON indica que a Game Thread (tick) do SCUM Server
+    está parada/congelada ou sofreu timeout de execução.
+    """
+    if response is None:
+        return True
+    text = str(response).strip().lower()
+    if not text:
+        return True
+    freeze_markers = (
+        "sem resposta",
+        "tick do jogo",
+        "circuit_breaker_open",
+        "server still starting",
+        "socket timeout",
+    )
+    return any(marker in text for marker in freeze_markers)
+
+
+def is_rcon_error_response(response: Optional[str], allow_empty: bool = False) -> bool:
+    """
+    Verifica se o corpo de resposta de um comando RCON indica falha de execução.
+    """
+    if response is None:
+        return True
+    text = str(response).strip()
+    if not text:
+        return not allow_empty
+    lower = text.lower()
+    if lower.startswith("erro:") or lower.startswith("error:"):
+        return True
+    error_markers = (
+        "sem resposta",
+        "tick do jogo",
+        "circuit_breaker_open",
+        "not online",
+        "player not found",
+        "server still starting",
+        "unknown command",
+        "failed to",
+    )
+    return any(marker in lower for marker in error_markers)
+
+
+
 class RconClient:
     """
     Cliente RCON compatível com o protocolo Source RCON.
@@ -180,12 +226,14 @@ class RconClient:
 
             resp_id, _, body = self._read_packet()
             duration_ms = (time.perf_counter() - t_start) * 1000.0
+            is_lp = command.strip().lower() == "listplayers"
+            is_err = is_rcon_error_response(body, allow_empty=is_lp)
             rcon_log.log_command(
                 command=command,
                 response=body,
                 duration_ms=duration_ms,
                 origin=origin,
-                success=True,
+                success=not is_err,
             )
             return body
         except socket.timeout as e:

@@ -489,18 +489,31 @@ class BankAccountSyncService:
                 """
 
                 for player_data in players_data.values():
+                    steam_id = player_data["steam_id"]
                     cursor.execute(
-                        insert_sql,
-                        (
-                            player_data["steam_id"],
-                            player_data["player_name"],
-                            player_data["account_number"],
-                            player_data["money_balance"],
-                            player_data["gold_balance"],
-                            player_data["total_balance"],
-                            snapshot_at,
-                        ),
+                        "SELECT total_balance, gold_balance FROM bank_accounts_current WHERE steam_id = ?",
+                        (steam_id,),
                     )
+                    curr_row = cursor.fetchone()
+                    balance_changed = (
+                        curr_row is None
+                        or abs((curr_row[0] or 0) - (player_data["total_balance"] or 0)) > 0.01
+                        or abs((curr_row[1] or 0) - (player_data["gold_balance"] or 0)) > 0.01
+                    )
+
+                    if balance_changed:
+                        cursor.execute(
+                            insert_sql,
+                            (
+                                steam_id,
+                                player_data["player_name"],
+                                player_data["account_number"],
+                                player_data["money_balance"],
+                                player_data["gold_balance"],
+                                player_data["total_balance"],
+                                snapshot_at,
+                            ),
+                        )
 
                     cursor.execute(
                         upsert_current_sql,

@@ -419,6 +419,10 @@ def ensure_bank_transaction_tables(
         raise
 
 
+_location_cache: Dict[str, int] = {}
+_item_cache: Dict[str, int] = {}
+
+
 def get_or_create_location(
     conn: sqlite3.Connection,
     quadrant: str,
@@ -437,8 +441,13 @@ def get_or_create_location(
     Returns:
         ID do local
     """
-    cursor = conn.cursor()
     full_name = f"{quadrant}_{location_type}"
+
+    # Cache hit em memória evita consultas repetitivas ao banco
+    if full_name in _location_cache:
+        return _location_cache[full_name]
+
+    cursor = conn.cursor()
 
     # Tentar obter ID existente
     cursor.execute("SELECT id FROM locations WHERE full_name = ?", (full_name,))
@@ -456,6 +465,7 @@ def get_or_create_location(
         """,
             (location_id,),
         )
+        _location_cache[full_name] = location_id
         return location_id
 
     # Criar novo local
@@ -473,7 +483,7 @@ def get_or_create_location(
     )
 
     location_id = cursor.lastrowid
-    conn.commit()
+    _location_cache[full_name] = location_id
 
     if logger:
         logger.debug(f"Novo local criado: {full_name} (ID: {location_id})")
@@ -495,6 +505,10 @@ def get_or_create_item(
     Returns:
         ID do item
     """
+    # Cache hit em memória evita consultas repetitivas ao banco
+    if item_name in _item_cache:
+        return _item_cache[item_name]
+
     cursor = conn.cursor()
 
     # Tentar obter ID existente
@@ -513,6 +527,7 @@ def get_or_create_item(
         """,
             (item_id,),
         )
+        _item_cache[item_name] = item_id
         return item_id
 
     # Criar novo item
@@ -525,7 +540,7 @@ def get_or_create_item(
     )
 
     item_id = cursor.lastrowid
-    conn.commit()
+    _item_cache[item_name] = item_id
 
     if logger:
         logger.debug(f"Novo item criado: {item_name} (ID: {item_id})")

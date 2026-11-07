@@ -534,7 +534,7 @@ class SquadSyncService:
                         new_squad_id = new_members.get(steam_id)
                         if new_squad_id != old_squad_id:
                             if bounty_svc:
-                                bounty_svc.log_squad_leave(steam_id, old_squad_id)
+                                bounty_svc.log_squad_leave(steam_id, old_squad_id, conn=conn)
                 except Exception as compare_err:
                     self.logger.error("Erro ao comparar saídas de squad", {"error": str(compare_err)})
 

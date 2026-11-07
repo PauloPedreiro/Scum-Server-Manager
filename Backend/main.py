@@ -110,6 +110,7 @@ from core.scheduler.settings_routine_scheduler import SettingsRoutineScheduler
 from core.webhooks.discord_webhook import DiscordWebhook
 from core.notifications.notification_manager import NotificationManager
 from core.logs.scum_logs_cleanup_service import ScumLogsCleanupService
+from core.database.database_maintenance_service import DatabaseMaintenanceService
 from core.communication.gestao_messages_service import GestaoMessagesService
 from core.identity.backend_id import BackendIdentity
 from core.identity.owner_manager import OwnerManager
@@ -344,6 +345,7 @@ squad_tk_jail_service = None
 survival_stats_sync_service = None
 chest_sync_service = None
 scum_logs_cleanup_service = None
+database_maintenance_service = None
 
 # Serviços de ranking
 rankings_update_service = None
@@ -495,10 +497,10 @@ def ensure_default_config_sections(config_path: str, config: Dict[str, Any]) -> 
                 shop_notif_cfg["welcome_kit_delivered"] = "Your kit has been successfully delivered!"
                 config_modified = True
             if "items_delivered" not in shop_notif_cfg:
-                shop_notif_cfg["items_delivered"] = "Seus itens foram entregues com sucesso!"
+                shop_notif_cfg["items_delivered"] = "Your items have been successfully delivered!"
                 config_modified = True
             if "insufficient_funds" not in shop_notif_cfg:
-                shop_notif_cfg["insufficient_funds"] = "Saldo insuficiente! Seu saldo atual: R$ {balance}"
+                shop_notif_cfg["insufficient_funds"] = "Insufficient funds! Your current balance: $ {balance}"
                 config_modified = True
 
         # Seção economy
@@ -687,7 +689,7 @@ def init_components(allow_gui_call=False):
     global rankings_update_service, lockpicking_ranking_service, kills_ranking_service, snipers_ranking_service
     global auth_manager, password_reset_manager, gestao_sync_service, gestao_messages_service
     global chest_inventory_sync_service
-    global scum_logs_cleanup_service
+    global scum_logs_cleanup_service, database_maintenance_service
     global shop_buy_job_worker, shop_delivery_worker, _fishing_scheduler_stop_event
 
     # Carregar configuração
@@ -799,6 +801,16 @@ def init_components(allow_gui_call=False):
     except Exception as e:
         scum_logs_cleanup_service = None
         logger.warn(f"ScumLogsCleanupService não disponível: {e}")
+
+    # Inicializar DatabaseMaintenanceService (limpeza e compactação periódica do SSM.db)
+    try:
+        database_maintenance_service = DatabaseMaintenanceService(config, path_helper, logger=logger)
+        if database_maintenance_service.enabled and database_maintenance_service.auto_start:
+            database_maintenance_service.start()
+        logger.debug("DatabaseMaintenanceService inicializado")
+    except Exception as e:
+        database_maintenance_service = None
+        logger.warn(f"DatabaseMaintenanceService não disponível: {e}")
 
     # Inicializar RconLogger e executar auto-limpeza de logs antigos da RCON
     try:
@@ -1641,6 +1653,8 @@ def init_components(allow_gui_call=False):
             ssm_db_path=ssm_db_path,
         )
         chat_command_monitor.start_monitoring()
+        if log_processor:
+            log_processor.chat_command_monitor = chat_command_monitor
         logger.debug("Monitor de comandos de chat iniciado")
 
         # Inicializar RconQueueManager
@@ -2245,6 +2259,7 @@ def init_components(allow_gui_call=False):
         svc.elevated_users_manager = elevated_users_manager
         svc.gestao_sync_service = gestao_sync_service
         svc.scum_logs_cleanup_service = scum_logs_cleanup_service
+        svc.database_maintenance_service = database_maintenance_service
 
         # Rankings
         svc.rankings_update_service = rankings_update_service
@@ -2280,7 +2295,7 @@ def cleanup_components():
     global notification_manager, gestao_messages_service
     global chest_inventory_sync_service
     global discord_bot_service, discord_webhook
-    global scum_logs_cleanup_service
+    global scum_logs_cleanup_service, database_maintenance_service
     global rcon_queue_manager, event_manager
     global elevated_users_manager, heartbeat_manager
     global chat_processor, bunker_processor, chat_command_monitor
@@ -2466,6 +2481,16 @@ def cleanup_components():
                 if logger:
                     logger.warn(f"Erro ao parar ScumLogsCleanupService: {e}")
             scum_logs_cleanup_service = None
+
+        if database_maintenance_service:
+            try:
+                database_maintenance_service.stop()
+                if logger:
+                    logger.info("DatabaseMaintenanceService parado")
+            except Exception as e:
+                if logger:
+                    logger.warn(f"Erro ao parar DatabaseMaintenanceService: {e}")
+            database_maintenance_service = None
 
         # 8. Sinalizar parada do scheduler de pesca
         if _fishing_scheduler_stop_event:

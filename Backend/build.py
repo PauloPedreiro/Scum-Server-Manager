@@ -273,7 +273,7 @@ def main():
         sys.exit(1)
 
     # Incrementar versao automaticamente
-    new_version = bump_version()
+    new_version = bump_version() if "--no-bump" not in sys.argv else __import__("version").__version__
 
     # Limpar builds anteriores
     clean_build()

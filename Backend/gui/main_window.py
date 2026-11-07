@@ -3778,128 +3778,136 @@ class MainWindow(ctk.CTk):
 
     def _show_custom_message(self, title: str, message: str, type_: str = "ok") -> bool:
         """
-        Shows a modern, English-only CustomTkinter message dialog centered on MainWindow.
+        Shows a modern, English-only modal message dialog centered on MainWindow.
         type_: "ok", "yesno", "warning", "error"
         Returns: True if OK/Yes clicked, False otherwise.
         """
-        dialog = ctk.CTkToplevel(self)
-        dialog.title(title)
-        dialog.resizable(False, False)
-        dialog.transient(self)
-        dialog.grab_set()
-
-        # Ensure window is in front and focused
-        dialog.lift()
-        dialog.focus_force()
-        dialog.attributes("-topmost", True)
-        dialog.after(100, lambda: dialog.attributes("-topmost", False))
-
-        # Dynamic calculation of dialog size based on content
-        lines = message.splitlines()
-        line_count = len(lines) if lines else 1
-        max_line_len = max(len(l) for l in lines) if lines else 20
-
-        # Calculate dynamic dimensions
-        width = min(540, max(440, max_line_len * 7 + 80))
-        calculated_height = max(80, min(300, line_count * 20 + 30))
-        height = calculated_height + 100
-
-        self.update_idletasks()
-        px = self.winfo_x()
-        py = self.winfo_y()
-        pw = self.winfo_width()
-        ph = self.winfo_height()
-        x = px + (pw // 2) - (width // 2)
-        y = py + (ph // 2) - (height // 2)
-        dialog.geometry(f"{width}x{height}+{max(0, x)}+{max(0, y)}")
+        import tkinter as tk
 
         result = [False]
+        win = tk.Toplevel(self)
+        win.title(title)
+        win.configure(bg="#1a1a1a")
+        try:
+            win.resizable(False, False)
+        except Exception:
+            pass
+
+        try:
+            win.transient(self)
+            win.grab_set()
+        except Exception:
+            pass
+
+        # Main frame
+        container = tk.Frame(win, bg="#1a1a1a", padx=24, pady=18)
+        container.pack(fill="both", expand=True)
+
+        # Message
+        lbl = tk.Label(
+            container,
+            text=message,
+            bg="#1a1a1a",
+            fg="#f0f0f0",
+            font=("Segoe UI", 11),
+            justify="left",
+            wraplength=480,
+        )
+        lbl.pack(fill="both", expand=True, pady=(0, 18))
+
+        # Buttons
+        btns = tk.Frame(container, bg="#1a1a1a")
+        btns.pack(fill="x", side="bottom")
 
         def on_yes():
             result[0] = True
-            dialog.destroy()
+            try:
+                win.grab_release()
+            except Exception:
+                pass
+            try:
+                win.destroy()
+            except Exception:
+                pass
 
         def on_no():
             result[0] = False
-            dialog.destroy()
-
-        # Main frame
-        container = ctk.CTkFrame(dialog, fg_color="transparent")
-        container.pack(fill="both", expand=True, padx=20, pady=(15, 12))
-
-        # Content Area - If tall or long, use a clean scrollable box
-        if line_count > 7 or len(message) > 280:
-            content_box = ctk.CTkScrollableFrame(
-                container,
-                height=min(220, calculated_height),
-                fg_color=("gray90", "gray18"),
-                corner_radius=8,
-            )
-            content_box.pack(fill="both", expand=True, pady=(0, 12))
-            label = ctk.CTkLabel(
-                content_box,
-                text=message,
-                wraplength=width - 90,
-                justify="left",
-                font=ctk.CTkFont(family="Consolas" if ("|" in message or "{" in message) else "Segoe UI", size=12),
-                anchor="w",
-            )
-            label.pack(fill="both", expand=True, padx=10, pady=8)
-        else:
-            label = ctk.CTkLabel(
-                container,
-                text=message,
-                wraplength=width - 50,
-                justify="left",
-                font=ctk.CTkFont(family="Segoe UI", size=13),
-            )
-            label.pack(fill="both", expand=True, pady=(0, 12))
-
-        # Buttons
-        btn_frame = ctk.CTkFrame(container, fg_color="transparent")
-        btn_frame.pack(fill="x", side="bottom")
+            try:
+                win.grab_release()
+            except Exception:
+                pass
+            try:
+                win.destroy()
+            except Exception:
+                pass
 
         if type_ == "yesno":
-            btn_no = ctk.CTkButton(
-                btn_frame,
+            btn_no = tk.Button(
+                btns,
                 text="No",
-                width=80,
-                height=30,
-                fg_color="#4a4a4a",
-                hover_color="#5a5a5a",
+                width=10,
+                bg="#333333",
+                fg="#ffffff",
+                relief="flat",
+                activebackground="#444444",
+                activeforeground="#ffffff",
                 command=on_no,
+                cursor="hand2",
             )
-            btn_no.pack(side="right", padx=(6, 0))
+            btn_no.pack(side="right", padx=(8, 0))
 
-            btn_yes = ctk.CTkButton(
-                btn_frame,
+            btn_yes = tk.Button(
+                btns,
                 text="Yes",
-                width=80,
-                height=30,
-                fg_color="#1f538d",
-                hover_color="#2b74c7",
+                width=10,
+                bg="#1f538d",
+                fg="#ffffff",
+                relief="flat",
+                activebackground="#2b74c7",
+                activeforeground="#ffffff",
                 command=on_yes,
+                cursor="hand2",
             )
             btn_yes.pack(side="right")
         else:
-            # "ok", "warning", "error"
-            btn_ok = ctk.CTkButton(
-                btn_frame,
+            btn_ok = tk.Button(
+                btns,
                 text="OK",
-                width=85,
-                height=30,
-                fg_color="#1f538d",
-                hover_color="#2b74c7",
+                width=10,
+                bg="#1f538d",
+                fg="#ffffff",
+                relief="flat",
+                activebackground="#2b74c7",
+                activeforeground="#ffffff",
                 command=on_yes,
+                cursor="hand2",
             )
             btn_ok.pack(side="right")
 
-        dialog.bind("<Return>", lambda e: on_yes())
-        dialog.bind("<Escape>", lambda e: on_no())
+        win.bind("<Return>", lambda e: on_yes())
+        win.bind("<Escape>", lambda e: on_no())
+        win.protocol("WM_DELETE_WINDOW", on_no)
 
-        # Wait until dialog is closed
-        self.wait_window(dialog)
-        return result[0]
+        # Center on parent using screen coordinates
+        try:
+            win.update_idletasks()
+            w = max(420, win.winfo_reqwidth())
+            h = max(130, win.winfo_reqheight())
+            px = int(self.winfo_rootx())
+            py = int(self.winfo_rooty())
+            pw = int(self.winfo_width())
+            ph = int(self.winfo_height())
+            x = max(0, int(px + (pw / 2) - (w / 2)))
+            y = max(0, int(py + (ph / 2) - (h / 2)))
+            win.geometry(f"{w}x{h}+{x}+{y}")
+        except Exception:
+            pass
+
+        try:
+            win.wait_window()
+        except Exception:
+            pass
+        return bool(result[0])
 
 
     def _on_rcon_switch_toggled(self):
@@ -4586,71 +4594,7 @@ class MainWindow(ctk.CTk):
             messagebox.showerror("Error", f"Failed to apply NSSM preset:\n{str(e)}")
 
     def _ask_yes_no_english(self, *, title: str, message: str) -> bool:
-        import tkinter as tk
-
-        result = {"value": False}
-        win = tk.Toplevel(self)
-        win.title(title)
-        try:
-            win.resizable(False, False)
-        except Exception:
-            pass
-
-        try:
-            win.transient(self)
-            win.grab_set()
-        except Exception:
-            pass
-
-        frm = tk.Frame(win, padx=16, pady=14)
-        frm.pack(fill="both", expand=True)
-
-        tk.Label(frm, text=message, justify="left", anchor="w").pack(
-            fill="both", expand=True
-        )
-
-        btns = tk.Frame(frm)
-        btns.pack(fill="x", pady=(12, 0))
-
-        def _no():
-            try:
-                win.destroy()
-            except Exception:
-                pass
-
-        def _yes():
-            result["value"] = True
-            try:
-                win.destroy()
-            except Exception:
-                pass
-
-        tk.Button(btns, text="No", width=10, command=_no).pack(side="right", padx=(8, 0))
-        tk.Button(btns, text="Yes", width=10, command=_yes).pack(side="right")
-
-        try:
-            win.update_idletasks()
-            w = int(win.winfo_reqwidth())
-            h = int(win.winfo_reqheight())
-            px = int(self.winfo_rootx())
-            py = int(self.winfo_rooty())
-            pw = int(self.winfo_width())
-            ph = int(self.winfo_height())
-            x = int(px + (pw / 2) - (w / 2))
-            y = int(py + (ph / 2) - (h / 2))
-            if x < 0:
-                x = 0
-            if y < 0:
-                y = 0
-            win.geometry(f"{w}x{h}+{x}+{y}")
-        except Exception:
-            pass
-
-        try:
-            win.wait_window()
-        except Exception:
-            pass
-        return bool(result.get("value"))
+        return self._show_custom_message(title=title, message=message, type_="yesno")
 
     def _ask_yes_no_cancel_english(
         self, *, title: str, message: str
@@ -7237,7 +7181,7 @@ class MainWindow(ctk.CTk):
 
         desc_label = ctk.CTkLabel(
             reset_card,
-            text="Clean player links to Discord, delete old link tokens, remove shop orders/delivery items, and reset wallet balance to initial balance.",
+            text="Clean player links to Discord, delete old link tokens, remove shop orders/delivery items, and optionally reset wallet balance.",
             font=ctk.CTkFont(size=12),
             text_color="gray",
             wraplength=700,
@@ -7402,6 +7346,118 @@ class MainWindow(ctk.CTk):
         # Load initial values
         self._load_logs_cleanup_settings()
 
+        # ========== CARD 3: DATABASE MAINTENANCE & COMPACTION (SSM.db) ==========
+        db_maint_card = ctk.CTkFrame(
+            scroll,
+            fg_color=card_color,
+            corner_radius=12,
+            border_width=1,
+            border_color=card_border_color,
+        )
+        db_maint_card.pack(fill="x", pady=(0, 10), padx=6)
+
+        # Header with Title and inline Auto Maintenance Switch
+        db_maint_header = ctk.CTkFrame(db_maint_card, fg_color="transparent")
+        db_maint_header.pack(fill="x", padx=15, pady=(12, 4))
+
+        db_maint_icon = ctk.CTkLabel(
+            db_maint_header, text="🗄️", font=ctk.CTkFont(size=18)
+        )
+        db_maint_icon.pack(side="left", padx=(0, 8))
+
+        db_maint_title = ctk.CTkLabel(
+            db_maint_header,
+            text="SSM.db Database Maintenance & Compaction",
+            font=ctk.CTkFont(size=15, weight="bold"),
+        )
+        db_maint_title.pack(side="left")
+
+        self.db_maintenance_enabled_switch = ctk.CTkSwitch(
+            db_maint_header,
+            text="Auto Maintenance",
+            font=ctk.CTkFont(size=12, weight="bold"),
+            progress_color=("#2ecc71", "#27ae60"),
+        )
+        self.db_maintenance_enabled_switch.pack(side="right", padx=(0, 5))
+
+        db_maint_desc = ctk.CTkLabel(
+            db_maint_card,
+            text="Automatically purges obsolete vehicle logs, redundant balance snapshots, and expired transactions, then compacts the SSM.db database using VACUUM to keep disk size optimized.",
+            font=ctk.CTkFont(size=12),
+            text_color="gray",
+            wraplength=700,
+            justify="left",
+        )
+        db_maint_desc.pack(fill="x", padx=15, pady=(0, 8))
+
+        # Compact Parameters Row (Retention, Schedule Time, Auto VACUUM)
+        db_params_row = ctk.CTkFrame(db_maint_card, fg_color="transparent")
+        db_params_row.pack(fill="x", padx=15, pady=(0, 10))
+
+        # Retention
+        db_ret_label = ctk.CTkLabel(db_params_row, text="Retention:", font=ctk.CTkFont(size=12, weight="bold"))
+        db_ret_label.pack(side="left", padx=(0, 6))
+        self.db_maintenance_retention_entry = ctk.CTkEntry(db_params_row, width=55, justify="center")
+        self.db_maintenance_retention_entry.pack(side="left", padx=(0, 4))
+        db_ret_unit = ctk.CTkLabel(db_params_row, text="days", font=ctk.CTkFont(size=12), text_color="gray")
+        db_ret_unit.pack(side="left", padx=(0, 18))
+
+        # Schedule Time
+        db_time_label = ctk.CTkLabel(db_params_row, text="Schedule Time:", font=ctk.CTkFont(size=12, weight="bold"))
+        db_time_label.pack(side="left", padx=(0, 6))
+        self.db_maintenance_time_entry = ctk.CTkEntry(db_params_row, width=65, justify="center")
+        self.db_maintenance_time_entry.pack(side="left", padx=(0, 4))
+        db_time_hint = ctk.CTkLabel(db_params_row, text="(HH:MM)", font=ctk.CTkFont(size=12), text_color="gray")
+        db_time_hint.pack(side="left", padx=(0, 18))
+
+        # Compact / VACUUM switch
+        self.db_maintenance_vacuum_switch = ctk.CTkSwitch(
+            db_params_row,
+            text="Compact (VACUUM)",
+            font=ctk.CTkFont(size=12),
+            progress_color=("#3498db", "#2980b9"),
+        )
+        self.db_maintenance_vacuum_switch.pack(side="left", padx=(0, 10))
+
+        # Action Buttons Row
+        db_action_row = ctk.CTkFrame(db_maint_card, fg_color="transparent")
+        db_action_row.pack(fill="x", padx=15, pady=(0, 12))
+
+        db_save_btn = ctk.CTkButton(
+            db_action_row,
+            text="Save Settings",
+            command=self._save_db_maintenance_settings,
+            width=120,
+            height=32,
+            fg_color=("#1f538d", "#14375e"),
+            hover_color=("#2a5a9a", "#1a4a7a"),
+            font=ctk.CTkFont(size=12, weight="bold"),
+        )
+        db_save_btn.pack(side="left", padx=(0, 10))
+
+        db_clean_now_btn = ctk.CTkButton(
+            db_action_row,
+            text="Clean & Compact Now",
+            command=self._run_db_maintenance_now,
+            width=170,
+            height=32,
+            fg_color=("#2E7D32", "#1B5E20"),
+            hover_color=("#388E3C", "#2E7D32"),
+            font=ctk.CTkFont(size=12, weight="bold"),
+        )
+        db_clean_now_btn.pack(side="left", padx=(0, 15))
+
+        self.db_maintenance_status_label = ctk.CTkLabel(
+            db_action_row,
+            text="Status: Ready",
+            font=ctk.CTkFont(size=12),
+            text_color="gray",
+        )
+        self.db_maintenance_status_label.pack(side="left")
+
+        # Load initial values
+        self._load_db_maintenance_settings()
+
     def _maintenance_reset_player(self):
         """Reset a single player's registration and shop history"""
         steam_id = self.maintenance_steam_id_entry.get().strip()
@@ -7426,94 +7482,115 @@ class MainWindow(ctk.CTk):
 
         confirm = self._ask_yes_no_english(
             title="Reset Player Registration",
-            message=f"Are you sure you want to reset registration, tokens, orders, and wallet balance for player {steam_id_clean}?",
+            message=f"Are you sure you want to reset registration, tokens, and shop orders for player {steam_id_clean}?",
         )
         if not confirm:
             return
 
-        try:
-            from utils.config_path_helper import ConfigPathHelper
-            from core.database.connector import DatabaseConnector
+        # Perguntar sempre se deseja também limpar o saldo
+        reset_wallet = self._ask_yes_no_english(
+            title="Reset Wallet Balance?",
+            message=f"Do you also want to reset the wallet balance for player {steam_id_clean}?\n\n• Click 'Yes' to reset wallet to initial balance.\n• Click 'No' to KEEP the current wallet balance.",
+        )
 
-            config = self._load_config() or {}
-            path_helper = ConfigPathHelper(config)
-            ssm_db_path = path_helper.get_ssm_db_path()
+        def _do_reset():
+            try:
+                from utils.config_path_helper import ConfigPathHelper
+                from core.database.connector import DatabaseConnector
 
-            with DatabaseConnector.get_connection(ssm_db_path, timeout=30.0, write_mode=True) as conn:
-                cur = conn.cursor()
-                
-                # 1. Reset Discord link
-                cur.execute(
-                    "UPDATE players SET discord_user_id = NULL, discord_linked_at = NULL WHERE steam_id = ?",
-                    (steam_id_clean,),
-                )
-                
-                # 2. Delete consumed tokens
-                cur.execute(
-                    "DELETE FROM discord_link_tokens WHERE consumed_by_steam_id = ?",
-                    (steam_id_clean,),
-                )
-                
-                # 3. Delete orders and delivery items
-                cur.execute(
-                    "DELETE FROM shop_order_item WHERE order_id IN (SELECT order_id FROM shop_order WHERE steam_id = ?)",
-                    (steam_id_clean,),
-                )
-                
-                cur.execute(
-                    "DELETE FROM shop_delivery_item WHERE order_id IN (SELECT order_id FROM shop_order WHERE steam_id = ?)",
-                    (steam_id_clean,),
-                )
-                
-                cur.execute(
-                    "DELETE FROM shop_order WHERE steam_id = ?",
-                    (steam_id_clean,),
-                )
-                
-                # 4. Reset wallet
-                economy = config.get("economy")
-                initial_balance = 0
-                if isinstance(economy, dict):
+                config = self._load_config() or {}
+                path_helper = ConfigPathHelper(config)
+                ssm_db_path = path_helper.get_ssm_db_path()
+
+                with DatabaseConnector.get_connection(ssm_db_path, timeout=30.0, write_mode=True) as conn:
+                    cur = conn.cursor()
+                    
+                    # 1. Reset Discord link
+                    cur.execute(
+                        "UPDATE players SET discord_user_id = NULL, discord_linked_at = NULL WHERE steam_id = ?",
+                        (steam_id_clean,),
+                    )
+                    
+                    # 2. Delete consumed tokens
+                    cur.execute(
+                        "DELETE FROM discord_link_tokens WHERE consumed_by_steam_id = ?",
+                        (steam_id_clean,),
+                    )
+                    
+                    # 3. Delete orders and delivery items
+                    cur.execute(
+                        "DELETE FROM shop_order_item WHERE order_id IN (SELECT order_id FROM shop_order WHERE steam_id = ?)",
+                        (steam_id_clean,),
+                    )
+                    
+                    cur.execute(
+                        "DELETE FROM shop_delivery_item WHERE order_id IN (SELECT order_id FROM shop_order WHERE steam_id = ?)",
+                        (steam_id_clean,),
+                    )
+                    
+                    cur.execute(
+                        "DELETE FROM shop_order WHERE steam_id = ?",
+                        (steam_id_clean,),
+                    )
+                    
+                    # 4. Reset wallet (apenas se confirmado)
+                    if reset_wallet:
+                        economy = config.get("economy")
+                        initial_balance = 0
+                        if isinstance(economy, dict):
+                            try:
+                                initial_balance = int(economy.get("initial_balance", 0))
+                            except Exception:
+                                pass
+
+                        cur.execute(
+                            "UPDATE wallet SET balance = ? WHERE steam_id = ?",
+                            (initial_balance, steam_id_clean),
+                        )
+                        if cur.rowcount == 0:
+                            cur.execute(
+                                "INSERT OR IGNORE INTO wallet(steam_id, balance) VALUES(?, ?)",
+                                (steam_id_clean, initial_balance),
+                            )
+                    
+                    conn.commit()
+
+                wallet_detail = " (wallet reset)" if reset_wallet else " (wallet balance kept)"
+                def _success_ui():
+                    self._add_log_message(f"Maintenance: Reset player {steam_id_clean} successfully{wallet_detail}.", "SUCCESS")
                     try:
-                        initial_balance = int(economy.get("initial_balance", 0))
+                        self.maintenance_steam_id_entry.delete(0, "end")
                     except Exception:
                         pass
-
-                cur.execute(
-                    "UPDATE wallet SET balance = ? WHERE steam_id = ?",
-                    (initial_balance, steam_id_clean),
-                )
-                if cur.rowcount == 0:
-                    cur.execute(
-                        "INSERT OR IGNORE INTO wallet(steam_id, balance) VALUES(?, ?)",
-                        (steam_id_clean, initial_balance),
+                    self._show_custom_message(
+                        title="Success",
+                        message=f"Player {steam_id_clean} has been successfully reset{wallet_detail}.",
+                        type_="ok",
                     )
-                
-                conn.commit()
 
-            self._add_log_message(f"Maintenance: Reset player {steam_id_clean} successfully.", "SUCCESS")
-            self._show_custom_message(
-                title="Success",
-                message=f"Player {steam_id_clean} has been successfully reset.",
-                type_="ok",
-            )
-            self.maintenance_steam_id_entry.delete(0, "end")
+                self.after(0, _success_ui)
 
-        except Exception as e:
-            if self.logger:
-                self.logger.error(f"Error resetting player: {e}")
-            self._add_log_message(f"Maintenance Error: Failed to reset player: {e}", "ERROR")
-            self._show_custom_message(
-                title="Error",
-                message=f"Failed to reset player: {e}",
-                type_="ok",
-            )
+            except Exception as e:
+                err_msg = str(e)
+                if self.logger:
+                    self.logger.error(f"Error resetting player: {err_msg}")
+                def _error_ui():
+                    self._add_log_message(f"Maintenance Error: Failed to reset player: {err_msg}", "ERROR")
+                    self._show_custom_message(
+                        title="Error",
+                        message=f"Failed to reset player: {err_msg}",
+                        type_="ok",
+                    )
+                self.after(0, _error_ui)
+
+        import threading
+        threading.Thread(target=_do_reset, daemon=True).start()
 
     def _maintenance_reset_all_players(self):
         """Reset all players' registrations and shop history"""
         confirm = self._ask_yes_no_english(
             title="Reset ALL Players",
-            message="WARNING: Are you sure you want to reset registration, tokens, orders, and wallet balance for ALL players? This action is IRREVERSIBLE.",
+            message="WARNING: Are you sure you want to reset registration, tokens, and shop orders for ALL players? This action is IRREVERSIBLE.",
         )
         if not confirm:
             return
@@ -7526,66 +7603,84 @@ class MainWindow(ctk.CTk):
         if not confirm_double:
             return
 
-        try:
-            from utils.config_path_helper import ConfigPathHelper
-            from core.database.connector import DatabaseConnector
+        # Perguntar sempre se deseja também limpar o saldo de todos
+        reset_wallet = self._ask_yes_no_english(
+            title="Reset All Wallet Balances?",
+            message="Do you also want to reset the wallet balance for ALL players?\n\n• Click 'Yes' to reset all wallets to initial balance.\n• Click 'No' to KEEP all players' current wallet balances.",
+        )
 
-            config = self._load_config() or {}
-            path_helper = ConfigPathHelper(config)
-            ssm_db_path = path_helper.get_ssm_db_path()
+        def _do_reset_all():
+            try:
+                from utils.config_path_helper import ConfigPathHelper
+                from core.database.connector import DatabaseConnector
 
-            with DatabaseConnector.get_connection(ssm_db_path, timeout=30.0, write_mode=True) as conn:
-                cur = conn.cursor()
-                
-                # 1. Reset Discord links
-                cur.execute("UPDATE players SET discord_user_id = NULL, discord_linked_at = NULL")
-                players_affected = cur.rowcount
-                
-                # 2. Delete all tokens
-                cur.execute("DELETE FROM discord_link_tokens")
-                tokens_affected = cur.rowcount
-                
-                # 3. Delete all orders and delivery items
-                cur.execute("DELETE FROM shop_order_item")
-                order_items_affected = cur.rowcount
-                
-                cur.execute("DELETE FROM shop_delivery_item")
-                delivery_items_affected = cur.rowcount
-                
-                cur.execute("DELETE FROM shop_order")
-                orders_affected = cur.rowcount
-                
-                # 4. Reset all wallets
-                economy = config.get("economy")
-                initial_balance = 0
-                if isinstance(economy, dict):
-                    try:
-                        initial_balance = int(economy.get("initial_balance", 0))
-                    except Exception:
-                        pass
+                config = self._load_config() or {}
+                path_helper = ConfigPathHelper(config)
+                ssm_db_path = path_helper.get_ssm_db_path()
 
-                cur.execute("UPDATE wallet SET balance = ?", (initial_balance,))
-                wallets_affected = cur.rowcount
-                
-                conn.commit()
+                with DatabaseConnector.get_connection(ssm_db_path, timeout=30.0, write_mode=True) as conn:
+                    cur = conn.cursor()
+                    
+                    # 1. Reset Discord links
+                    cur.execute("UPDATE players SET discord_user_id = NULL, discord_linked_at = NULL")
+                    players_affected = cur.rowcount
+                    
+                    # 2. Delete all tokens
+                    cur.execute("DELETE FROM discord_link_tokens")
+                    tokens_affected = cur.rowcount
+                    
+                    # 3. Delete all orders and delivery items
+                    cur.execute("DELETE FROM shop_order_item")
+                    order_items_affected = cur.rowcount
+                    
+                    cur.execute("DELETE FROM shop_delivery_item")
+                    delivery_items_affected = cur.rowcount
+                    
+                    cur.execute("DELETE FROM shop_order")
+                    orders_affected = cur.rowcount
+                    
+                    # 4. Reset all wallets (apenas se confirmado)
+                    wallets_affected = 0
+                    if reset_wallet:
+                        economy = config.get("economy")
+                        initial_balance = 0
+                        if isinstance(economy, dict):
+                            try:
+                                initial_balance = int(economy.get("initial_balance", 0))
+                            except Exception:
+                                pass
 
-            msg = f"Reset all players complete. Affected: {players_affected} players, {tokens_affected} tokens, {orders_affected} orders, {wallets_affected} wallets."
-            self._add_log_message(f"Maintenance: {msg}", "SUCCESS")
-            self._show_custom_message(
-                title="Success",
-                message="All registrations and shop history have been successfully reset.",
-                type_="ok",
-            )
+                        cur.execute("UPDATE wallet SET balance = ?", (initial_balance,))
+                        wallets_affected = cur.rowcount
+                    
+                    conn.commit()
 
-        except Exception as e:
-            if self.logger:
-                self.logger.error(f"Error resetting all players: {e}")
-            self._add_log_message(f"Maintenance Error: Failed to reset all players: {e}", "ERROR")
-            self._show_custom_message(
-                title="Error",
-                message=f"Failed to reset database: {e}",
-                type_="ok",
-            )
+                wallet_text = f", {wallets_affected} wallets reset" if reset_wallet else " (wallet balances kept)"
+                msg = f"Reset all players complete. Affected: {players_affected} players, {tokens_affected} tokens, {orders_affected} orders{wallet_text}."
+                def _success_ui():
+                    self._add_log_message(f"Maintenance: {msg}", "SUCCESS")
+                    self._show_custom_message(
+                        title="Success",
+                        message=f"All registrations and shop history have been successfully reset{wallet_text}.",
+                        type_="ok",
+                    )
+                self.after(0, _success_ui)
+
+            except Exception as e:
+                err_msg = str(e)
+                if self.logger:
+                    self.logger.error(f"Error resetting all players: {err_msg}")
+                def _error_ui():
+                    self._add_log_message(f"Maintenance Error: Failed to reset all players: {err_msg}", "ERROR")
+                    self._show_custom_message(
+                        title="Error",
+                        message=f"Failed to reset database: {err_msg}",
+                        type_="ok",
+                    )
+                self.after(0, _error_ui)
+
+        import threading
+        threading.Thread(target=_do_reset_all, daemon=True).start()
 
     def _load_logs_cleanup_settings(self):
         """Carregar configurações de limpeza de logs para os campos da aba Maintenance"""
@@ -7777,6 +7872,213 @@ class MainWindow(ctk.CTk):
                 self.after(0, _on_error)
 
         threading.Thread(target=_worker, daemon=True, name="ManualLogsCleanupThread").start()
+
+    def _load_db_maintenance_settings(self):
+        """Carregar configurações de manutenção do banco SSM.db para os campos da aba Maintenance"""
+        try:
+            config = self._load_config() or {}
+            maint = config.get("database_maintenance", {})
+
+            enabled = bool(maint.get("enabled", True))
+            if hasattr(self, "db_maintenance_enabled_switch"):
+                if enabled:
+                    self.db_maintenance_enabled_switch.select()
+                else:
+                    self.db_maintenance_enabled_switch.deselect()
+
+            retention = str(maint.get("retention_days", 30) or 30)
+            if hasattr(self, "db_maintenance_retention_entry"):
+                self.db_maintenance_retention_entry.delete(0, "end")
+                self.db_maintenance_retention_entry.insert(0, retention)
+
+            sched_time = str(maint.get("schedule_time", "04:00") or "04:00")
+            if hasattr(self, "db_maintenance_time_entry"):
+                self.db_maintenance_time_entry.delete(0, "end")
+                self.db_maintenance_time_entry.insert(0, sched_time)
+
+            vacuum_enabled = bool(maint.get("auto_vacuum", True))
+            if hasattr(self, "db_maintenance_vacuum_switch"):
+                if vacuum_enabled:
+                    self.db_maintenance_vacuum_switch.select()
+                else:
+                    self.db_maintenance_vacuum_switch.deselect()
+
+            # Exibir tamanho atual do SSM.db no status
+            if hasattr(self, "db_maintenance_status_label"):
+                import os
+                from utils.config_path_helper import ConfigPathHelper
+                path_helper = ConfigPathHelper(config)
+                db_path = path_helper.get_ssm_db_path()
+                if os.path.exists(db_path):
+                    size_mb = os.path.getsize(db_path) / (1024 * 1024)
+                    self.db_maintenance_status_label.configure(
+                        text=f"Status: Ready | Current DB Size: {size_mb:.1f} MB",
+                        text_color="gray",
+                    )
+        except Exception as e:
+            if self.logger:
+                self.logger.warn(f"Failed to load database maintenance settings: {e}")
+
+    def _save_db_maintenance_settings(self):
+        """Salvar configurações de manutenção do banco para o config.json e atualizar serviço"""
+        try:
+            config = self._load_config() or {}
+            if "database_maintenance" not in config:
+                config["database_maintenance"] = {}
+
+            enabled = bool(self.db_maintenance_enabled_switch.get())
+            retention_raw = self.db_maintenance_retention_entry.get().strip()
+            time_raw = self.db_maintenance_time_entry.get().strip()
+            vacuum_enabled = bool(self.db_maintenance_vacuum_switch.get())
+
+            try:
+                retention_val = max(1, int(retention_raw))
+            except ValueError:
+                self._show_custom_message(
+                    title="Invalid Input",
+                    message="Retention days must be a positive integer.",
+                    type_="ok",
+                )
+                return
+
+            if not time_raw:
+                time_raw = "04:00"
+
+            patch = {
+                "enabled": enabled,
+                "retention_days": retention_val,
+                "schedule_time": time_raw,
+                "auto_vacuum": vacuum_enabled,
+                "auto_start": True,
+            }
+            config["database_maintenance"].update(patch)
+
+            config_path = (
+                self.DATA_DIR / "config.json"
+                if self.IS_EXE
+                else self.ROOT_DIR / "data" / "config.json"
+            )
+            import json
+            with open(config_path, "w", encoding="utf-8") as f:
+                json.dump(config, f, indent=2, ensure_ascii=False)
+
+            # Atualizar serviço se o backend estiver rodando
+            try:
+                from app.extensions import get_services
+                svc = get_services()
+                maint_svc = getattr(svc, "database_maintenance_service", None)
+                if maint_svc and hasattr(maint_svc, "update_config"):
+                    maint_svc.update_config(config["database_maintenance"])
+            except Exception:
+                pass
+
+            self._add_log_message("Maintenance: Database maintenance settings saved successfully", "SUCCESS")
+            self.db_maintenance_status_label.configure(text="Status: Settings saved", text_color="#2ecc71")
+            self._show_custom_message(
+                title="Success",
+                message="Database maintenance settings saved successfully!",
+                type_="ok",
+            )
+        except Exception as e:
+            if self.logger:
+                self.logger.error(f"Failed to save database maintenance settings: {e}")
+            self._add_log_message(f"Maintenance Error: Failed to save DB maintenance settings: {e}", "ERROR")
+            self._show_custom_message(
+                title="Error",
+                message=f"Failed to save settings: {e}",
+                type_="ok",
+            )
+
+    def _run_db_maintenance_now(self):
+        """Executar manutenção e compactação do SSM.db sob demanda em background"""
+        confirm = self._ask_yes_no_english(
+            title="Clean & Compact Database",
+            message="Are you sure you want to clean expired history and compact SSM.db now?\n\n• Obsolete logs older than retention will be purged.\n• Redundant duplicate history will be removed.\n• VACUUM will compact the file to free disk space.",
+        )
+        if not confirm:
+            return
+
+        self.db_maintenance_status_label.configure(text="Status: Maintenance in progress...", text_color="#3498db")
+
+        import threading
+
+        def _worker():
+            try:
+                from utils.config_path_helper import ConfigPathHelper
+                from core.database.database_maintenance_service import DatabaseMaintenanceService
+                from app.extensions import get_services
+
+                config = self._load_config() or {}
+                path_helper = ConfigPathHelper(config)
+
+                svc = get_services()
+                maint_svc = getattr(svc, "database_maintenance_service", None)
+                if not maint_svc:
+                    maint_svc = DatabaseMaintenanceService(config, path_helper, logger=self.logger)
+
+                retention_raw = self.db_maintenance_retention_entry.get().strip()
+                try:
+                    retention_val = max(1, int(retention_raw))
+                except Exception:
+                    retention_val = 30
+
+                vacuum_val = bool(self.db_maintenance_vacuum_switch.get())
+
+                res = maint_svc.run_maintenance(
+                    retention_days=retention_val,
+                    run_vacuum=vacuum_val,
+                    deduplicate_history=True,
+                )
+
+                if not res.get("success"):
+                    raise RuntimeError(res.get("error", "Unknown error during database maintenance"))
+
+                bytes_freed = res.get("bytes_freed", 0)
+                freed_mb = res.get("bytes_freed_mb", 0.0)
+                total_deleted = res.get("total_rows_deleted", 0)
+                bytes_after = res.get("bytes_after", 0)
+                size_after_mb = round(bytes_after / (1024 * 1024), 2)
+                duration = res.get("duration_seconds", 0.0)
+
+                from datetime import datetime
+                ts = datetime.now().strftime("%H:%M")
+                status_text = f"Status: Last run {ts} | {total_deleted:,} rows removed ({freed_mb:.1f} MB freed) | Size: {size_after_mb:.1f} MB"
+
+                def _on_success():
+                    self.db_maintenance_status_label.configure(text=status_text, text_color="#2ecc71")
+                    self._add_log_message(
+                        f"Maintenance: SSM.db maintenance completed: {total_deleted:,} records deleted, {freed_mb:.1f} MB freed in {duration}s. Final size: {size_after_mb:.1f} MB.",
+                        "SUCCESS",
+                    )
+                    self._show_custom_message(
+                        title="Database Maintenance Completed",
+                        message=f"Database maintenance and compaction completed successfully!\n\n"
+                                f"• Records deleted: {total_deleted:,}\n"
+                                f"• Disk space freed: {freed_mb:.1f} MB\n"
+                                f"• Current SSM.db size: {size_after_mb:.1f} MB\n"
+                                f"• Execution time: {duration:.1f}s",
+                        type_="ok",
+                    )
+
+                self.after(0, _on_success)
+
+            except Exception as e:
+                err_msg = str(e)
+                if self.logger:
+                    self.logger.error(f"Error during database maintenance: {err_msg}")
+
+                def _on_error():
+                    self.db_maintenance_status_label.configure(text="Status: Maintenance failed", text_color="#e74c3c")
+                    self._add_log_message(f"Maintenance Error: Database maintenance failed: {err_msg}", "ERROR")
+                    self._show_custom_message(
+                        title="Error",
+                        message=f"Database maintenance failed:\n{err_msg}",
+                        type_="ok",
+                    )
+
+                self.after(0, _on_error)
+
+        threading.Thread(target=_worker, daemon=True, name="ManualDbMaintenanceThread").start()
 
     def _create_database_tab(self, parent, register_tab: bool = True):
         database_frame = ctk.CTkFrame(parent, fg_color="transparent")
@@ -13036,7 +13338,7 @@ class MainWindow(ctk.CTk):
             return None
 
         # Verificar se cache é válido (última requisição há menos de cache_ttl_seconds)
-        if self.cached_next_restart and self.last_api_check_time:
+        if self.last_api_check_time:
             elapsed = time.time() - self.last_api_check_time
             if elapsed < self.cache_ttl_seconds:
                 # Cache ainda válido, retornar sem fazer requisição
@@ -13054,8 +13356,11 @@ class MainWindow(ctk.CTk):
                 self.cached_next_restart = next_restart_str
                 self.last_api_check_time = time.time()
                 return next_restart_str
-        except:
+        except Exception:
             pass
+
+        # Mesmo se falhar, atualizar last_api_check_time para evitar spam a cada segundo
+        self.last_api_check_time = time.time()
         return None
 
     def _update_restart_countdown(self):
@@ -13077,7 +13382,9 @@ class MainWindow(ctk.CTk):
                 next_restart_str = self._get_restart_countdown_via_api()
 
             if not next_restart_str:
-                self.restart_countdown.configure(text="Not scheduled")
+                if getattr(self, "_last_countdown_display", None) != "Not scheduled":
+                    self._last_countdown_display = "Not scheduled"
+                    self.restart_countdown.configure(text="Not scheduled")
                 return
 
             # Calcular tempo restante
@@ -13094,7 +13401,9 @@ class MainWindow(ctk.CTk):
                         next_restart_str_clean, "%Y-%m-%dT%H:%M:%S"
                     )
                 except:
-                    self.restart_countdown.configure(text="Invalid format")
+                    if getattr(self, "_last_countdown_display", None) != "Invalid format":
+                        self._last_countdown_display = "Invalid format"
+                        self.restart_countdown.configure(text="Invalid format")
                     return
 
             now = datetime.now()
@@ -13102,7 +13411,9 @@ class MainWindow(ctk.CTk):
             diff = next_restart - now
 
             if diff.total_seconds() < 0:
-                self.restart_countdown.configure(text="Passed")
+                if getattr(self, "_last_countdown_display", None) != "Passed":
+                    self._last_countdown_display = "Passed"
+                    self.restart_countdown.configure(text="Passed")
                 # Invalidar cache para buscar próximo restart na próxima atualização
                 self.cached_next_restart = None
                 self.last_api_check_time = None
@@ -13121,12 +13432,16 @@ class MainWindow(ctk.CTk):
             else:
                 countdown_text = f"{seconds}s"
 
-            self.restart_countdown.configure(text=countdown_text)
+            if getattr(self, "_last_countdown_display", None) != countdown_text:
+                self._last_countdown_display = countdown_text
+                self.restart_countdown.configure(text=countdown_text)
 
         except Exception as e:
             if self.logger:
                 self.logger.warn(f"Erro ao atualizar countdown: {e}")
-            self.restart_countdown.configure(text="Error")
+            if getattr(self, "_last_countdown_display", None) != "Error":
+                self._last_countdown_display = "Error"
+                self.restart_countdown.configure(text="Error")
 
     def _update_restart_countdown_periodic(self):
         """Atualização periódica do countdown (a cada segundo)"""
