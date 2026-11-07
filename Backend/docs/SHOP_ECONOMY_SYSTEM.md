@@ -260,7 +260,8 @@ O SSM 3.0 suporta dois modos de entrega de itens:
    - Quando o jogador digita `/buy <code>` ou `/kit <code>` no chat global/local do jogo (ou vincula a conta via `/register`), o backend processa o pedido e despacha a entrega via `deliver_single_order_now`.
    - O comando de spawn utiliza a sintaxe universal `spawnitem <ItemClass> <Qty> Location "<SteamID>"` (com sanitização automática de `StackCount` e typos como `Water_051` -> `Water_05l`).
    - **Bypass de `ListPlayers`**: Para compras originadas no próprio chat in-game, o sistema não consulta a lista de jogadores online, pois o remetente comprovadamente está no jogo.
-   - **Blindagem Anti-Crash (Serialização + Circuit Breaker + Progresso por Sub-Item)**:
-     - Todas as entregas RCON são serializadas por `_delivery_lock` com *cooldown* de `2.5s` entre pedidos e cadência de `0.8s` (itens comuns) a `1.5s` (armas `Weapon_*` e veículos `BPC_*` / `BP_*`).
-     - Caso o servidor SCUM reporte congelamento de tick (`"erro: sem resposta em 4s - o tick do jogo pode estar parado"`), o *Circuit Breaker* do `RconQueueManager` interrompe imediatamente os disparos, preserva os sub-itens já entregues em `shop_delivery_item` e devolve o pedido para `pending` para retomada segura quando o servidor recuperar o tick.
+   - **Blindagem Anti-Crash (Serialização + Ordenação de Armas + Pausa por Lote + Circuit Breaker)**:
+     - Todas as entregas RCON são serializadas por `_delivery_lock` com *cooldown* de `2.5s` entre pedidos, pausa de `2.5s` a cada lote de 4 sub-itens de kit e cadência de `0.8s` (itens comuns) a `2.0s` (armas `Weapon_*` e veículos `BPC_*` / `BP_*`).
+     - Em kits, armas (`Weapon_*`) são sempre instanciadas **primeiro** (antes de formar pilha física no mesmo `{X, Y, Z}` do jogador) e veículos por último.
+     - Caso o servidor SCUM reporte congelamento de tick (`"erro: sem resposta em 4s - o tick do jogo pode estar parado"`), o *Circuit Breaker* do `RconQueueManager` interrompe imediatamente os disparos, preserva os sub-itens já entregues em `shop_delivery_item` e marca o pedido como `failed` (`retry_requested = 0`) para evitar loop de crash após reinício do servidor.
    - Após a entrega completa, uma notificação de sucesso é enviada para o chat do jogador via `SendChat 6 "[SSM] ..." <SteamID>`.

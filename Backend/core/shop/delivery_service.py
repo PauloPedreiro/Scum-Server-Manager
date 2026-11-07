@@ -22,12 +22,16 @@ _last_rcon_delivery_ts: float = 0.0
 # Intervalos de proteção da Game Thread da Unreal Engine (anti-crash)
 _INTER_ORDER_COOLDOWN_SEC: float = 2.5
 _DELAY_NORMAL_ITEM_SEC: float = 0.8
-_DELAY_HEAVY_ITEM_SEC: float = 1.5
+_DELAY_HEAVY_ITEM_SEC: float = 2.0
+_KIT_BATCH_SIZE: int = 4
+_KIT_BATCH_PAUSE_SEC: float = 2.5
 _MAX_TRANSIENT_ATTEMPTS: int = 8
 
 # Correções automáticas de typos comuns em nomes de classes do SCUM
 _CLASS_TYPO_FIXES: Dict[str, str] = {
     "water_051": "Water_05l",
+    "emergency_bandage_big_s": "Emergency_bandage_Big",
+    "emergency_bandage_big_es": "Emergency_bandage_Big",
 }
 
 
@@ -79,13 +83,38 @@ def _is_heavy_actor(item_class: str) -> bool:
     return _is_vehicle(cls) or cls.lower().startswith("weapon_")
 
 
+def _kit_subitem_priority(item_class: str) -> int:
+    """
+    Define a ordem segura de spawn dentro de um kit:
+    0 = Armas primeiro (Weapon_*), quando ainda não há pilha de física no mesmo (X,Y,Z) do jogador;
+    1 = Itens comuns e acessórios;
+    2 = Veículos por último (BPC_* / BP_*).
+    """
+    cls = str(item_class).strip()
+    if cls.lower().startswith("weapon_"):
+        return 0
+    if _is_vehicle(cls):
+        return 2
+    return 1
+
+
+def _sanitize_asset_name(asset_name: str) -> str:
+    """Remove sufixo _ES (case-insensitive) e aplica correções de typos conhecidos."""
+    cleaned = str(asset_name).strip()
+    cleaned = _CLASS_TYPO_FIXES.get(cleaned.lower(), cleaned)
+    if cleaned.upper().endswith("_ES"):
+        cleaned = cleaned[:-3].strip()
+    cleaned = _CLASS_TYPO_FIXES.get(cleaned.lower(), cleaned)
+    return cleaned
+
+
 def _build_spawnitem_cmd(raw_setup: str, qty: int, steam_id: str) -> str:
     """
     Sanitiza o setup de um item (removendo sufixo _ES, corrigindo typos conhecidos
     e posicionando corretamente a quantidade quando há StackCount embutido) e monta o comando RCON.
     """
     clean_setup = str(raw_setup).strip()
-    if clean_setup.endswith("_ES"):
+    if clean_setup.upper().endswith("_ES"):
         clean_setup = clean_setup[:-3].strip()
 
     # Verificar se há StackCount embutido (ex: "Cash 1 StackCount 5000" ou "Cash StackCount 5000")
@@ -95,12 +124,11 @@ def _build_spawnitem_cmd(raw_setup: str, qty: int, steam_id: str) -> str:
         flags=re.IGNORECASE,
     )
     if m_stack:
-        asset_name = m_stack.group(1)
+        asset_name = _sanitize_asset_name(m_stack.group(1))
         stack_part = m_stack.group(2).strip()
-        asset_name = _CLASS_TYPO_FIXES.get(asset_name.lower(), asset_name)
         return f'spawnitem {asset_name} {int(qty)} {stack_part} Location "{steam_id}"'
 
-    clean_setup = _CLASS_TYPO_FIXES.get(clean_setup.lower(), clean_setup)
+    clean_setup = _sanitize_asset_name(clean_setup)
     return f'spawnitem {clean_setup} {int(qty)} Location "{steam_id}"'
 
 
@@ -194,14 +222,16 @@ class ShopDeliveryService:
             delivered = 0
             failed = 0
 
-            # Verificar primeiro no banco local se há pedidos pendentes antes de acionar RCON ListPlayers
+            # Verificar primeiro no banco local se há pedidos em fila de espera/retentativa antes de acionar RCON ListPlayers.
+            # Pedidos recém-criados pelo chat (< 15s e attempt_count = 0) são entregues direto por deliver_single_order_now()
+            # sem precisar chamar ListPlayers.
             with DatabaseConnector.get_connection(self.ssm_db_path, timeout=30.0) as conn_chk:
                 cur_chk = conn_chk.cursor()
                 cur_chk.execute(
                     """
                     SELECT 1
                     FROM shop_order
-                    WHERE status = 'pending'
+                    WHERE (status = 'pending' AND (attempt_count > 0 OR created_at <= datetime('now', '-15 seconds')))
                        OR (status = 'failed' AND retry_requested = 1)
                     LIMIT 1
                     """
@@ -245,7 +275,7 @@ class ShopDeliveryService:
                     sql = f"""
                     SELECT order_id
                     FROM shop_order
-                    WHERE status = 'pending'
+                    WHERE (status = 'pending' AND (attempt_count > 0 OR created_at <= datetime('now', '-15 seconds')))
                        OR (status = 'failed' AND retry_requested = 1)
                     ORDER BY CASE WHEN steam_id IN ({placeholders}) THEN 0 ELSE 1 END, created_at ASC
                     LIMIT ?
@@ -256,7 +286,7 @@ class ShopDeliveryService:
                         """
                         SELECT order_id
                         FROM shop_order
-                        WHERE status = 'pending'
+                        WHERE (status = 'pending' AND (attempt_count > 0 OR created_at <= datetime('now', '-15 seconds')))
                            OR (status = 'failed' AND retry_requested = 1)
                         ORDER BY created_at ASC
                         LIMIT ?
@@ -355,20 +385,35 @@ class ShopDeliveryService:
 
     def _revert_or_fail_order(self, order_id: str, attempt_count: int, err_msg: str) -> None:
         """
-        Em caso de falha transitória do RCON (ex: tick do servidor travado),
-        devolve o pedido para 'pending' (até o limite de tentativas) para não perder o kit do jogador.
+        Em caso de falha transitória do RCON, devolve o pedido para 'pending' (até o limite de tentativas).
+        PORÉM, se o pedido causou RCON_TICK_FROZEN (travou a Game Thread ao spawnar um item),
+        marca como 'failed' (retry_requested=0) para impedir loop infinito de crash a cada reinício do servidor.
         """
-        new_status = "pending" if int(attempt_count) < _MAX_TRANSIENT_ATTEMPTS else "failed"
+        is_freeze = str(err_msg or "").startswith("RCON_TICK_FROZEN")
+        if is_freeze:
+            new_status = "failed"
+        else:
+            new_status = "pending" if int(attempt_count) < _MAX_TRANSIENT_ATTEMPTS else "failed"
         try:
             with ssm_tx(self.ssm_db_path) as conn_rev:
-                conn_rev.execute(
-                    """
-                    UPDATE shop_order
-                    SET status=?, error=?, last_attempt_at=datetime('now')
-                    WHERE order_id=? AND status != 'delivered'
-                    """,
-                    (new_status, err_msg, order_id),
-                )
+                if is_freeze:
+                    conn_rev.execute(
+                        """
+                        UPDATE shop_order
+                        SET status=?, retry_requested=0, error=?, last_attempt_at=datetime('now')
+                        WHERE order_id=? AND status != 'delivered'
+                        """,
+                        (new_status, err_msg, order_id),
+                    )
+                else:
+                    conn_rev.execute(
+                        """
+                        UPDATE shop_order
+                        SET status=?, error=?, last_attempt_at=datetime('now')
+                        WHERE order_id=? AND status != 'delivered'
+                        """,
+                        (new_status, err_msg, order_id),
+                    )
         except Exception:
             pass
 
@@ -411,7 +456,9 @@ class ShopDeliveryService:
             if status == "delivered":
                 return True, None
 
-            # Se o jogador não está online, manter pending (será entregue depois)
+            # Se o jogador não está online, manter pending (será entregue depois).
+            # Quando bypass_online_check=True (comando digitado no chat do jogo: /register, /kit, /buy),
+            # o jogador comprovadamente já está online no mundo, portanto não consulta ListPlayers.
             if not bypass_online_check and (not online_steam_ids or steam_id not in online_steam_ids):
                 if self.logger:
                     self.logger.debug(
@@ -503,14 +550,29 @@ class ShopDeliveryService:
 
                 # Comandos de entrega universais via RCON (com verificação de resposta e cadência segura)
                 if is_kit:
-                    sub_step = 0
-                    for _ in range(remaining):
-                        for sub_setup, sub_qty in kit_items:
-                            sub_step += 1
+                    total_kit_steps = len(kit_items)
+                    for rep_idx in range(remaining):
+                        # Preserva o índice original (1-based) para synth_code, mas ordena a execução:
+                        # Armas (Weapon_*) PRIMEIRO -> Itens comuns -> Veículos POR ÚLTIMO
+                        indexed_kit_items = [
+                            (rep_idx * total_kit_steps + idx + 1, sub_s, sub_q)
+                            for idx, (sub_s, sub_q) in enumerate(kit_items)
+                        ]
+                        ordered_kit_items = sorted(
+                            indexed_kit_items,
+                            key=lambda item_tuple: (_kit_subitem_priority(item_tuple[1]), item_tuple[0]),
+                        )
+                        spawned_in_batch = 0
+
+                        for sub_step, sub_setup, sub_qty in ordered_kit_items:
                             synth_code = -(abs(code) * 10000 + sub_step)
                             already_sub_del = partial_kit_progress.get(synth_code, 0)
                             if already_sub_del >= sub_qty:
                                 continue
+
+                            # Pausa de respiro a cada lote (_KIT_BATCH_SIZE itens) para a física da UE4 estabilizar os itens no chão
+                            if spawned_in_batch > 0 and (spawned_in_batch % _KIT_BATCH_SIZE == 0):
+                                time.sleep(_KIT_BATCH_PAUSE_SEC)
 
                             delay_sec = (
                                 _DELAY_HEAVY_ITEM_SEC
@@ -533,6 +595,7 @@ class ShopDeliveryService:
                                         return False, resp_or_err
                                     if self.logger:
                                         self.logger.debug(f"Kit RCON spawnvehicle {sub_setup} → {resp_or_err}")
+                                    spawned_in_batch += 1
                             else:
                                 cmd = _build_spawnitem_cmd(sub_setup, sub_qty, steam_id)
                                 ok_cmd, resp_or_err = self._execute_rcon_spawn(rcon_q, cmd, delay_sec)
@@ -546,6 +609,7 @@ class ShopDeliveryService:
                                     return False, resp_or_err
                                 if self.logger:
                                     self.logger.debug(f"Kit RCON {cmd} → {resp_or_err}")
+                                spawned_in_batch += 1
 
                             # Persistir progresso individual do sub-item do kit
                             with ssm_tx(self.ssm_db_path) as conn_sub:

@@ -729,13 +729,20 @@ Modernizar a arquitetura de comunicação e gerenciamento RCON do SSM 3.0, desco
 * **Persistência Granular Sub-Item a Sub-Item em Kits (`core/shop/delivery_service.py`)**:
   * Cada sub-item de um kit (`KIT:...`) tem seu progresso salvo individualmente em `shop_delivery_item` (usando códigos sintéticos negativos durante a entrega).
   * Se o servidor travar no meio de um kit (ex.: no 11º item), a entrega é **abortada imediatamente**, o pedido retorna para `status='pending'` (via `_revert_or_fail_order`) e, quando o servidor recupera o tick, a entrega retoma exatamente do sub-item onde parou, sem perder o kit e sem duplicar itens ou veículos já entregues.
-* **Cadência Segura (*Throttling*) e Sanitização de Comandos (`core/shop/delivery_service.py`)**:
-  * Intervalo ajustado para `0.8s` em itens comuns e `1.5s` em atores pesados (`_is_heavy_actor`: armas `Weapon_*` e veículos `BPC_*` / `BP_*`).
-  * Helper `_build_spawnitem_cmd()` corrige automaticamente `Water_051` -> `Water_05l` e reposiciona a quantidade corretamente antes de `StackCount`.
+* **Cadência Segura (*Throttling*), Ordenação de Armas e Pausa por Lote (`core/shop/delivery_service.py`)**:
+  * **Armas Primeiro (`_kit_subitem_priority`)**: Como o `bsbr_scum` converte `Location "<SteamID>"` para a coordenada exata `{X, Y, Z}` do jogador, instanciar `Weapon_MP5` como 10º/11º item em cima de uma pilha de 15 atores físicos recém-dropados no mesmo milímetro `(X, Y, Z)` causava deadlock na Game Thread (`UAdminCommand_SpawnItem`). Agora o SSM ordena automaticamente os sub-itens de qualquer kit para spawnar **Armas (`Weapon_*`) primeiro** (quando há `0` itens empilhados no chão), seguidas de itens comuns e **Veículos (`BPC_*` / `BP_*`) por último**, preservando o `synth_code` original no banco.
+  * **Pausa de Respiro por Lote (`_KIT_BATCH_SIZE = 4` / `2.5s`)**: A cada 4 sub-itens entregues em um kit, o SSM aguarda `2.5s` para a física da Unreal Engine estabilizar os itens no chão antes do próximo lote.
+  * Intervalo ajustado para `0.8s` em itens comuns e `2.0s` em atores pesados (`_is_heavy_actor`: armas `Weapon_*` e veículos `BPC_*` / `BP_*`).
+  * Helper `_build_spawnitem_cmd()` e `_sanitize_asset_name()` corrigem automaticamente `Water_051` -> `Water_05l`, `Emergency_bandage_Big_S` / `Emergency_bandage_Big_ES` -> `Emergency_bandage_Big`, e reposicionam a quantidade corretamente antes de `StackCount`.
+* **Fim do Loop de Crash Pós-Reinício e Eliminação de `ListPlayers` Ocioso (`v3.22.71` / `v3.22.72`)**:
+  * Se um pedido causar `RCON_TICK_FROZEN`, `_revert_or_fail_order()` marca o pedido como `failed` (`retry_requested=0`) em vez de `pending`, impedindo que um kit problemático volte a rodar automaticamente 30 segundos após cada reinício do `SCUMServer.exe`.
+  * Comandos originados no chat (`/register`, `/kit`, `/buy`) nunca chamam `ListPlayers` (pois o jogador comprovadamente está online), e o `run_once()` ignora pedidos recém-criados (`< 15s` e `attempt_count = 0`) que já estão sendo entregues diretamente por `deliver_single_order_now()`, além de verificar no SQLite se há pedidos pendentes antes de consultar o RCON.
+  * `SendChat` (`/sd` e avisos no chat) permanece liberado mesmo com o *Circuit Breaker* aberto, e o socket RCON é reinicializado a cada timeout de tick.
 
 ### 3. Arquivos Modificados
 * `Backend/utils/rcon_client.py`: Funções `is_rcon_tick_frozen` e `is_rcon_error_response`, além de marcação precisa de `success` nos logs RCON.
-* `Backend/core/rcon_queue_manager.py`: *Circuit Breaker* automático para proteção da Game Thread do SCUM Server.
-* `Backend/core/shop/delivery_service.py`: Lock global unificado, cooldown entre pedidos, cadência por peso de ator, sanitização de `StackCount`/typos e persistência sub-item a sub-item de kits.
+* `Backend/core/rcon_queue_manager.py`: *Circuit Breaker* automático para proteção da Game Thread do SCUM Server, reset de socket e isenção de `SendChat`.
+* `Backend/core/shop/delivery_service.py`: Lock global unificado, ordenação de armas primeiro em kits, pausa por lote de 4 itens, prevenção de loop de crash pós-reinício, pré-checagem SQLite sem `ListPlayers` ocioso e sanitização de `StackCount`/typos.
+* `Backend/core/gps/player_gps_sync_service.py`: Suspensão de sincronização RCON quando o *Circuit Breaker* está aberto.
 * `Backend/core/logs/chat_command_monitor.py`: Unificação do disparo do Welcome Pack no `/register` via `deliver_single_order_now`.
 * `Backend/docs/SHOP_DELIVERY_RCON_INSTANTANEO.md` & `Backend/docs/SHOP_ECONOMY_SYSTEM.md`: Atualização da documentação técnica e seção Obsidian.
