@@ -152,7 +152,7 @@ class RconQueueManager:
                 cmd_lower = item.command.strip().lower()
                 is_lp = cmd_lower == "listplayers"
                 cb_open, cb_rem = self.is_circuit_open()
-                if cb_open and cmd_lower.startswith(("spawnitem", "spawnvehicle", "sendchat")):
+                if cb_open and cmd_lower.startswith(("spawnitem", "spawnvehicle")):
                     skip_delay = True
                     item.future.set_result(
                         f"erro: circuit_breaker_open ({cb_rem:.1f}s restantes - protegendo tick do servidor)"
@@ -179,6 +179,12 @@ class RconQueueManager:
                     else is_rcon_tick_frozen(response)
                 )
                 if tick_frozen:
+                    with self._client_lock:
+                        if self._rcon_client:
+                            try:
+                                self._rcon_client.close()
+                            except Exception:
+                                pass
                     self._consecutive_tick_failures += 1
                     cooldown = min(45.0, 15.0 * self._consecutive_tick_failures)
                     self.trip_circuit(cooldown=cooldown, reason=response or "RCON socket timeout")

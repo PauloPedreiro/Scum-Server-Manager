@@ -194,6 +194,21 @@ class ShopDeliveryService:
             delivered = 0
             failed = 0
 
+            # Verificar primeiro no banco local se há pedidos pendentes antes de acionar RCON ListPlayers
+            with DatabaseConnector.get_connection(self.ssm_db_path, timeout=30.0) as conn_chk:
+                cur_chk = conn_chk.cursor()
+                cur_chk.execute(
+                    """
+                    SELECT 1
+                    FROM shop_order
+                    WHERE status = 'pending'
+                       OR (status = 'failed' AND retry_requested = 1)
+                    LIMIT 1
+                    """
+                )
+                if not cur_chk.fetchone():
+                    return DeliveryJobResult(0, 0, 0)
+
             # Decidir modo de entrega
             rcon_cfg = _load_rcon_config()
             rcon_enabled = _is_rcon_enabled(rcon_cfg)

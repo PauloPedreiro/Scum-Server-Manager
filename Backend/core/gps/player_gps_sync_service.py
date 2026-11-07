@@ -422,11 +422,16 @@ class PlayerGpsSyncService:
         Muito mais rápido que o SCUM.db — retorna posição em tempo real.
         """
         from core.rcon_queue_manager import RconQueueManager
-        from utils.rcon_client import parse_listplayers_response
+        from utils.rcon_client import is_rcon_error_response, parse_listplayers_response
 
         try:
             rcon_q = RconQueueManager.get_instance()
+            cb_open, cb_rem = rcon_q.is_circuit_open()
+            if cb_open:
+                return {"success": False, "error": f"RCON circuit breaker open ({cb_rem:.1f}s)", "players_synced": 0}
             raw = rcon_q.execute_command_sync("ListPlayers", delay_after=0.5, priority=20)
+            if is_rcon_error_response(raw, allow_empty=True):
+                return {"success": False, "error": str(raw), "players_synced": 0}
         except Exception as e:
             return {"success": False, "error": str(e), "players_synced": 0}
 
