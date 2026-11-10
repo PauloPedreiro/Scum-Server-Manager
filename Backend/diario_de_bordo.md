@@ -815,3 +815,28 @@ Modernizar a arquitetura de comunicação e gerenciamento RCON do SSM 3.0, desco
 * `Backend/data/mods/bsbr_scum/`: Atualização completa dos componentes e binários do mod para 0.4.0.
 * `Backend/utils/rcon_client.py`: Detecção de respostas 0.4.0 e marcadores de estado de prisioneiro.
 * `Backend/version.py`: Incremento para `v3.22.75`.
+
+---
+
+## 🔄 36. Atualização Automática do Mod RCON no Restart do Servidor (`v3.22.76`)
+
+### 1. Desafio Operacional
+* Ao distribuir uma nova versão do SSM contendo atualizações do mod RCON nativo (`bsbr_scum`), as DLLs (`main.dll`, `dwmapi.dll`, `UE4SS.dll`) não podem ser substituídas enquanto o executável `SCUMServer.exe` estiver rodando, pois o Windows bloqueia a sobrescrita de arquivos carregados na memória.
+* Exigir que o administrador acesse o servidor, pare manualmente o jogo, vá na aba de Mods e clique em atualizar tornaria as atualizações manuais e propensas a esquecimento.
+
+### 2. Solução Implementada (`v3.22.76`)
+* **Auto-Atualização Integrada no Ciclo de Vida do Servidor (`core/server_control/server_manager.py`)**:
+  * Adicionado o método `_auto_update_rcon_mod_if_needed()`, acionado em dois pontos estratégicos:
+    1. **Dentro de `restart_server()`**: Durante a janela offline (logo após a parada confirmada do serviço e do processo `SCUMServer.exe` e antes do arranque do jogo).
+    2. **Dentro de `start_server()`**: Antes de subir o serviço, caso o servidor estivesse previamente parado.
+  * O método invoca o `RconModManager.check_update_status(bin_dir)`. Se a versão instalada no servidor for inferior à versão empacotada em `data/mods/bsbr_scum/` (ex: `0.3.0` -> `0.4.0`):
+    * Faz backup automático da versão antiga em `data/mods/_backup/`.
+    * Preserva intacto o arquivo `config.ini` (senhas RCON, portas e configurações de rede não são alteradas).
+    * Atualiza `dwmapi.dll`, `UE4SS.dll` e a nova `main.dll`.
+    * Garante `enabled.txt` e `mods.txt`.
+    * Registra todo o processo com clareza nos logs estruturados (`[RCON_MOD_AUTO_UPDATE]`).
+  * O processo é 100% automático, silencioso (leva ~100ms na cópia e ~2ms se já estiver atualizado) e não adiciona nenhum tempo perceptível ao restart.
+
+### 3. Arquivos Modificados
+* `Backend/core/server_control/server_manager.py`: Inclusão de `_auto_update_rcon_mod_if_needed` em `restart_server` e `start_server`.
+* `Backend/version.py`: Incremento para `v3.22.76`.

@@ -1137,6 +1137,14 @@ class ServerManager:
                         "Continuando com o start do servidor apesar do erro na limpeza de WAL/SHM"
                     )
 
+            # Atualização automática do mod RCON (BSBR-SCUM) caso haja nova versão disponível
+            try:
+                self._auto_update_rcon_mod_if_needed()
+            except Exception as e:
+                self.logger.error(
+                    f"[RCON_MOD_AUTO_UPDATE] Falha ao verificar mod RCON antes do start: {e}"
+                )
+
             # 1. Atualização Steam
             steam_result = self._update_steam()
             if not steam_result["success"]:
@@ -1647,6 +1655,15 @@ class ServerManager:
 
             except Exception as e:
                 self.logger.error(f"[OFFLINE_JOBS] Erro geral no processamento offline: {e}")
+
+            # 4) ATUALIZAÇÃO AUTOMÁTICA DO MOD RCON (BSBR-SCUM)
+            # Se uma nova versão estiver disponível em data/mods/bsbr_scum, atualiza as DLLs enquanto o servidor está parado
+            try:
+                self._auto_update_rcon_mod_if_needed()
+            except Exception as e:
+                self.logger.error(
+                    f"[RCON_MOD_AUTO_UPDATE] Falha no bloco de atualização automática do mod RCON: {e}"
+                )
 
             # Verificar timeout antes de tentar iniciar
             elapsed = time.time() - restart_start_time
@@ -3458,6 +3475,54 @@ class ServerManager:
                 self.logger.error(f"[OFFLINE_JOBS] Traceback: {traceback.format_exc()}")
             except Exception:
                 pass
+
+    def _auto_update_rcon_mod_if_needed(self) -> None:
+        """
+        Verifica se há uma versão mais recente do mod RCON nativo (bsbr_scum)
+        disponível em data/mods/bsbr_scum e a instala automaticamente enquanto
+        o SCUMServer.exe está parado, preservando todas as configurações do config.ini.
+        """
+        try:
+            rcon_cfg = self.config.get("rcon", {}) if isinstance(self.config, dict) else {}
+            if not rcon_cfg.get("auto_update_mod_on_restart", True):
+                self.logger.debug("[RCON_MOD_AUTO_UPDATE] Atualização automática desabilitada na configuração.")
+                return
+
+            from utils.rcon_mod_manager import RconModManager
+
+            if getattr(sys, "frozen", False):
+                backend_root = Path(sys.executable).parent
+            else:
+                backend_root = Path(__file__).resolve().parents[2]
+
+            mod_mgr = RconModManager(root_dir=str(backend_root), logger=self.logger)
+            bin_dir = self.server_path
+
+            if not os.path.exists(bin_dir):
+                self.logger.debug(f"[RCON_MOD_AUTO_UPDATE] Diretório Binaries não encontrado: {bin_dir}")
+                return
+
+            status = mod_mgr.check_update_status(bin_dir)
+            if status.get("update_available"):
+                pkg_ver = status.get("package_info", {}).get("version") or "recente"
+                inst_ver = status.get("installed_info", {}).get("version") or "nenhuma"
+                self.logger.info(
+                    f"[RCON_MOD_AUTO_UPDATE] Nova versão do mod RCON detectada: v{inst_ver} -> v{pkg_ver}. "
+                    "Aplicando atualização automática durante a janela offline..."
+                )
+                success, msg = mod_mgr.install_or_update(bin_dir, preserve_config=True, force=True)
+                if success:
+                    self.logger.info(
+                        f"[RCON_MOD_AUTO_UPDATE] Mod RCON (bsbr_scum) atualizado com sucesso para v{pkg_ver}!"
+                    )
+                else:
+                    self.logger.warn(
+                        f"[RCON_MOD_AUTO_UPDATE] Falha na atualização automática do mod RCON: {msg}"
+                    )
+            else:
+                self.logger.debug("[RCON_MOD_AUTO_UPDATE] Mod RCON já está na versão mais recente.")
+        except Exception as e:
+            self.logger.warn(f"[RCON_MOD_AUTO_UPDATE] Erro inesperado ao checar atualização do mod RCON: {e}")
 
     def get_status(self) -> Dict[str, Any]:
         """Obter status detalhado do servidor"""
