@@ -1,6 +1,6 @@
 # Versão do mod
 
-A versão atual é **0.3.0**. Ela pode ser lida de três formas, e as três sempre
+A versão atual é **0.4.0**. Ela pode ser lida de três formas, e as três sempre
 concordam, porque o número nasce num lugar só no código e é carimbado nos três
 na hora de compilar.
 
@@ -17,7 +17,7 @@ version
 ```
 
 ```
-bsbr_scum 0.3.0
+bsbr_scum 0.4.0
 portas source=28015 linha=27100
 opcoes elevate=1 split_replies=0 echo=0 perf_log=0
 ```
@@ -28,7 +28,7 @@ momento. A senha nunca aparece.
 Para um gerenciador externo, é uma chamada igual a qualquer outra:
 
 ```python
-versao = client.send_command("version").splitlines()[0]   # "bsbr_scum 0.3.0"
+versao = client.send_command("version").splitlines()[0]   # "bsbr_scum 0.4.0"
 ```
 
 ## Com o servidor parado
@@ -40,7 +40,7 @@ ue4ss\Mods\bsbr_scum\version.txt
 ```
 
 ```
-bsbr_scum 0.3.0
+bsbr_scum 0.4.0
 carregado 2026-10-15 00:31:04
 ```
 
@@ -65,6 +65,15 @@ sumiria quando o arquivo fosse regravado. Um número que mente sobre qual
 binário está rodando atrapalha mais do que ajuda, então a versão fica fora dele.
 
 ---
+
+## O que mudou na 0.4.0
+
+- **`DestroyAllBrennersWithinRadius [Radius [m]]`**, comando do mod. O jogo
+  não tem como remover o Brenner; este acha os `BP_Brenner_C` num raio do
+  jogador do `as` (padrão 50 m) e os destrói. Ver
+  [comandos/mod.md](../comandos/mod.md#destroyallbrennerswithinradius--remover-brenners).
+- **`SpawnBrenner` passa a exigir `as <SteamID>`.** Sem alvo, o Brenner nascia
+  na frente do primeiro jogador vivo. Agora responde o uso e não executa.
 
 ## O que mudou na 0.3.0
 

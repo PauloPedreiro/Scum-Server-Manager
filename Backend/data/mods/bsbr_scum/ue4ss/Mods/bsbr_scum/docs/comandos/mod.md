@@ -52,6 +52,7 @@ A abreviação só vale para comandos do mod. Verbos do jogo passam intactos.
 | `call <alvo> <função>` | Chama uma função sem parâmetros |
 | `spawn <classe> <x> <y> <z>` | Cria um ator direto pela engine |
 | `sudo <comando>` | Executa um comando de nível Developer |
+| `DestroyAllBrennersWithinRadius [Radius [m]]` | Destrói os Brenners num raio do jogador do `as` (padrão 50 m) |
 | `find <texto>` | Procura classes e objetos carregados |
 | `search <alvo> <valor>` | Procura uma propriedade com esse valor |
 | `inspect <classe>` | Reflexão completa de uma classe |
@@ -348,6 +349,54 @@ Destrava os 105 comandos de nível 3 e 4 — ver [developer.md](developer.md).
 > `DisableServer`. Um erro de digitação derruba o servidor, e o `DisableServer`
 > bloqueia até a sua própria reconexão.
 
+**`SpawnBrenner` exige o `as`.** O comando do jogo não tem parâmetro de jogador:
+o Brenner nasce no contexto de quem invoca, e pela porta Source isso seria o
+primeiro jogador vivo, que não pediu nada. Desde a 0.4.0, `sudo SpawnBrenner`
+sem `as <SteamID>` responde o uso e não executa. Pelo chat, o `@` ou o próprio
+remetente já resolvem o alvo. Para remover, ver
+[`DestroyAllBrennersWithinRadius`](#destroyallbrennerswithinradius--remover-brenners).
+
+---
+
+## `DestroyAllBrennersWithinRadius` — remover Brenners
+
+```powershell
+scum as 76561198121427572 DestroyAllBrennersWithinRadius
+scum as 76561198121427572 DestroyAllBrennersWithinRadius 100
+```
+
+```
+como Mazzotti:
+2 Brenner(s) destruido(s) num raio de 50 m
+```
+
+O SCUM não tem comando que remova o Brenner: ele não é zumbi, animal nem NPC
+armado, então `DestroyZombiesWithinRadius`, `DestroyAllAnimalsWithinRadius`,
+`DestroyArmedNPCsWithinRadius` e `DestroyEntity` passam por ele. Este comando é
+do mod e faz o que falta: acha os atores `BP_Brenner_C` num raio do jogador e os
+destrói, tirando colisão e desenho antes para o cliente não ficar com um Brenner
+fantasma.
+
+Mesma forma do `DestroyAllRazorsWithinRadius` do jogo, com duas diferenças:
+
+- **O jogador é obrigatório**, pelo `as <SteamID>` (ou `@` no chat). Não existe
+  `Location`: o centro é sempre esse jogador. Sem `as`, responde o uso e não faz
+  nada.
+- **`Radius [m]` é opcional**, padrão **50**, de 1 a 2000. Fora da faixa ou não
+  numérico, responde o uso.
+
+| Situação | Resposta |
+|---|---|
+| Sem `as` | `uso: as <SteamID> DestroyAllBrennersWithinRadius [Radius [m]]  (1 a 2000, padrao 50)` |
+| SteamID de quem não está conectado | `jogador '…' nao encontrado ou desconectado` (o próprio `as` recusa) |
+| Jogador morto ou carregando | `o jogador do 'as' nao tem prisioneiro no mundo agora (morto ou carregando)` |
+| Nenhum no raio | `nenhum Brenner num raio de 50 m` |
+| N no raio | `N Brenner(s) destruido(s) num raio de 50 m` |
+
+Custo: uma passagem pela lista de atores do mundo por chamada, mais três
+chamadas por Brenner destruído. Nada por tick. Serve para limpar depois de um
+evento com `DestroyAllBrennersWithinRadius 2000`.
+
 ---
 
 ## `say` — anunciar
@@ -400,7 +449,7 @@ controller antes de injetar.
 
 | Comando | Custo |
 |---|---|
-| Comandos do jogo, `sudo`, `players`, `vehicles`, `get`, `set`, `call` | Lista de atores — barato, pode ir para automação |
+| Comandos do jogo, `sudo`, `players`, `vehicles`, `get`, `set`, `call`, `DestroyAllBrennersWithinRadius` | Lista de atores — barato, pode ir para automação |
 | `find`, `search`, `inspect`, `object <nome parcial>` | Varredura completa — um engasgo de frame por chamada |
 
 A varredura roda na thread do jogo, então o frame para enquanto ela acontece.

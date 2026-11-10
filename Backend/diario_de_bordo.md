@@ -782,3 +782,36 @@ Modernizar a arquitetura de comunicação e gerenciamento RCON do SSM 3.0, desco
 * `Backend/core/rcon_queue_manager.py`: Detecção abrangente de comandos spawn sob o prefixo `as <SteamID>`.
 * `Backend/core/logs/chat_command_monitor.py`: Trava de re-criação de pedido para kits com falha.
 * `Backend/docs/SHOP_DELIVERY_RCON_INSTANTANEO.md`: Atualização da documentação técnica da blindagem.
+
+---
+
+## 🚀 35. Atualização do Mod RCON Nativo (`bsbr_scum 0.4.0`) e Suporte no SSM (`v3.22.75`)
+
+### 1. Novidades e Correções do Mod RCON (`bsbr_scum 0.4.0`)
+* **Validação Segura de Prisioneiro no Contexto `as <SteamID>`**:
+  * Adicionada verificação no motor C++ do mod: caso o jogador do `as` esteja morto ou ainda carregando no mundo (`Pawn == NULL`), o mod agora responde com segurança:
+    `"o jogador do 'as' nao tem prisioneiro no mundo agora (morto ou carregando)"`, evitando falhas de ponteiro ou spawning fantasma.
+* **Comando `DestroyAllBrennersWithinRadius [Radius [m]]`**:
+  * O jogo não possui comando nativo para remoção de Brenners (não são zumbis, animais nem NPCs armados). O mod adicionou o comando `DestroyAllBrennersWithinRadius` (1 a 2000m, padrão 50m) com destruição limpa via `K2_DestroyActor`.
+* **Proteção em `SpawnBrenner`**:
+  * Passou a exigir obrigatoriamente `as <SteamID>` para não nascer indevidamente na frente do primeiro jogador vivo aleatório.
+* **Formato Estruturado de `version`**:
+  * Saída padronizada:
+    ```
+    bsbr_scum 0.4.0
+    portas source=28015 linha=27100
+    opcoes elevate=1 split_replies=0 echo=0 perf_log=0
+    ```
+
+### 2. Integração no SSM Backend
+* **Atualização do Pacote Staged (`data/mods/bsbr_scum/`)**:
+  * Binário `main.dll` atualizado para `0.4.0` (675.840 bytes), documentação e `version.txt`.
+  * Detectado e pronto para instalação com 1 clique pelo `RconModManager` no SSM.
+* **Compatibilidade em `utils/rcon_client.py`**:
+  * Adicionados marcadores `"nao tem prisioneiro"` e `"morto ou carregando"` a `is_rcon_error_response()`, garantindo que pedidos de entrega sejam mantidos em `pending` caso o jogador esteja morto ou na tela de carregamento.
+  * Parser `query_live_mod_version()` atualizado com regex compatível com as versões `0.3.0` e `0.4.0+`.
+
+### 3. Arquivos Modificados
+* `Backend/data/mods/bsbr_scum/`: Atualização completa dos componentes e binários do mod para 0.4.0.
+* `Backend/utils/rcon_client.py`: Detecção de respostas 0.4.0 e marcadores de estado de prisioneiro.
+* `Backend/version.py`: Incremento para `v3.22.75`.

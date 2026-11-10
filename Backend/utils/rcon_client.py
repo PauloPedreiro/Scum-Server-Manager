@@ -66,6 +66,8 @@ def is_rcon_error_response(response: Optional[str], allow_empty: bool = False) -
         "nao encontrado",
         "desconectado",
         "nenhum jogador",
+        "nao tem prisioneiro",
+        "morto ou carregando",
         "uso: ",
         "server still starting",
         "unknown command",
@@ -534,11 +536,18 @@ def query_live_mod_version(client: RconClient) -> dict:
             if m_ver:
                 info["version"] = m_ver.group(1)
 
-        # Buscar portas e opções em todo o texto
+        # Buscar portas e opções em todo o texto (suporta formato 0.3.0 e 0.4.0+)
         m_ports = re.search(r"Source RCON on (\d+),\s*API on (\d+)", raw, re.IGNORECASE)
         if m_ports:
             info["source_port"] = int(m_ports.group(1))
             info["api_port"] = int(m_ports.group(2))
+        else:
+            m_src = re.search(r"source\s*=\s*(\d+)", raw, re.IGNORECASE)
+            if m_src:
+                info["source_port"] = int(m_src.group(1))
+            m_api = re.search(r"(?:linha|api)\s*=\s*(\d+)", raw, re.IGNORECASE)
+            if m_api:
+                info["api_port"] = int(m_api.group(1))
 
         m_elevate = re.search(r"elevate\s*=\s*(\d+)", raw, re.IGNORECASE)
         if m_elevate:

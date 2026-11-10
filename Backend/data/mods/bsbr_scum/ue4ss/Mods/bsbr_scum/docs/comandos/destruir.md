@@ -124,6 +124,11 @@ scum DestroyAllRazorsWithinRadius <Radius [m]> <Location>
 
 *Original:* Destroys all razors within a given radius around given location or player if none given.
 
+> O jogo não tem o equivalente para o **Brenner** (não é zumbi, animal nem NPC
+> armado). O mod cobre isso com
+> [`DestroyAllBrennersWithinRadius`](mod.md#destroyallbrennerswithinradius--remover-brenners),
+> na mesma forma, com o jogador obrigatório pelo `as`.
+
 ### `DestroyAllVehicles`
 
 Destrói **todos** os veículos do servidor
