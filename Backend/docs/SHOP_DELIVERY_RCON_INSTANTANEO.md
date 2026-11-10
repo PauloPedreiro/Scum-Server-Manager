@@ -85,7 +85,7 @@ No arquivo `core/shop/shop_buy_job_worker.py`:
 - Assim que o `enqueue_buy_job` insere o pedido na tabela `shop_buy_job`, ele aciona `_global_wake_event.set()`.
 - O worker acorda no mesmo milissegundo, processa a ordem e despacha a entrega unitária imediata.
 
-### 2.4 Blindagem Anti-Crash para Entregas Simultâneas em Massa (v3.22.70 – v3.22.73)
+### 2.4 Blindagem Anti-Crash para Entregas Simultâneas em Massa (v3.22.70 – v3.22.74)
 Para evitar que múltiplos jogadores entrando ao mesmo tempo e pedindo kits de boas-vindas (`/register` e `/kit`) sobrecarreguem ou congelem a **Game Thread** da Unreal Engine (`"erro: sem resposta em 4s - o tick do jogo pode estar parado"`):
 
 1. **Execução Direta no Controller do Comprador via `as <SteamID>` (Causa Raiz no `bsbr_scum 0.3.0`)**:
@@ -101,15 +101,17 @@ Para evitar que múltiplos jogadores entrando ao mesmo tempo e pedindo kits de b
 4. **Cadência Adaptativa por Complexidade do Ator (*Throttling*)**:
    - Itens comuns utilizam `delay_after = 0.8s`.
    - Atores pesados (`_is_heavy_actor`: armas `Weapon_*` e veículos `BPC_*` / `BP_*`) utilizam `delay_after = 2.0s`.
-5. **Detecção de Congelamento de Tick, *Circuit Breaker* e Prevenção de Loop de Crash Pós-Reinício**:
+5. **Detecção de Congelamento de Tick, *Circuit Breaker* Universal e Prevenção de Loop de Crash**:
    - Funções `is_rcon_tick_frozen()` e `is_rcon_error_response()` inspecionam o retorno de cada comando RCON.
-   - Se o servidor reportar congelamento de tick ou timeout, o `RconQueueManager` reinicializa o socket e abre o **Circuit Breaker** por `15s` a `45s`, abortando comandos de spawn/listagem subsequentes em `0ms` (mas mantendo `SendChat` como `/sd` liberado).
+   - Se o servidor reportar congelamento de tick ou timeout, o `RconQueueManager` reinicializa o socket e abre o **Circuit Breaker** por `15s` a `45s`, abortando comandos de spawn (`as <SteamID> spawnitem`, `spawnvehicle`) subsequentes em `0ms` (mas mantendo `SendChat` como `/sd` liberado).
    - Se um pedido causar `RCON_TICK_FROZEN`, `_revert_or_fail_order()` marca o pedido como `failed` (`retry_requested = 0`) em vez de `pending`, impedindo que um pedido problemático volte a rodar automaticamente 30 segundos após cada reinício do `SCUMServer.exe`.
+   - A checagem de kits de boas-vindas no `chat_command_monitor.py` inclui o status `'failed'`, impedindo que comandos repetidos `/register` no chat re-criem pedidos e re-enviem comandos nocivos para a fila.
 6. **Eliminação Total de `ListPlayers` Desnecessário e Filtro de `Pos: Lobby`**:
    - Comandos digitados no chat (`/register`, `/kit`, `/buy`) nunca executam `ListPlayers`, pois o jogador comprovadamente já está online no jogo.
    - O worker periódico `run_once()` verifica primeiro no SQLite se há pedidos aguardando na fila (`attempt_count > 0` ou `created_at <= -15s`) antes de chamar `ListPlayers`, e filtra jogadores que ainda estão em `Pos: Lobby` (`exclude_lobby=True`, sem `Pawn` no mundo).
-7. **Sanitização Automática de `StackCount` e Typos (`_build_spawnitem_cmd`)**:
+7. **Sanitização Automática de `StackCount`, Typos e Assets Instáveis (`_build_spawnitem_cmd` / `_CLASS_TYPO_FIXES`)**:
    - Corrige automaticamente typos conhecidos como `Water_051` -> `Water_05l` e `Emergency_bandage_Big_S` / `Emergency_bandage_Big_ES` -> `Emergency_bandage_Big`.
+   - Converte automaticamente classes com falhas conhecidas de colisão na UE4, como `Weapon_MP5` -> `Weapon_MP5_SD`, garantindo compatibilidade total com a munição 9mm e carregadores do kit sem congelar a Game Thread.
    - Quando um item possui `StackCount` embutido no cadastro (ex.: `Cash 1 StackCount 5000` com `qty=2`), posiciona a quantidade corretamente antes de `StackCount` (`as <SteamID> spawnitem Cash 2 StackCount 5000`).
 
 ---

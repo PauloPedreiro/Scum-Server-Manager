@@ -753,3 +753,32 @@ Modernizar a arquitetura de comunicação e gerenciamento RCON do SSM 3.0, desco
 * `Backend/core/gps/player_gps_sync_service.py`: Suspensão de sincronização RCON quando o *Circuit Breaker* está aberto.
 * `Backend/core/logs/chat_command_monitor.py`: Unificação do disparo do Welcome Pack no `/register` via `deliver_single_order_now`.
 * `Backend/docs/SHOP_DELIVERY_RCON_INSTANTANEO.md` & `Backend/docs/SHOP_ECONOMY_SYSTEM.md`: Atualização da documentação técnica e seção Obsidian.
+
+---
+
+## 🛡️ 34. Eliminação Definitiva de Congelamento por Assets Instáveis e Blindagem do Circuit Breaker (`v3.22.74`)
+
+### 1. Diagnóstico dos Logs em Produção (07/11 a 10/11)
+* **Amostra Analisada**: 654 comandos de entrega via RCON registrados nos logs `rcon_2026-11-07.log` a `rcon_2026-11-10.log`.
+* **Resultado**:
+  * **638 comandos de entrega bem-sucedidos (100% de sucesso)** para materiais, ferramentas, veículos, itens diversos e outras armas (`Weapon_Block21`, miras, supressores).
+  * **14 falhas causadas exclusivamente por um único asset**: `as <SteamID> spawnitem Weapon_MP5 1`.
+  * **Causa Raiz no SCUM Server**: A blueprint base `Weapon_MP5` (ao contrário de `Weapon_MP5_SD`, `Weapon_UMP45`, `Weapon_Block21` ou `Weapon_AKM`) possui uma falha crítica na resolução de colisão de sockets modulares quando instanciada em terreno aberto (fora de zonas com chão plano de concreto como postos de troca). A chamada a `UAdminCommand_SpawnItem::Execute` trava a Game Thread da Unreal Engine 4 em loop de colisão física (`"erro: sem resposta em 4s - o tick do jogo pode estar parado"`), congelando o servidor e impedindo respostas a qualquer comando subsequente do RCON (`ListPlayers`, `SendChat`, `/sd`, `/kit`, etc.).
+  * **Efeito Loop Pós-Falha**: Como o pedido falhava por freeze (`status = 'failed'`), o `chat_command_monitor.py` só verificava pedidos em `('pending', 'delivering', 'delivered')`. Toda vez que o jogador digitava `/register` novamente no chat, um novo pedido com a MP5 era gerado, congelando o servidor de novo 2 minutos após o reinício.
+  * **Bypass do Circuit Breaker**: O `rcon_queue_manager.py` testava `cmd_lower.startswith(("spawnitem", "spawnvehicle"))`. Como na v3.22.73 os comandos passaram a usar `as <SteamID> spawnitem`, o comando começava com `"as "`, não ativando o bloqueio rápido de spawns durante o congelamento.
+
+### 2. Solução Implementada (`v3.22.74`)
+1. **Sanitização Automática de Assets Perigosos (`core/shop/delivery_service.py`)**:
+   * Adicionado mapeamento de segurança em `_CLASS_TYPO_FIXES`: `"weapon_mp5": "Weapon_MP5_SD"`.
+   * A variante `Weapon_MP5_SD` possui silenciador integrado e malha de colisão fechada e estável, utilizando a mesma munição 9mm (`Cal_9mm_Ammobox`) e os mesmos carregadores (`Magazine_MP5`), impedindo o congelamento da engine mesmo se cadastrada como `Weapon_MP5` no banco de dados.
+   * Log explícito de aviso crítico quando um comando RCON de spawn sofre congelamento de tick.
+2. **Reconhecimento Universal do Circuit Breaker (`core/rcon_queue_manager.py`)**:
+   * O disjuntor agora verifica se o comando contém `" spawnitem "` ou `" spawnvehicle "`, protegendo a fila mesmo quando prefixado por `as <SteamID>`.
+3. **Bloqueio de Re-pedidos em Loop no Chat (`core/logs/chat_command_monitor.py`)**:
+   * A checagem de kit de registro agora inclui `o.status IN ('pending', 'delivering', 'delivered', 'failed')`. Se a entrega do kit inicial falhou por qualquer motivo para aquele SteamID, novos comandos `/register` no chat não duplicam pedidos nem re-disparam comandos na fila.
+
+### 3. Arquivos Modificados
+* `Backend/core/shop/delivery_service.py`: Sanitização automática segura de `Weapon_MP5` para `Weapon_MP5_SD` e log crítico de congelamento.
+* `Backend/core/rcon_queue_manager.py`: Detecção abrangente de comandos spawn sob o prefixo `as <SteamID>`.
+* `Backend/core/logs/chat_command_monitor.py`: Trava de re-criação de pedido para kits com falha.
+* `Backend/docs/SHOP_DELIVERY_RCON_INSTANTANEO.md`: Atualização da documentação técnica da blindagem.

@@ -746,7 +746,7 @@ class ChatCommandMonitor:
                             """
                             SELECT 1 FROM shop_order o
                             JOIN shop_order_item oi ON oi.order_id = o.order_id
-                            WHERE o.steam_id = ? AND oi.code = ? AND o.status IN ('pending', 'delivering', 'delivered')
+                            WHERE o.steam_id = ? AND oi.code = ? AND o.status IN ('pending', 'delivering', 'delivered', 'failed')
                             LIMIT 1
                             """,
                             (str(steam_id), int(welcome_kit_code))

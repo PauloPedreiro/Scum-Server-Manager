@@ -152,7 +152,13 @@ class RconQueueManager:
                 cmd_lower = item.command.strip().lower()
                 is_lp = cmd_lower == "listplayers"
                 cb_open, cb_rem = self.is_circuit_open()
-                if cb_open and cmd_lower.startswith(("spawnitem", "spawnvehicle")):
+                is_spawn = (
+                    cmd_lower.startswith(("spawnitem", "spawnvehicle"))
+                    or " spawnitem " in cmd_lower
+                    or " spawnvehicle " in cmd_lower
+                    or cmd_lower.endswith((" spawnitem", " spawnvehicle"))
+                )
+                if cb_open and is_spawn:
                     skip_delay = True
                     item.future.set_result(
                         f"erro: circuit_breaker_open ({cb_rem:.1f}s restantes - protegendo tick do servidor)"

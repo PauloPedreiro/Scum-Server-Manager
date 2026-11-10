@@ -27,11 +27,14 @@ _KIT_BATCH_SIZE: int = 4
 _KIT_BATCH_PAUSE_SEC: float = 2.5
 _MAX_TRANSIENT_ATTEMPTS: int = 8
 
-# Correções automáticas de typos comuns em nomes de classes do SCUM
+# Correções automáticas de typos comuns em nomes de classes do SCUM e sanitizações de segurança
 _CLASS_TYPO_FIXES: Dict[str, str] = {
     "water_051": "Water_05l",
     "emergency_bandage_big_s": "Emergency_bandage_Big",
     "emergency_bandage_big_es": "Emergency_bandage_Big",
+    # Weapon_MP5 causa deadlock conhecido na Game Thread do SCUM Server ao calcular colisão no mapa aberto.
+    # Weapon_MP5_SD usa silenciador integrado com malha de colisão estável e a mesma munição/carregador 9mm.
+    "weapon_mp5": "Weapon_MP5_SD",
 }
 
 
@@ -377,7 +380,11 @@ class ShopDeliveryService:
 
         resp = rcon_q.execute_command_sync(cmd, delay_after=delay_after, priority=5, origin="SHOP")
         if is_rcon_tick_frozen(resp):
-            rcon_q.trip_circuit(cooldown=20.0, reason=resp or "RCON timeout during spawn")
+            rcon_q.trip_circuit(cooldown=30.0, reason=resp or "RCON timeout during spawn")
+            if self.logger:
+                self.logger.error(
+                    f"CRÍTICO: O comando '{cmd}' causou travamento na Game Thread do SCUM Server ({resp})."
+                )
             return False, f"RCON_TICK_FROZEN:{resp or 'timeout'}"
 
         if is_rcon_error_response(resp, allow_empty=False):
