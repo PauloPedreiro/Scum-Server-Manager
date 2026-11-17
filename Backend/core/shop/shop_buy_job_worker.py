@@ -472,6 +472,9 @@ class ShopBuyJobWorker:
             elif code.startswith("IS_A_KIT_USE_KIT_COMMAND:"):
                 msg = f"Code {code.split(':', 1)[1]} is a kit. Use /kit."
                 err_code = "IS_A_KIT"
+            elif code.startswith("IS_DAILY_PACK_USE_DAILYPACK_COMMAND:"):
+                msg = "This kit is the Daily Pack reward. Use /dailypack to claim it."
+                err_code = "IS_DAILY_PACK"
             else:
                 err_code = "ERROR"
 

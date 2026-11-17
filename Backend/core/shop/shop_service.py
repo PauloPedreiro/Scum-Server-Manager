@@ -156,17 +156,25 @@ class ShopService:
             for code, qty in merged.items():
                 is_kit_requested = is_kit_by_code.get(int(code), False)
                 cur_kit = None
+                is_daily_pack = 0
                 if is_kit_requested:
-                    # Verificar se é um kit cadastrado
-                    cur_kit = conn.execute(
-                        "SELECT kit_id, name, price, enabled, only_once, auto_deliver_on_register FROM shop_kit WHERE code = ?",
-                        (int(code),),
-                    ).fetchone()
+                    # Verificar se é um kit cadastrado (com fallback caso is_daily_pack ainda não exista)
+                    try:
+                        cur_kit = conn.execute(
+                            "SELECT kit_id, name, price, enabled, only_once, auto_deliver_on_register, COALESCE(is_daily_pack, 0) FROM shop_kit WHERE code = ?",
+                            (int(code),),
+                        ).fetchone()
+                    except sqlite3.OperationalError:
+                        cur_kit_fallback = conn.execute(
+                            "SELECT kit_id, name, price, enabled, only_once, auto_deliver_on_register FROM shop_kit WHERE code = ?",
+                            (int(code),),
+                        ).fetchone()
+                        cur_kit = (*cur_kit_fallback, 0) if cur_kit_fallback else None
 
                 if is_kit_requested:
                     if not cur_kit:
                         raise ValueError(f"KIT_NOT_FOUND:{code}")
-                    kit_id, kit_name, price, enabled, only_once, auto_deliver_on_register = cur_kit
+                    kit_id, kit_name, price, enabled, only_once, auto_deliver_on_register, is_daily_pack = cur_kit
                     setup = f"KIT:{kit_id}"
                     offer_qty = 1
                     max_per_order = 1
@@ -186,8 +194,12 @@ class ShopService:
                     setup, offer_qty, price, enabled, max_per_order = row
                     only_once = 0
 
-                # Permitir kits de auto-entrega no registro mesmo se desabilitados no catalogo geral
-                if is_kit_requested and int(auto_deliver_on_register or 0) == 1:
+                # Impedir compra de kit Daily Pack fora do comando /dailypack (previne burlar o cooldown)
+                if is_kit_requested and int(is_daily_pack or 0) == 1 and source != "dailypack":
+                    raise ValueError(f"IS_DAILY_PACK_USE_DAILYPACK_COMMAND:{code}")
+
+                # Permitir kits de auto-entrega no registro ou Daily Pack mesmo se desabilitados no catalogo geral
+                if is_kit_requested and (int(auto_deliver_on_register or 0) == 1 or source == "dailypack"):
                     pass
                 elif int(enabled) != 1:
                     raise ValueError(f"OFFER_DISABLED:{code}")

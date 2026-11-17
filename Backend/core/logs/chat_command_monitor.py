@@ -100,6 +100,7 @@ class ChatCommandMonitor:
             'rd': r'/rd\b',  # Comando /rd <url> ou /rd off
             'buy': r'/buy\b',  # Comando /buy
             'kit': r'/kit\b',  # Comando /kit
+            'dailypack': r'/dailypack\b',  # Comando /dailypack (Presente diário)
             # 'mail': r'/mail\b',  # Comando /mail (Desativado)
             # 'tmail': r'/tmail\b',  # Comando /tmail (Desativado)
             'atr': r'/atr\b',  # Comando /atr
@@ -557,6 +558,21 @@ class ChatCommandMonitor:
                     steam_id=steam_id,
                     player_name=player,
                     message_text=msg,
+                )
+                try:
+                    if ts:
+                        ts_dt2 = datetime.strptime(ts, "%Y.%m.%d-%H.%M.%S")
+                        if not self.last_processed_chat_ts or ts_dt2 > self.last_processed_chat_ts:
+                            self.last_processed_chat_ts = ts_dt2
+                            self._save_last_processed_chat_ts()
+                except Exception:
+                    pass
+                return
+
+            if cmd == "dailypack":
+                self._handle_dailypack_command(
+                    steam_id=steam_id,
+                    player_name=player,
                 )
                 try:
                     if ts:
@@ -3227,3 +3243,222 @@ class ChatCommandMonitor:
 
         except Exception as e:
             self.logger.error(f"Erro ao processar comando /atr: {e}")
+
+    def _handle_dailypack_command(self, steam_id: str, player_name: str) -> None:
+        """Processa o comando /dailypack com cooldown persistente de 24h (86400s)"""
+        try:
+            if not steam_id:
+                return
+
+            from core.rcon_queue_manager import RconQueueManager
+            rcon_q = RconQueueManager.get_instance()
+
+            # Prevenção contra duplo clique concorrente
+            if not hasattr(self, "_active_dailypack_claims"):
+                self._active_dailypack_claims = set()
+            if steam_id in self._active_dailypack_claims:
+                return
+            self._active_dailypack_claims.add(steam_id)
+
+            try:
+                # 1. Verificar se o jogador está preso
+                try:
+                    from app.extensions import get_services
+                    svc = get_services()
+                    if getattr(svc, 'squad_tk_jail_service', None) and svc.squad_tk_jail_service.is_player_jailed(steam_id):
+                        chat_color = int(svc.squad_tk_jail_service.warning_color) if (svc.squad_tk_jail_service.warning_color.isdigit() and svc.squad_tk_jail_service.use_colors) else 7
+                        rcon_q.enqueue_command(
+                            f'SendChat {chat_color} "[SSM] Voce nao pode resgatar o /dailypack enquanto estiver preso!" {steam_id}',
+                            priority=20
+                        )
+                        return
+                except Exception as jail_check_err:
+                    self.logger.error(f"Erro ao verificar prisao no /dailypack: {jail_check_err}")
+
+                # 2. Ler configuração do Daily Pack no data/config.json
+                import sys
+                config_file = "data/config.json"
+                if getattr(sys, "frozen", False):
+                    config_path = Path(sys.executable).parent / config_file
+                else:
+                    config_path = Path(config_file)
+
+                cfg = {}
+                if os.path.exists(config_path):
+                    try:
+                        with open(config_path, "r", encoding="utf-8") as f:
+                            cfg = json.load(f) or {}
+                    except Exception as cfg_err:
+                        self.logger.error(f"Erro ao ler config.json no /dailypack: {cfg_err}")
+
+                dp_cfg = cfg.get("daily_pack", {})
+                enabled = bool(dp_cfg.get("enabled", True))
+                kit_code = dp_cfg.get("kit_code")
+                cooldown_seconds = int(dp_cfg.get("cooldown_seconds", 86400) or 86400)
+                bonus_coins = int(dp_cfg.get("bonus_coins", 0) or 0)
+
+                # Priorizar kit marcado como Daily Pack na tabela shop_kit do SSM.db
+                try:
+                    with DatabaseConnector.get_connection(self.ssm_db_path) as conn_dp:
+                        cur_dp = conn_dp.cursor()
+                        cur_dp.execute("SELECT code FROM shop_kit WHERE is_daily_pack = 1 LIMIT 1")
+                        row_dp = cur_dp.fetchone()
+                        if row_dp and row_dp[0]:
+                            kit_code = int(row_dp[0])
+                except Exception:
+                    pass
+
+                if not enabled:
+                    rcon_q.enqueue_command(
+                        f'SendChat 7 "[SSM] O comando /dailypack esta desativado no momento." {steam_id}',
+                        priority=15
+                    )
+                    return
+
+                if not kit_code and bonus_coins <= 0:
+                    self.logger.warn("[DAILYPACK] Nenhum kit_code ou bonus_coins configurado em data/config.json")
+                    rcon_q.enqueue_command(
+                        f'SendChat 7 "[SSM] Daily Pack ainda nao configurado pela administracao." {steam_id}',
+                        priority=15
+                    )
+                    return
+
+                # 3. Criar tabela de controle de cooldown no SSM.db (se não existir) e validar tempo
+                now_ts = int(time.time())
+                with DatabaseConnector.get_connection(self.ssm_db_path, write_mode=True) as conn:
+                    cur = conn.cursor()
+                    cur.execute(
+                        """
+                        CREATE TABLE IF NOT EXISTS daily_pack_claims (
+                            steam_id TEXT PRIMARY KEY,
+                            last_claimed_ts INTEGER NOT NULL,
+                            last_claimed_at TEXT NOT NULL,
+                            total_claims INTEGER NOT NULL DEFAULT 1
+                        )
+                        """
+                    )
+                    cur.execute(
+                        "SELECT last_claimed_ts FROM daily_pack_claims WHERE steam_id = ? LIMIT 1",
+                        (str(steam_id),)
+                    )
+                    row = cur.fetchone()
+
+                    if row and row[0]:
+                        last_claimed_ts = int(row[0])
+                        elapsed = now_ts - last_claimed_ts
+                        if elapsed < cooldown_seconds:
+                            remaining = cooldown_seconds - elapsed
+                            hours = remaining // 3600
+                            minutes = (remaining % 3600) // 60
+                            seconds = remaining % 60
+                            rcon_q.enqueue_command(
+                                f'SendChat 7 "[SSM] Voce ja resgatou seu Daily Pack! Tente novamente em {hours:02d}h {minutes:02d}m {seconds:02d}s." {steam_id}',
+                                priority=15
+                            )
+                            return
+
+                safe_player = str(player_name or "Player").strip() or "Player"
+                delivered_parts: List[str] = []
+
+                # 4. Entregar Kit (se kit_code estiver configurado)
+                if kit_code:
+                    try:
+                        shop = ShopService(self.ssm_db_path, logger=self.logger)
+                        order_res = shop.create_order(
+                            steam_id=steam_id,
+                            items=[OrderCreateItem(code=int(kit_code), qty=1, is_kit=True)],
+                            player_name=safe_player,
+                            source="dailypack"
+                        )
+                        delivered_parts.append(f"Kit #{int(kit_code)}")
+
+                        # Disparar entrega imediata via deliver_single_order_now
+                        def trigger_dailypack_delivery_async():
+                            try:
+                                from core.shop.delivery_service import ShopDeliveryService
+                                svc_del = ShopDeliveryService(self.ssm_db_path, self.scum_db_path, logger=self.logger)
+                                svc_del.deliver_single_order_now(order_res.order_id)
+                            except Exception as del_err:
+                                try:
+                                    self.logger.error(f"Erro ao disparar entrega imediata do Daily Pack: {del_err}")
+                                except Exception:
+                                    pass
+
+                        threading.Thread(target=trigger_dailypack_delivery_async, daemon=True).start()
+                    except Exception as kit_err:
+                        err_str = str(kit_err)
+                        self.logger.error(f"Erro ao criar pedido do Daily Pack para {safe_player}: {kit_err}")
+                        if "PLAYER_NOT_REGISTERED" in err_str:
+                            rcon_q.enqueue_command(
+                                f'SendChat 7 "[SSM] Voce precisa vincular seu Discord com !register para resgatar o Daily Pack!" {steam_id}',
+                                priority=15
+                            )
+                        elif "INSUFFICIENT_FUNDS" in err_str:
+                            rcon_q.enqueue_command(
+                                f'SendChat 7 "[SSM] Saldo insuficiente para resgatar este pacote (verifique o preco com a administracao)." {steam_id}',
+                                priority=15
+                            )
+                        elif "KIT_NOT_FOUND" in err_str:
+                            rcon_q.enqueue_command(
+                                f'SendChat 7 "[SSM] Kit #{kit_code} nao encontrado no catalogo." {steam_id}',
+                                priority=15
+                            )
+                        elif "KIT_ALREADY_PURCHASED" in err_str:
+                            rcon_q.enqueue_command(
+                                f'SendChat 7 "[SSM] Este kit esta configurado como compra unica pela administracao." {steam_id}',
+                                priority=15
+                            )
+                        else:
+                            rcon_q.enqueue_command(
+                                f'SendChat 7 "[SSM] Erro ao entregar seu Daily Pack. Tente novamente em instantes." {steam_id}',
+                                priority=15
+                            )
+                        return
+
+                # 5. Entregar Coins extras (opcional, se bonus_coins > 0)
+                if bonus_coins > 0:
+                    try:
+                        wallet = WalletService(self.ssm_db_path, logger=self.logger)
+                        wallet.apply_delta(
+                            steam_id=steam_id,
+                            delta=int(bonus_coins),
+                            reason="daily_pack_reward",
+                            ref_type="dailypack",
+                            ref_id=f"{steam_id}_{now_ts}",
+                            meta={"player": safe_player}
+                        )
+                        delivered_parts.append(f"+{int(bonus_coins)} coins")
+                    except Exception as coin_err:
+                        self.logger.error(f"Erro ao creditar bonus_coins do Daily Pack: {coin_err}")
+
+                # 6. Registrar o resgate apenas após o sucesso
+                now_iso = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+                with DatabaseConnector.get_connection(self.ssm_db_path, write_mode=True) as conn:
+                    cur = conn.cursor()
+                    cur.execute(
+                        """
+                        INSERT INTO daily_pack_claims (steam_id, last_claimed_ts, last_claimed_at, total_claims)
+                        VALUES (?, ?, ?, 1)
+                        ON CONFLICT(steam_id) DO UPDATE SET
+                            last_claimed_ts = excluded.last_claimed_ts,
+                            last_claimed_at = excluded.last_claimed_at,
+                            total_claims = daily_pack_claims.total_claims + 1
+                        """,
+                        (str(steam_id), int(now_ts), now_iso)
+                    )
+                    conn.commit()
+
+                reward_summary = " e ".join(delivered_parts) if delivered_parts else "Recompensa"
+                rcon_q.enqueue_command(
+                    f'SendChat 6 "[SSM] Daily Pack ({reward_summary}) resgatado com sucesso! Volte em 24 horas." {steam_id}',
+                    priority=15
+                )
+
+                self._send_shop_log_message(
+                    f"**[DAILY PACK]** : **{safe_player}** (`{steam_id}`) resgatou o presente diario ({reward_summary})."
+                )
+            finally:
+                self._active_dailypack_claims.discard(steam_id)
+
+        except Exception as e:
+            self.logger.error(f"Erro ao processar comando /dailypack: {e}")

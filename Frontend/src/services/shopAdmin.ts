@@ -493,6 +493,7 @@ export type ShopAdminKit = {
   enabled: 0 | 1 | boolean;
   only_once: 0 | 1 | boolean;
   auto_deliver_on_register: 0 | 1 | boolean;
+  is_daily_pack?: 0 | 1 | boolean;
   created_at: string;
   updated_at: string;
   items: ShopAdminKitItemDetail[];
@@ -510,6 +511,7 @@ export type SaveKitPayload = {
   enabled: boolean;
   only_once: boolean;
   auto_deliver_on_register?: boolean;
+  is_daily_pack?: boolean;
   items: ShopAdminKitItemDetail[];
 };
 
@@ -521,6 +523,7 @@ export type ScanKitPayload = {
   enabled: boolean;
   only_once: boolean;
   auto_deliver_on_register?: boolean;
+  is_daily_pack?: boolean;
   code?: number;
 };
 

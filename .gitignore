@@ -41,6 +41,7 @@ eggs/
 .eggs/
 lib/
 lib64/
+!Frontend/src/lib/
 parts/
 sdist/
 var/
