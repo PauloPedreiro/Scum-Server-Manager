@@ -2771,7 +2771,7 @@ def shop_admin_list_kits():
             cur.execute(
                 """
                 SELECT 
-                    kit_id, code, name, price, enabled, only_once, auto_deliver_on_register, created_at, updated_at
+                    kit_id, code, name, price, enabled, only_once, auto_deliver_on_register, is_daily_pack, created_at, updated_at
                 FROM shop_kit
                 ORDER BY name ASC
                 """
@@ -2791,6 +2791,61 @@ def shop_admin_list_kits():
         if logger:
             logger.error(f"Erro em shop_admin_list_kits: {e}")
         return jsonify({"success": False, "error": str(e)}), 500
+
+
+def _sync_daily_pack_config(kit_code: Optional[int]) -> None:
+    """Atualiza daily_pack.kit_code no data/config.json (ou None se nenhum kit estiver ativo)."""
+    try:
+        import sys
+        from pathlib import Path
+        config_path = None
+        if getattr(sys, "frozen", False):
+            candidate = Path(sys.executable).parent / "data" / "config.json"
+            if candidate.exists():
+                config_path = candidate
+        if not config_path:
+            candidate = Path(__file__).resolve().parent.parent.parent / "data" / "config.json"
+            if candidate.exists():
+                config_path = candidate
+        if not config_path:
+            candidate = Path("data/config.json")
+            if candidate.exists():
+                config_path = candidate
+
+        if config_path and config_path.exists():
+            with open(config_path, "r", encoding="utf-8") as f:
+                cfg = json.load(f) or {}
+            dp = cfg.get("daily_pack")
+            if not isinstance(dp, dict):
+                dp = {"enabled": True, "cooldown_seconds": 86400, "bonus_coins": 50}
+            dp["kit_code"] = int(kit_code) if kit_code is not None else None
+            cfg["daily_pack"] = dp
+            with open(config_path, "w", encoding="utf-8") as f:
+                json.dump(cfg, f, indent=2, ensure_ascii=False)
+    except Exception as e:
+        import logging
+        logging.getLogger(__name__).error(f"Erro ao sincronizar config.json com daily_pack: {e}")
+
+
+def _refresh_daily_pack_config_from_db(conn) -> None:
+    """Sincroniza data/config.json com o estado atual da coluna is_daily_pack no banco."""
+    cur = conn.cursor()
+    cur.execute("SELECT code FROM shop_kit WHERE is_daily_pack = 1 LIMIT 1")
+    row = cur.fetchone()
+    _sync_daily_pack_config(int(row[0]) if (row and row[0] is not None) else None)
+
+
+def _resolve_kit_flags(enabled_val, only_once_val, auto_deliver_val, is_daily_pack_val) -> Tuple[int, int, int, int]:
+    """Normaliza flags do kit garantindo exclusividade mútua entre Daily Pack e Welcome Pack."""
+    truthy = (True, 1, "1", "true", "True")
+    enabled_i = 1 if enabled_val in truthy else 0
+    is_daily_pack_i = 1 if is_daily_pack_val in truthy else 0
+    if is_daily_pack_i == 1:
+        # Daily Pack não pode ser Welcome Pack nem compra única
+        return enabled_i, 0, 0, 1
+    auto_deliver_i = 1 if auto_deliver_val in truthy else 0
+    only_once_i = 1 if (only_once_val in truthy or auto_deliver_i == 1) else 0
+    return enabled_i, only_once_i, auto_deliver_i, 0
 
 
 @shop_bp.route("/api/shop/admin/kits", methods=["POST"])
@@ -2813,6 +2868,7 @@ def shop_admin_save_kit():
         price_val = payload.get("price", 0)
         enabled_val = payload.get("enabled", True)
         auto_deliver_val = payload.get("auto_deliver_on_register", 0)
+        is_daily_pack_val = payload.get("is_daily_pack", 0)
 
         if not kit_id:
             return jsonify({"success": False, "error": "Missing required field: kit_id"}), 400
@@ -2835,9 +2891,9 @@ def shop_admin_save_kit():
         except (ValueError, TypeError):
             return jsonify({"success": False, "error": "price must be an integer"}), 400
 
-        enabled_i = 1 if (enabled_val in (True, 1, "1", "true", "True")) else 0
-        auto_deliver_i = 1 if (auto_deliver_val in (True, 1, "1", "true", "True")) else 0
-        only_once_i = 1 if (only_once_val in (True, 1, "1", "true", "True") or auto_deliver_i == 1) else 0
+        enabled_i, only_once_i, auto_deliver_i, is_daily_pack_i = _resolve_kit_flags(
+            enabled_val, only_once_val, auto_deliver_val, is_daily_pack_val
+        )
 
         for it in items:
             if not isinstance(it, dict) or "setup" not in it or "qty" not in it:
@@ -2860,13 +2916,20 @@ def shop_admin_save_kit():
                     (kit_id,)
                 )
 
+            # Se for kit de Daily Pack, desativar outros kits como Daily Pack
+            if is_daily_pack_i == 1:
+                conn.execute(
+                    "UPDATE shop_kit SET is_daily_pack = 0 WHERE kit_id != ?",
+                    (kit_id,)
+                )
+
             # Insert/replace kit
             conn.execute(
                 """
-                INSERT OR REPLACE INTO shop_kit (kit_id, code, name, price, enabled, only_once, auto_deliver_on_register, updated_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, datetime('now'))
+                INSERT OR REPLACE INTO shop_kit (kit_id, code, name, price, enabled, only_once, auto_deliver_on_register, is_daily_pack, updated_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))
                 """,
-                (kit_id, code_i, name, price_i, enabled_i, only_once_i, auto_deliver_i)
+                (kit_id, code_i, name, price_i, enabled_i, only_once_i, auto_deliver_i, is_daily_pack_i)
             )
 
             conn.execute("DELETE FROM shop_kit_item WHERE kit_id = ?", (kit_id,))
@@ -2879,6 +2942,8 @@ def shop_admin_save_kit():
                     """,
                     (kit_id, str(it["setup"]).strip(), int(it["qty"]))
                 )
+
+            _refresh_daily_pack_config_from_db(conn)
 
         return jsonify({"success": True, "message": f"Kit '{name}' saved successfully."}), 200
 
@@ -2906,7 +2971,7 @@ def shop_admin_get_kit(kit_id):
             cur.execute(
                 """
                 SELECT 
-                    kit_id, code, name, price, enabled, only_once, auto_deliver_on_register, created_at, updated_at
+                    kit_id, code, name, price, enabled, only_once, auto_deliver_on_register, is_daily_pack, created_at, updated_at
                 FROM shop_kit
                 WHERE kit_id = ?
                 """,
@@ -2952,6 +3017,7 @@ def shop_admin_delete_kit(kit_id):
 
             conn.execute("DELETE FROM shop_kit WHERE kit_id = ?", (kit_id,))
             conn.execute("DELETE FROM shop_kit_item WHERE kit_id = ?", (kit_id,))
+            _refresh_daily_pack_config_from_db(conn)
 
         return jsonify({"success": True, "message": f"Kit '{kit_id}' successfully deleted"}), 200
 
@@ -2985,6 +3051,7 @@ def shop_admin_scan_and_create_kit():
         only_once_val = payload.get("only_once", 0)
         code = payload.get("code")
         auto_deliver_val = payload.get("auto_deliver_on_register", 0)
+        is_daily_pack_val = payload.get("is_daily_pack", 0)
 
         if chest_id is None:
             return jsonify({"success": False, "error": "Missing required field: chest_id"}), 400
@@ -3005,9 +3072,9 @@ def shop_admin_scan_and_create_kit():
         except (ValueError, TypeError):
             return jsonify({"success": False, "error": "price must be an integer"}), 400
 
-        enabled_i = 1 if (enabled_val in (True, 1, "1", "true", "True")) else 0
-        auto_deliver_i = 1 if (auto_deliver_val in (True, 1, "1", "true", "True")) else 0
-        only_once_i = 1 if (only_once_val in (True, 1, "1", "true", "True") or auto_deliver_i == 1) else 0
+        enabled_i, only_once_i, auto_deliver_i, is_daily_pack_i = _resolve_kit_flags(
+            enabled_val, only_once_val, auto_deliver_val, is_daily_pack_val
+        )
 
         # Scan the chest items with quantity
         from core.shop.scanner_service import ShopScannerService
@@ -3040,13 +3107,20 @@ def shop_admin_scan_and_create_kit():
                     (kit_id,)
                 )
 
+            # Se for kit de Daily Pack, desativar outros kits como Daily Pack
+            if is_daily_pack_i == 1:
+                conn.execute(
+                    "UPDATE shop_kit SET is_daily_pack = 0 WHERE kit_id != ?",
+                    (kit_id,)
+                )
+
             # Insert/replace kit
             conn.execute(
                 """
-                INSERT OR REPLACE INTO shop_kit (kit_id, code, name, price, enabled, only_once, auto_deliver_on_register, updated_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, datetime('now'))
+                INSERT OR REPLACE INTO shop_kit (kit_id, code, name, price, enabled, only_once, auto_deliver_on_register, is_daily_pack, updated_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))
                 """,
-                (kit_id, code_i, name, price_i, enabled_i, only_once_i, auto_deliver_i)
+                (kit_id, code_i, name, price_i, enabled_i, only_once_i, auto_deliver_i, is_daily_pack_i)
             )
 
             # Clean old items
@@ -3062,6 +3136,8 @@ def shop_admin_scan_and_create_kit():
                     (kit_id, str(it["setup"]).strip(), int(it["qty"]))
                 )
 
+            _refresh_daily_pack_config_from_db(conn)
+
         return jsonify({
             "success": True,
             "message": f"Kit '{name}' scanned from chest {chest_id_i} and created successfully.",
@@ -3073,6 +3149,7 @@ def shop_admin_scan_and_create_kit():
                 "enabled": bool(enabled_i),
                 "only_once": bool(only_once_i),
                 "auto_deliver_on_register": bool(auto_deliver_i),
+                "is_daily_pack": bool(is_daily_pack_i),
                 "items": items
             }
         }), 201
