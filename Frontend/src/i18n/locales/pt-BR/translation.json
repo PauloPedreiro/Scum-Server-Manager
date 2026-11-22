@@ -169,6 +169,7 @@
         "rewards": "Recompensas",
         "baseUpgrades": "Upgrades de Base",
         "kits": "Kits",
+        "dailyPack": "Dailypack",
         "shopNotifications": "Notificações RCON",
         "attributes": "Atributos",
         "raidWebhooks": "Webhook Raid (/rd)",
@@ -1141,10 +1142,13 @@
         "destroyed": "Destruído"
       },
       "details": {
-        "entityId": "ID Container",
+        "entityId": "ID Conteiner",
         "vehicleEntityId": "ID Veículo",
         "vehicleClass": "Classe",
         "location": "Localização",
+        "lockLocation": "Loc. tranca",
+        "currentLocation": "Loc. atual",
+        "locationUnavailable": "Indisponível",
         "lastChange": "Última mudança",
         "functional": "Funcional",
         "nonFunctional": "Não funcional",

@@ -333,6 +333,7 @@ rcon_queue_manager = None
 event_manager = None
 shop_buy_job_worker = None
 shop_delivery_worker = None
+daily_pack_reminder_scheduler = None
 player_gps_sync_service = None
 player_skills_sync_service = None
 bank_account_sync_service = None
@@ -690,7 +691,7 @@ def init_components(allow_gui_call=False):
     global auth_manager, password_reset_manager, gestao_sync_service, gestao_messages_service
     global chest_inventory_sync_service
     global scum_logs_cleanup_service, database_maintenance_service
-    global shop_buy_job_worker, shop_delivery_worker, _fishing_scheduler_stop_event
+    global shop_buy_job_worker, shop_delivery_worker, daily_pack_reminder_scheduler, _fishing_scheduler_stop_event
 
     # Carregar configuração
     config = load_config()
@@ -1709,6 +1710,21 @@ def init_components(allow_gui_call=False):
         shop_delivery_worker.start()
         logger.debug("Worker de entregas de shop iniciado")
 
+        # Inicializar agendador de aviso do DailyPack (/daily) para jogadores não registrados
+        try:
+            from core.shop.daily_pack_service import DailyPackReminderScheduler
+
+            daily_pack_reminder_scheduler = DailyPackReminderScheduler(
+                ssm_db_path=ssm_db_path,
+                rcon_queue_manager=rcon_queue_manager,
+                logger=logger,
+            )
+            daily_pack_reminder_scheduler.start()
+            logger.debug("DailyPackReminderScheduler iniciado")
+        except Exception as dp_sched_err:
+            logger.warn(f"Erro ao iniciar DailyPackReminderScheduler: {dp_sched_err}")
+            daily_pack_reminder_scheduler = None
+
 
         # Inicializar sistema de ranking de pescadores
         logger.debug("Inicializando sistema de ranking de pescadores...")
@@ -1969,6 +1985,9 @@ def init_components(allow_gui_call=False):
                     enabled=vehicle_verification_config.get("enabled", True),
                     verification_interval_hours=vehicle_verification_config.get(
                         "verification_interval_hours", 24
+                    ),
+                    location_sync_interval_minutes=vehicle_verification_config.get(
+                        "location_sync_interval_minutes", 5
                     ),
                     logger=logger,
                 )
@@ -2245,6 +2264,7 @@ def init_components(allow_gui_call=False):
         svc.fishing_ranking_manager = fishing_ranking_manager
         svc.shop_buy_job_worker = shop_buy_job_worker
         svc.shop_delivery_worker = shop_delivery_worker
+        svc.daily_pack_reminder_scheduler = daily_pack_reminder_scheduler
 
         # Sincronização
         svc.squad_sync_service = squad_sync_service
@@ -2299,7 +2319,7 @@ def cleanup_components():
     global rcon_queue_manager, event_manager
     global elevated_users_manager, heartbeat_manager
     global chat_processor, bunker_processor, chat_command_monitor
-    global shop_buy_job_worker, shop_delivery_worker, _fishing_scheduler_stop_event, fishing_ranking_manager
+    global shop_buy_job_worker, shop_delivery_worker, daily_pack_reminder_scheduler, _fishing_scheduler_stop_event, fishing_ranking_manager
     global permission_manager, ini_manager, auth_manager, password_reset_manager, server_manager
 
     if logger:
@@ -2326,6 +2346,16 @@ def cleanup_components():
                 if logger:
                     logger.warn(f"Erro ao parar ShopBuyJobWorker: {e}")
             shop_buy_job_worker = None
+
+        if daily_pack_reminder_scheduler:
+            try:
+                daily_pack_reminder_scheduler.stop()
+                if logger:
+                    logger.info("DailyPackReminderScheduler parado")
+            except Exception as e:
+                if logger:
+                    logger.warn(f"Erro ao parar DailyPackReminderScheduler: {e}")
+            daily_pack_reminder_scheduler = None
 
         # 2. Parar EventManager e RconQueueManager
         if event_manager:

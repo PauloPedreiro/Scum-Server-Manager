@@ -588,7 +588,7 @@ export default function Kits({ isTab = false }: { isTab?: boolean } = {}) {
                 </label>
               </div>
 
-              {/* Checkbox Daily Pack (/dailypack) */}
+              {/* Checkbox Daily Pack (/daily) */}
               <div className="flex items-center gap-3 p-3 rounded-lg border border-blue-500/20 bg-blue-500/5">
                 <input
                   type="checkbox"
@@ -605,9 +605,9 @@ export default function Kits({ isTab = false }: { isTab?: boolean } = {}) {
                   className="w-4 h-4 text-scum-orange border-white/20 bg-white/5 rounded focus:ring-scum-orange"
                 />
                 <label htmlFor="dailyPack" className="text-sm text-white/80 cursor-pointer select-none">
-                  <span className="font-semibold text-white block">Definir como Daily Pack (/dailypack)</span>
+                  <span className="font-semibold text-white block">Definir como Daily Pack (/daily)</span>
                   <span className="text-xs text-white/50 block mt-0.5">
-                    Define este kit como a recompensa diária entregue no comando /dailypack. Só 1 kit pode ter esta opção ativa.
+                    Define este kit como a recompensa diária entregue no comando /daily. Só 1 kit pode ter esta opção ativa.
                   </span>
                 </label>
               </div>
@@ -810,9 +810,9 @@ export default function Kits({ isTab = false }: { isTab?: boolean } = {}) {
                     className="w-4 h-4 text-scum-orange border-white/20 bg-white/5 rounded focus:ring-scum-orange"
                   />
                   <label htmlFor="scanDailyPack" className="text-sm text-white/80 cursor-pointer select-none">
-                    <span className="font-semibold text-white block">Definir como Daily Pack (/dailypack)</span>
+                    <span className="font-semibold text-white block">Definir como Daily Pack (/daily)</span>
                     <span className="text-xs text-white/50 block mt-0.5">
-                      Define este kit como a recompensa diária entregue no comando /dailypack. Só 1 kit pode ter esta opção ativa.
+                      Define este kit como a recompensa diária entregue no comando /daily. Só 1 kit pode ter esta opção ativa.
                     </span>
                   </label>
                 </div>

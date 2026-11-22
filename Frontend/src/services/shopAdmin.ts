@@ -567,3 +567,180 @@ export async function scanChestToKit(payload: ScanKitPayload): Promise<ApiRespon
   return data;
 }
 
+// --- Gestão do Daily Pack (/daily) ---
+
+export type DailyPackConfig = {
+  enabled: boolean;
+  kit_code: number | null;
+  cooldown_seconds: number;
+  bonus_coins: number;
+  discord_invite_url: string;
+  reminder_enabled: boolean;
+  reminder_interval_minutes: number;
+  reminder_chat_color: number;
+  reminder_message: string;
+};
+
+export type DailyPackKitItem = {
+  setup: string;
+  qty: number;
+  display_name?: string;
+};
+
+export type DailyPackKitDetails = {
+  kit_id: string;
+  code: number;
+  name: string;
+  price: number;
+  enabled: boolean;
+  only_once: boolean;
+  auto_deliver_on_register: boolean;
+  is_daily_pack: boolean;
+  items: DailyPackKitItem[];
+};
+
+export type DailyPackOnlineStats = {
+  online_total: number;
+  online_unregistered: number;
+  online_registered: number;
+};
+
+export type DailyPackReminderStatus = {
+  running: boolean;
+  last_sent_ts: number | null;
+  last_sent_at: string | null;
+};
+
+export type DailyPackConfigPayload = {
+  config: DailyPackConfig;
+  active_kit: DailyPackKitDetails | null;
+  available_kits: DailyPackKitDetails[];
+  online_stats: DailyPackOnlineStats;
+  reminder_status: DailyPackReminderStatus;
+};
+
+export type PatchDailyPackConfigRequest = {
+  enabled?: boolean;
+  kit_id?: string | null;
+  kit_code?: number | null;
+  cooldown_hours?: number;
+  cooldown_seconds?: number;
+  bonus_coins?: number;
+  discord_invite_url?: string;
+  reminder_enabled?: boolean;
+  reminder_interval_minutes?: number;
+  reminder_chat_color?: number;
+  reminder_message?: string;
+};
+
+export type DailyPackPlayerItem = {
+  steam_id: string;
+  player_name: string | null;
+  discord_user_id: string | null;
+  discord_linked_at: string | null;
+  last_claimed_ts: number | null;
+  last_claimed_at: string | null;
+  last_command_at: string | null;
+  total_claims: number;
+  last_kit_code: number | null;
+  last_kit_name: string | null;
+  claim_status: 'claimed' | 'available' | 'never';
+  remaining_seconds: number;
+};
+
+export type DailyPackPlayersResponse = ApiResponse<{
+  items: DailyPackPlayerItem[];
+  total: number;
+  count: number;
+  limit: number;
+  offset: number;
+  cooldown_seconds: number;
+  summary: {
+    total_registered: number;
+    claimed_in_cycle: number;
+    available_now: number;
+    never_claimed: number;
+  };
+}>;
+
+export type DailyPackHistoryItem = {
+  id: number;
+  steam_id: string;
+  player_name: string | null;
+  kit_code: number | null;
+  kit_name: string | null;
+  bonus_coins: number;
+  command_at: string;
+  claimed_ts: number;
+  order_id: string | null;
+  created_at: string;
+};
+
+export type DailyPackHistoryResponse = ApiResponse<{
+  items: DailyPackHistoryItem[];
+  total: number;
+  count: number;
+  limit: number;
+  offset: number;
+}>;
+
+export async function getShopAdminDailyPackConfig(): Promise<ApiResponse<DailyPackConfigPayload>> {
+  const { data } = await api.get<ApiResponse<DailyPackConfigPayload>>('/shop/admin/daily-pack/config');
+  return data;
+}
+
+export async function patchShopAdminDailyPackConfig(
+  payload: PatchDailyPackConfigRequest
+): Promise<ApiResponse<DailyPackConfigPayload>> {
+  const { data } = await api.patch<ApiResponse<DailyPackConfigPayload>>('/shop/admin/daily-pack/config', payload);
+  return data;
+}
+
+export type TestDailyPackReminderRequest = {
+  reminder_message?: string;
+  reminder_chat_color?: number;
+  discord_invite_url?: string;
+};
+
+export async function testShopAdminDailyPackReminder(
+  payload?: TestDailyPackReminderRequest
+): Promise<ApiResponse<Record<string, any>>> {
+  const { data } = await api.post<ApiResponse<Record<string, any>>>(
+    '/shop/admin/daily-pack/reminder/test',
+    payload || {}
+  );
+  return data;
+}
+
+export async function getShopAdminDailyPackPlayers(params?: {
+  limit?: number;
+  offset?: number;
+  q?: string;
+  status?: 'all' | 'claimed' | 'available' | 'never';
+  sort_by?: string;
+  sort_order?: 'asc' | 'desc';
+}): Promise<DailyPackPlayersResponse> {
+  const { data } = await api.get<DailyPackPlayersResponse>('/shop/admin/daily-pack/players', { params });
+  return data;
+}
+
+export async function getShopAdminDailyPackHistory(params?: {
+  limit?: number;
+  offset?: number;
+  q?: string;
+}): Promise<DailyPackHistoryResponse> {
+  const { data } = await api.get<DailyPackHistoryResponse>('/shop/admin/daily-pack/history', { params });
+  return data;
+}
+
+export async function resetShopAdminDailyPackPlayer(
+  steamId: string
+): Promise<ApiResponse<{ steam_id: string; reset: boolean }>> {
+  const { data } = await api.post<ApiResponse<{ steam_id: string; reset: boolean }>>(
+    `/shop/admin/daily-pack/reset/${encodeURIComponent(steamId)}`,
+    {}
+  );
+  return data;
+}
+
+

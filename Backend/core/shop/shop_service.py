@@ -194,7 +194,7 @@ class ShopService:
                     setup, offer_qty, price, enabled, max_per_order = row
                     only_once = 0
 
-                # Impedir compra de kit Daily Pack fora do comando /dailypack (previne burlar o cooldown)
+                # Impedir compra de kit Daily Pack fora do comando /daily (previne burlar o cooldown)
                 if is_kit_requested and int(is_daily_pack or 0) == 1 and source != "dailypack":
                     raise ValueError(f"IS_DAILY_PACK_USE_DAILYPACK_COMMAND:{code}")
 

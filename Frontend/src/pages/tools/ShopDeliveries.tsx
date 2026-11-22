@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { ModuleToolPage } from '@/components/tools/ModuleToolPage';
 import SearchBar from '@/components/ui/SearchBar';
 import Kits from './Kits';
+import DailyPackTab from './DailyPackTab';
 import ShopNotificationsTab from '@/pages/settings/tabs/ShopNotificationsTab';
 import AttributesConfigTab from './AttributesConfigTab';
 import RaidWebhookConfigTab from './RaidWebhookConfigTab';
@@ -514,7 +515,7 @@ export default function ShopDeliveries() {
   const [scannerChestId, setScannerChestId] = useState('');
   const [scannerBusy, setScannerBusy] = useState(false);
 
-  const [section, setSection] = useState<'catalog' | 'vehicles' | 'wallet' | 'base_upgrades' | 'kits' | 'shop_notifications' | 'attributes' | 'raid_webhooks' | 'wanted_bounty'>('catalog');
+  const [section, setSection] = useState<'catalog' | 'vehicles' | 'wallet' | 'base_upgrades' | 'kits' | 'daily_pack' | 'shop_notifications' | 'attributes' | 'raid_webhooks' | 'wanted_bounty'>('catalog');
 
   const [ownersQuery, setOwnersQuery] = useState('');
   const [ownersBusy, setOwnersBusy] = useState(false);
@@ -2435,7 +2436,7 @@ export default function ShopDeliveries() {
         defaultValue: 'Admin catalog management (scanner, enable/disable, pricing, limits).',
       })}
     >
-      <div className="flex gap-2 mb-4">
+      <div className="flex flex-wrap gap-2 mb-4">
         <button
           type="button"
           onClick={() => setSection('catalog')}
@@ -2479,6 +2480,17 @@ export default function ShopDeliveries() {
           }
         >
           {t('tools.shopDeliveries.sections.kits', { defaultValue: 'Kits' })}
+        </button>
+        <button
+          type="button"
+          onClick={() => setSection('daily_pack')}
+          className={
+            section === 'daily_pack'
+              ? 'px-3 py-2 rounded-lg border border-scum-orange/60 bg-scum-orange/10 text-sm font-semibold text-scum-orange'
+              : 'px-3 py-2 rounded-lg border border-white/15 bg-white/8 text-sm font-medium text-white/90 hover:bg-white/12 hover:border-white/25'
+          }
+        >
+          {t('tools.shopDeliveries.sections.dailyPack', { defaultValue: 'Dailypack' })}
         </button>
         <button
           type="button"
@@ -3378,6 +3390,8 @@ export default function ShopDeliveries() {
         </div>
       ) : section === 'kits' ? (
         <Kits isTab={true} />
+      ) : section === 'daily_pack' ? (
+        <DailyPackTab />
       ) : section === 'shop_notifications' ? (
         <ShopNotificationsTab />
       ) : section === 'attributes' ? (

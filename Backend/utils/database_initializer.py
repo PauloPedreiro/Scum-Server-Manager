@@ -107,6 +107,7 @@ OPTIONAL_TABLES = [
     "abandoned_bunker",
     "abandoned_bunker_mesh_instance_bound_to_activation",
     "daily_pack_claims",
+    "daily_pack_claim_history",
 ]
 
 
@@ -1323,17 +1324,9 @@ def _init_shop_kit(
                 "CREATE INDEX IF NOT EXISTS idx_shop_kit_item_kit_id ON shop_kit_item(kit_id)"
             )
 
-            # Criar tabela de controle de resgates do Daily Pack (/dailypack)
-            cursor.execute(
-                """
-                CREATE TABLE IF NOT EXISTS daily_pack_claims (
-                    steam_id TEXT PRIMARY KEY,
-                    last_claimed_ts INTEGER NOT NULL,
-                    last_claimed_at TEXT NOT NULL,
-                    total_claims INTEGER NOT NULL DEFAULT 1
-                )
-                """
-            )
+            # Garantir tabelas e migrações de Daily Pack (/daily)
+            from core.shop.daily_pack_service import ensure_daily_pack_tables
+            ensure_daily_pack_tables(conn)
 
             conn.commit()
     except Exception as e:
@@ -1755,6 +1748,10 @@ def _init_vehicle_events(
                     location_x REAL,
                     location_y REAL,
                     location_z REAL,
+                    current_location_x REAL,
+                    current_location_y REAL,
+                    current_location_z REAL,
+                    current_location_updated_at DATETIME,
                     last_ownership_change DATETIME NOT NULL,
                     container_class TEXT,
                     vehicle_class TEXT,
@@ -1766,6 +1763,20 @@ def _init_vehicle_events(
                 )
             """
             )
+
+            # Migração leve: garantir colunas de localização atual em bancos existentes
+            cursor.execute("PRAGMA table_info('vehicle_current_ownership')")
+            vco_cols = {str(r[1]) for r in (cursor.fetchall() or [])}
+            for col_name, col_type in (
+                ("current_location_x", "REAL"),
+                ("current_location_y", "REAL"),
+                ("current_location_z", "REAL"),
+                ("current_location_updated_at", "DATETIME"),
+            ):
+                if col_name not in vco_cols:
+                    cursor.execute(
+                        f"ALTER TABLE vehicle_current_ownership ADD COLUMN {col_name} {col_type}"
+                    )
 
             # vehicle_ownership_history
             cursor.execute(
