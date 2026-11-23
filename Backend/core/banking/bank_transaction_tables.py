@@ -4,7 +4,7 @@ Módulo para criação e gerenciamento das tabelas de transações bancárias
 from core.database.connector import DatabaseConnector
 
 import sqlite3
-from typing import Optional
+from typing import Dict, Optional
 from utils.logger import StructuredLogger
 
 

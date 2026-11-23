@@ -60,6 +60,7 @@ class ServiceRegistry:
         self.bunker_processor = None
         self.chat_command_monitor = None
         self.fishing_ranking_manager = None
+        self.daily_pack_reminder_scheduler = None
 
         # Sincronização
         self.squad_sync_service = None

@@ -18,6 +18,13 @@ from utils.integration_helpers import (
 from utils.scum_db_helper import scum_db_readonly_connection_strict
 from core.shop.shop_service import ShopService, OrderCreateItem
 from core.shop.delivery_service import ShopDeliveryService
+from core.shop.daily_pack_service import (
+    DailyPackReminderScheduler,
+    ensure_daily_pack_tables,
+    get_online_registration_stats,
+    load_daily_pack_config,
+    save_daily_pack_config,
+)
 from .helpers import _get_ssm_database_path, _ensure_sqlite_wal, _get_scum_database_path
 from core.shop.wallet_service import WalletService
 from core.shop.rewards_service import RewardsService
@@ -2771,7 +2778,7 @@ def shop_admin_list_kits():
             cur.execute(
                 """
                 SELECT 
-                    kit_id, code, name, price, enabled, only_once, auto_deliver_on_register, created_at, updated_at
+                    kit_id, code, name, price, enabled, only_once, auto_deliver_on_register, is_daily_pack, created_at, updated_at
                 FROM shop_kit
                 ORDER BY name ASC
                 """
@@ -2791,6 +2798,38 @@ def shop_admin_list_kits():
         if logger:
             logger.error(f"Erro em shop_admin_list_kits: {e}")
         return jsonify({"success": False, "error": str(e)}), 500
+
+
+def _sync_daily_pack_config(kit_code: Optional[int]) -> None:
+    """Atualiza daily_pack.kit_code no data/config.json (ou None se nenhum kit estiver ativo)."""
+    try:
+        save_daily_pack_config(
+            {"kit_code": int(kit_code) if kit_code is not None else None}
+        )
+    except Exception as e:
+        import logging
+        logging.getLogger(__name__).error(f"Erro ao sincronizar config.json com daily_pack: {e}")
+
+
+def _refresh_daily_pack_config_from_db(conn) -> None:
+    """Sincroniza data/config.json com o estado atual da coluna is_daily_pack no banco."""
+    cur = conn.cursor()
+    cur.execute("SELECT code FROM shop_kit WHERE is_daily_pack = 1 LIMIT 1")
+    row = cur.fetchone()
+    _sync_daily_pack_config(int(row[0]) if (row and row[0] is not None) else None)
+
+
+def _resolve_kit_flags(enabled_val, only_once_val, auto_deliver_val, is_daily_pack_val) -> Tuple[int, int, int, int]:
+    """Normaliza flags do kit garantindo exclusividade mútua entre Daily Pack e Welcome Pack."""
+    truthy = (True, 1, "1", "true", "True")
+    enabled_i = 1 if enabled_val in truthy else 0
+    is_daily_pack_i = 1 if is_daily_pack_val in truthy else 0
+    if is_daily_pack_i == 1:
+        # Daily Pack não pode ser Welcome Pack nem compra única
+        return enabled_i, 0, 0, 1
+    auto_deliver_i = 1 if auto_deliver_val in truthy else 0
+    only_once_i = 1 if (only_once_val in truthy or auto_deliver_i == 1) else 0
+    return enabled_i, only_once_i, auto_deliver_i, 0
 
 
 @shop_bp.route("/api/shop/admin/kits", methods=["POST"])
@@ -2813,6 +2852,7 @@ def shop_admin_save_kit():
         price_val = payload.get("price", 0)
         enabled_val = payload.get("enabled", True)
         auto_deliver_val = payload.get("auto_deliver_on_register", 0)
+        is_daily_pack_val = payload.get("is_daily_pack", 0)
 
         if not kit_id:
             return jsonify({"success": False, "error": "Missing required field: kit_id"}), 400
@@ -2835,9 +2875,9 @@ def shop_admin_save_kit():
         except (ValueError, TypeError):
             return jsonify({"success": False, "error": "price must be an integer"}), 400
 
-        enabled_i = 1 if (enabled_val in (True, 1, "1", "true", "True")) else 0
-        auto_deliver_i = 1 if (auto_deliver_val in (True, 1, "1", "true", "True")) else 0
-        only_once_i = 1 if (only_once_val in (True, 1, "1", "true", "True") or auto_deliver_i == 1) else 0
+        enabled_i, only_once_i, auto_deliver_i, is_daily_pack_i = _resolve_kit_flags(
+            enabled_val, only_once_val, auto_deliver_val, is_daily_pack_val
+        )
 
         for it in items:
             if not isinstance(it, dict) or "setup" not in it or "qty" not in it:
@@ -2860,13 +2900,20 @@ def shop_admin_save_kit():
                     (kit_id,)
                 )
 
+            # Se for kit de Daily Pack, desativar outros kits como Daily Pack
+            if is_daily_pack_i == 1:
+                conn.execute(
+                    "UPDATE shop_kit SET is_daily_pack = 0 WHERE kit_id != ?",
+                    (kit_id,)
+                )
+
             # Insert/replace kit
             conn.execute(
                 """
-                INSERT OR REPLACE INTO shop_kit (kit_id, code, name, price, enabled, only_once, auto_deliver_on_register, updated_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, datetime('now'))
+                INSERT OR REPLACE INTO shop_kit (kit_id, code, name, price, enabled, only_once, auto_deliver_on_register, is_daily_pack, updated_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))
                 """,
-                (kit_id, code_i, name, price_i, enabled_i, only_once_i, auto_deliver_i)
+                (kit_id, code_i, name, price_i, enabled_i, only_once_i, auto_deliver_i, is_daily_pack_i)
             )
 
             conn.execute("DELETE FROM shop_kit_item WHERE kit_id = ?", (kit_id,))
@@ -2879,6 +2926,8 @@ def shop_admin_save_kit():
                     """,
                     (kit_id, str(it["setup"]).strip(), int(it["qty"]))
                 )
+
+            _refresh_daily_pack_config_from_db(conn)
 
         return jsonify({"success": True, "message": f"Kit '{name}' saved successfully."}), 200
 
@@ -2906,7 +2955,7 @@ def shop_admin_get_kit(kit_id):
             cur.execute(
                 """
                 SELECT 
-                    kit_id, code, name, price, enabled, only_once, auto_deliver_on_register, created_at, updated_at
+                    kit_id, code, name, price, enabled, only_once, auto_deliver_on_register, is_daily_pack, created_at, updated_at
                 FROM shop_kit
                 WHERE kit_id = ?
                 """,
@@ -2952,6 +3001,7 @@ def shop_admin_delete_kit(kit_id):
 
             conn.execute("DELETE FROM shop_kit WHERE kit_id = ?", (kit_id,))
             conn.execute("DELETE FROM shop_kit_item WHERE kit_id = ?", (kit_id,))
+            _refresh_daily_pack_config_from_db(conn)
 
         return jsonify({"success": True, "message": f"Kit '{kit_id}' successfully deleted"}), 200
 
@@ -2985,6 +3035,7 @@ def shop_admin_scan_and_create_kit():
         only_once_val = payload.get("only_once", 0)
         code = payload.get("code")
         auto_deliver_val = payload.get("auto_deliver_on_register", 0)
+        is_daily_pack_val = payload.get("is_daily_pack", 0)
 
         if chest_id is None:
             return jsonify({"success": False, "error": "Missing required field: chest_id"}), 400
@@ -3005,9 +3056,9 @@ def shop_admin_scan_and_create_kit():
         except (ValueError, TypeError):
             return jsonify({"success": False, "error": "price must be an integer"}), 400
 
-        enabled_i = 1 if (enabled_val in (True, 1, "1", "true", "True")) else 0
-        auto_deliver_i = 1 if (auto_deliver_val in (True, 1, "1", "true", "True")) else 0
-        only_once_i = 1 if (only_once_val in (True, 1, "1", "true", "True") or auto_deliver_i == 1) else 0
+        enabled_i, only_once_i, auto_deliver_i, is_daily_pack_i = _resolve_kit_flags(
+            enabled_val, only_once_val, auto_deliver_val, is_daily_pack_val
+        )
 
         # Scan the chest items with quantity
         from core.shop.scanner_service import ShopScannerService
@@ -3040,13 +3091,20 @@ def shop_admin_scan_and_create_kit():
                     (kit_id,)
                 )
 
+            # Se for kit de Daily Pack, desativar outros kits como Daily Pack
+            if is_daily_pack_i == 1:
+                conn.execute(
+                    "UPDATE shop_kit SET is_daily_pack = 0 WHERE kit_id != ?",
+                    (kit_id,)
+                )
+
             # Insert/replace kit
             conn.execute(
                 """
-                INSERT OR REPLACE INTO shop_kit (kit_id, code, name, price, enabled, only_once, auto_deliver_on_register, updated_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, datetime('now'))
+                INSERT OR REPLACE INTO shop_kit (kit_id, code, name, price, enabled, only_once, auto_deliver_on_register, is_daily_pack, updated_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))
                 """,
-                (kit_id, code_i, name, price_i, enabled_i, only_once_i, auto_deliver_i)
+                (kit_id, code_i, name, price_i, enabled_i, only_once_i, auto_deliver_i, is_daily_pack_i)
             )
 
             # Clean old items
@@ -3062,6 +3120,8 @@ def shop_admin_scan_and_create_kit():
                     (kit_id, str(it["setup"]).strip(), int(it["qty"]))
                 )
 
+            _refresh_daily_pack_config_from_db(conn)
+
         return jsonify({
             "success": True,
             "message": f"Kit '{name}' scanned from chest {chest_id_i} and created successfully.",
@@ -3073,6 +3133,7 @@ def shop_admin_scan_and_create_kit():
                 "enabled": bool(enabled_i),
                 "only_once": bool(only_once_i),
                 "auto_deliver_on_register": bool(auto_deliver_i),
+                "is_daily_pack": bool(is_daily_pack_i),
                 "items": items
             }
         }), 201
@@ -3081,6 +3142,546 @@ def shop_admin_scan_and_create_kit():
         if logger:
             logger.error(f"Erro em shop_admin_scan_and_create_kit: {e}")
         return jsonify({"success": False, "error": str(e)}), 500
+
+
+def _build_daily_pack_config_payload(ssm_db_path: str, services: Any = None) -> Dict[str, Any]:
+    """Monta payload completo de configuração, kit ativo (com itens), status online e agendador do DailyPack."""
+    cfg = load_daily_pack_config()
+    kits: List[Dict[str, Any]] = []
+
+    with DatabaseConnector.get_connection(ssm_db_path, timeout=30.0) as conn:
+        conn.row_factory = sqlite3.Row
+        cur = conn.cursor()
+        cur.execute(
+            """
+            SELECT
+                kit_id, code, name, price, enabled, only_once,
+                auto_deliver_on_register, COALESCE(is_daily_pack, 0) AS is_daily_pack
+            FROM shop_kit
+            ORDER BY code ASC, name ASC
+            """
+        )
+        kit_rows = cur.fetchall() or []
+        for row in kit_rows:
+            kit_dict: Dict[str, Any] = {
+                "kit_id": str(row["kit_id"]),
+                "code": int(row["code"]),
+                "name": str(row["name"]),
+                "price": int(row["price"] or 0),
+                "enabled": bool(row["enabled"]),
+                "only_once": bool(row["only_once"]),
+                "auto_deliver_on_register": bool(row["auto_deliver_on_register"]),
+                "is_daily_pack": bool(row["is_daily_pack"]),
+                "items": [],
+            }
+            cur.execute(
+                """
+                SELECT ski.setup, ski.qty, COALESCE(sc.display_name, '') AS display_name
+                FROM shop_kit_item ski
+                LEFT JOIN shop_catalog sc ON sc.setup = ski.setup
+                WHERE ski.kit_id = ?
+                ORDER BY ski.id ASC
+                """,
+                (kit_dict["kit_id"],),
+            )
+            for it in cur.fetchall() or []:
+                kit_dict["items"].append(
+                    {
+                        "setup": str(it["setup"]),
+                        "qty": int(it["qty"] or 1),
+                        "display_name": str(it["display_name"] or ""),
+                    }
+                )
+            kits.append(kit_dict)
+
+    active_kit = next((k for k in kits if k["is_daily_pack"]), None)
+    if active_kit is None and cfg.get("kit_code") is not None:
+        target_code = int(cfg["kit_code"])
+        active_kit = next((k for k in kits if k["code"] == target_code), None)
+
+    if active_kit is not None and active_kit["is_daily_pack"]:
+        cfg["kit_code"] = int(active_kit["code"])
+
+    online_stats = get_online_registration_stats(ssm_db_path)
+    scheduler = getattr(services, "daily_pack_reminder_scheduler", None) if services else None
+    reminder_status = (
+        scheduler.get_status()
+        if scheduler and hasattr(scheduler, "get_status")
+        else {"running": False, "last_sent_ts": None, "last_sent_at": None}
+    )
+
+    return {
+        "config": cfg,
+        "active_kit": active_kit,
+        "available_kits": kits,
+        "online_stats": {
+            "online_total": int(online_stats.get("online_total", 0)),
+            "online_unregistered": int(online_stats.get("online_unregistered", 0)),
+            "online_registered": int(online_stats.get("online_registered", 0)),
+        },
+        "reminder_status": reminder_status,
+    }
+
+
+@shop_bp.route("/api/shop/admin/daily-pack/config", methods=["GET"])
+@require_auth
+@require_admin
+def shop_admin_get_daily_pack_config():
+    """Retorna configuração do DailyPack (/daily), kit selecionado com itens, stats online e agendador."""
+    services = get_services()
+    logger = getattr(services, "logger", None)
+    try:
+        ssm_db_path, error = _get_ssm_database_path()
+        if error:
+            return jsonify({"success": False, "error": error}), 500
+        return jsonify({"success": True, "data": _build_daily_pack_config_payload(ssm_db_path, services)}), 200
+    except Exception as e:
+        if logger:
+            logger.error(f"Erro em shop_admin_get_daily_pack_config: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+@shop_bp.route("/api/shop/admin/daily-pack/config", methods=["PATCH"])
+@require_auth
+@require_admin
+def shop_admin_patch_daily_pack_config():
+    """Atualiza configuração do /daily, kit vinculado, mensagem automática, cooldown e link do Discord."""
+    services = get_services()
+    logger = getattr(services, "logger", None)
+    try:
+        ssm_db_path, error = _get_ssm_database_path()
+        if error:
+            return jsonify({"success": False, "error": error}), 500
+
+        payload = request.get_json(force=True, silent=True) or {}
+        updates: Dict[str, Any] = {}
+
+        if "enabled" in payload:
+            updates["enabled"] = bool(payload["enabled"])
+
+        if "cooldown_seconds" in payload and payload["cooldown_seconds"] is not None:
+            try:
+                cd_sec = int(payload["cooldown_seconds"])
+            except (ValueError, TypeError):
+                return jsonify({"success": False, "error": "cooldown_seconds must be an integer"}), 400
+            if cd_sec < 60:
+                return jsonify({"success": False, "error": "cooldown_seconds must be at least 60"}), 400
+            updates["cooldown_seconds"] = cd_sec
+        elif "cooldown_hours" in payload and payload["cooldown_hours"] is not None:
+            try:
+                cd_hours = float(payload["cooldown_hours"])
+            except (ValueError, TypeError):
+                return jsonify({"success": False, "error": "cooldown_hours must be numeric"}), 400
+            if cd_hours <= 0:
+                return jsonify({"success": False, "error": "cooldown_hours must be greater than 0"}), 400
+            updates["cooldown_seconds"] = max(60, int(round(cd_hours * 3600)))
+
+        if "bonus_coins" in payload and payload["bonus_coins"] is not None:
+            try:
+                coins_i = int(payload["bonus_coins"])
+            except (ValueError, TypeError):
+                return jsonify({"success": False, "error": "bonus_coins must be an integer"}), 400
+            if coins_i < 0:
+                return jsonify({"success": False, "error": "bonus_coins cannot be negative"}), 400
+            updates["bonus_coins"] = coins_i
+
+        if "discord_invite_url" in payload:
+            updates["discord_invite_url"] = str(payload.get("discord_invite_url") or "").strip()
+
+        if "reminder_enabled" in payload:
+            updates["reminder_enabled"] = bool(payload["reminder_enabled"])
+
+        if "reminder_interval_minutes" in payload and payload["reminder_interval_minutes"] is not None:
+            try:
+                rem_min = int(payload["reminder_interval_minutes"])
+            except (ValueError, TypeError):
+                return jsonify({"success": False, "error": "reminder_interval_minutes must be an integer"}), 400
+            if rem_min < 1:
+                return jsonify({"success": False, "error": "reminder_interval_minutes must be at least 1"}), 400
+            updates["reminder_interval_minutes"] = rem_min
+
+        if "reminder_chat_color" in payload and payload["reminder_chat_color"] is not None:
+            try:
+                color_i = int(payload["reminder_chat_color"])
+            except (ValueError, TypeError):
+                return jsonify({"success": False, "error": "reminder_chat_color must be an integer"}), 400
+            updates["reminder_chat_color"] = min(9, max(0, color_i))
+
+        if "reminder_message" in payload:
+            updates["reminder_message"] = str(payload.get("reminder_message") or "")
+
+        has_kit_change = ("kit_id" in payload) or ("kit_code" in payload)
+        if has_kit_change:
+            raw_kit_id = str(payload.get("kit_id") or "").strip()
+            raw_kit_code = payload.get("kit_code")
+
+            with DatabaseConnector.get_connection(ssm_db_path, timeout=30.0, write_mode=True) as conn:
+                cur = conn.cursor()
+                if not raw_kit_id and (raw_kit_code is None or str(raw_kit_code).strip() == ""):
+                    conn.execute("UPDATE shop_kit SET is_daily_pack = 0, updated_at = datetime('now') WHERE is_daily_pack = 1")
+                    updates["kit_code"] = None
+                else:
+                    row = None
+                    if raw_kit_id:
+                        cur.execute("SELECT kit_id, code FROM shop_kit WHERE kit_id = ? LIMIT 1", (raw_kit_id,))
+                        row = cur.fetchone()
+                    if row is None and raw_kit_code is not None and str(raw_kit_code).strip() != "":
+                        try:
+                            kc_i = int(raw_kit_code)
+                        except (ValueError, TypeError):
+                            return jsonify({"success": False, "error": "kit_code must be an integer"}), 400
+                        cur.execute("SELECT kit_id, code FROM shop_kit WHERE code = ? LIMIT 1", (kc_i,))
+                        row = cur.fetchone()
+
+                    if not row:
+                        return jsonify({"success": False, "error": "KIT_NOT_FOUND"}), 404
+
+                    target_kit_id = str(row[0])
+                    target_kit_code = int(row[1])
+                    conn.execute("UPDATE shop_kit SET is_daily_pack = 0 WHERE kit_id != ?", (target_kit_id,))
+                    conn.execute(
+                        """
+                        UPDATE shop_kit
+                        SET is_daily_pack = 1, only_once = 0, auto_deliver_on_register = 0, updated_at = datetime('now')
+                        WHERE kit_id = ?
+                        """,
+                        (target_kit_id,),
+                    )
+                    updates["kit_code"] = target_kit_code
+                conn.commit()
+
+        save_daily_pack_config(updates)
+        return jsonify({"success": True, "data": _build_daily_pack_config_payload(ssm_db_path, services)}), 200
+    except Exception as e:
+        if logger:
+            logger.error(f"Erro em shop_admin_patch_daily_pack_config: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+@shop_bp.route("/api/shop/admin/daily-pack/reminder/test", methods=["POST"])
+@require_auth
+@require_admin
+def shop_admin_test_daily_pack_reminder():
+    """Envia imediatamente a mensagem configurada do DailyPack para jogadores online (teste admin)."""
+    services = get_services()
+    logger = getattr(services, "logger", None)
+    try:
+        ssm_db_path, error = _get_ssm_database_path()
+        if error:
+            return jsonify({"success": False, "error": error}), 500
+
+        scheduler = getattr(services, "daily_pack_reminder_scheduler", None)
+        if scheduler is None:
+            scheduler = DailyPackReminderScheduler(
+                ssm_db_path=ssm_db_path,
+                rcon_queue_manager=getattr(services, "rcon_queue_manager", None),
+                logger=logger,
+            )
+
+        payload = request.get_json(force=True, silent=True) or {}
+        overrides: Dict[str, Any] = {}
+        for key in ("reminder_message", "reminder_chat_color", "discord_invite_url"):
+            if key in payload:
+                overrides[key] = payload.get(key)
+
+        res = scheduler.check_and_send_reminder(force=True, overrides=overrides or None)
+        return jsonify({"success": True, "data": res}), 200
+    except Exception as e:
+        if logger:
+            logger.error(f"Erro em shop_admin_test_daily_pack_reminder: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+@shop_bp.route("/api/shop/admin/daily-pack/players", methods=["GET"])
+@require_auth
+@require_admin
+def shop_admin_daily_pack_players():
+    """Lista jogadores registrados com status do DailyPack, horário do comando /daily e totais."""
+    services = get_services()
+    logger = getattr(services, "logger", None)
+    try:
+        ssm_db_path, error = _get_ssm_database_path()
+        if error:
+            return jsonify({"success": False, "error": error}), 500
+
+        def _to_int(val, default: int) -> int:
+            try:
+                return int(val)
+            except Exception:
+                return int(default)
+
+        limit = max(1, min(1000, _to_int(request.args.get("limit", 100), 100)))
+        offset = max(0, _to_int(request.args.get("offset", 0), 0))
+        search_query = (request.args.get("q") or "").strip()
+        status_filter = (request.args.get("status") or "all").strip().lower()
+        sort_by = (request.args.get("sort_by") or "last_command_at").strip()
+        sort_order = (request.args.get("sort_order") or "desc").strip().lower()
+        if sort_order not in {"asc", "desc"}:
+            sort_order = "desc"
+
+        sort_col_map = {
+            "player_name": "COALESCE(p.player_name, '') COLLATE NOCASE",
+            "steam_id": "p.steam_id",
+            "last_command_at": "COALESCE(d.last_claimed_ts, 0)",
+            "total_claims": "COALESCE(d.total_claims, 0)",
+            "discord_linked_at": "COALESCE(p.discord_linked_at, '')",
+        }
+        order_col = sort_col_map.get(sort_by, "COALESCE(d.last_claimed_ts, 0)")
+
+        cfg = load_daily_pack_config()
+        cooldown_seconds = int(cfg.get("cooldown_seconds", 86400) or 86400)
+        now_ts = int(time.time())
+
+        base_reg_cond = "p.discord_user_id IS NOT NULL AND TRIM(p.discord_user_id) != ''"
+        where_parts = [base_reg_cond]
+        params: List[Any] = []
+
+        if search_query:
+            where_parts.append("(p.player_name LIKE ? OR p.steam_id LIKE ?)")
+            params.extend([f"%{search_query}%", f"%{search_query}%"])
+
+        if status_filter == "claimed":
+            where_parts.append("d.last_claimed_ts IS NOT NULL AND (? - d.last_claimed_ts) < ?")
+            params.extend([now_ts, cooldown_seconds])
+        elif status_filter == "available":
+            where_parts.append("(d.last_claimed_ts IS NULL OR (? - d.last_claimed_ts) >= ?)")
+            params.extend([now_ts, cooldown_seconds])
+        elif status_filter == "never":
+            where_parts.append("d.last_claimed_ts IS NULL")
+
+        where_sql = "WHERE " + " AND ".join(where_parts)
+
+        with DatabaseConnector.get_connection(ssm_db_path, timeout=30.0, write_mode=True) as conn:
+            ensure_daily_pack_tables(conn)
+            conn.row_factory = sqlite3.Row
+            cur = conn.cursor()
+
+            cur.execute(
+                f"""
+                SELECT
+                    COUNT(*) AS total_registered,
+                    SUM(CASE WHEN d.last_claimed_ts IS NOT NULL AND (? - d.last_claimed_ts) < ? THEN 1 ELSE 0 END) AS claimed_in_cycle,
+                    SUM(CASE WHEN d.last_claimed_ts IS NULL THEN 1 ELSE 0 END) AS never_claimed
+                FROM players p
+                LEFT JOIN daily_pack_claims d ON p.steam_id = d.steam_id
+                WHERE {base_reg_cond}
+                """,
+                (now_ts, cooldown_seconds),
+            )
+            sum_row = cur.fetchone()
+            total_registered = int(sum_row["total_registered"] or 0) if sum_row else 0
+            claimed_in_cycle = int(sum_row["claimed_in_cycle"] or 0) if sum_row else 0
+            never_claimed = int(sum_row["never_claimed"] or 0) if sum_row else 0
+            available_now = max(0, total_registered - claimed_in_cycle)
+
+            cur.execute(
+                f"""
+                SELECT COUNT(*) AS total
+                FROM players p
+                LEFT JOIN daily_pack_claims d ON p.steam_id = d.steam_id
+                {where_sql}
+                """,
+                params,
+            )
+            total = int(cur.fetchone()[0] or 0)
+
+            cur.execute(
+                f"""
+                SELECT
+                    p.steam_id,
+                    p.player_name,
+                    p.discord_user_id,
+                    p.discord_linked_at,
+                    d.last_claimed_ts,
+                    d.last_claimed_at,
+                    d.last_command_at,
+                    COALESCE(d.total_claims, 0) AS total_claims,
+                    d.last_kit_code,
+                    d.last_kit_name
+                FROM players p
+                LEFT JOIN daily_pack_claims d ON p.steam_id = d.steam_id
+                {where_sql}
+                ORDER BY {order_col} {sort_order.upper()}, p.steam_id ASC
+                LIMIT ? OFFSET ?
+                """,
+                params + [limit, offset],
+            )
+            rows = cur.fetchall() or []
+
+        items = []
+        for r in rows:
+            last_ts = int(r["last_claimed_ts"]) if r["last_claimed_ts"] is not None else None
+            if last_ts is None:
+                claim_status = "never"
+                remaining_seconds = 0
+            else:
+                elapsed = max(0, now_ts - last_ts)
+                if elapsed < cooldown_seconds:
+                    claim_status = "claimed"
+                    remaining_seconds = cooldown_seconds - elapsed
+                else:
+                    claim_status = "available"
+                    remaining_seconds = 0
+
+            items.append(
+                {
+                    "steam_id": str(r["steam_id"]),
+                    "player_name": str(r["player_name"]) if r["player_name"] is not None else None,
+                    "discord_user_id": str(r["discord_user_id"]) if r["discord_user_id"] else None,
+                    "discord_linked_at": str(r["discord_linked_at"]) if r["discord_linked_at"] else None,
+                    "last_claimed_ts": last_ts,
+                    "last_claimed_at": str(r["last_claimed_at"]) if r["last_claimed_at"] else None,
+                    "last_command_at": (
+                        str(r["last_command_at"])
+                        if r["last_command_at"]
+                        else (str(r["last_claimed_at"]) if r["last_claimed_at"] else None)
+                    ),
+                    "total_claims": int(r["total_claims"] or 0),
+                    "last_kit_code": int(r["last_kit_code"]) if r["last_kit_code"] is not None else None,
+                    "last_kit_name": str(r["last_kit_name"]) if r["last_kit_name"] else None,
+                    "claim_status": claim_status,
+                    "remaining_seconds": int(remaining_seconds),
+                }
+            )
+
+        return jsonify(
+            {
+                "success": True,
+                "data": {
+                    "items": items,
+                    "total": total,
+                    "count": len(items),
+                    "limit": limit,
+                    "offset": offset,
+                    "cooldown_seconds": cooldown_seconds,
+                    "summary": {
+                        "total_registered": total_registered,
+                        "claimed_in_cycle": claimed_in_cycle,
+                        "available_now": available_now,
+                        "never_claimed": never_claimed,
+                    },
+                },
+            }
+        ), 200
+    except Exception as e:
+        if logger:
+            logger.error(f"Erro em shop_admin_daily_pack_players: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+@shop_bp.route("/api/shop/admin/daily-pack/history", methods=["GET"])
+@require_auth
+@require_admin
+def shop_admin_daily_pack_history():
+    """Lista histórico completo de resgates do /daily."""
+    services = get_services()
+    logger = getattr(services, "logger", None)
+    try:
+        ssm_db_path, error = _get_ssm_database_path()
+        if error:
+            return jsonify({"success": False, "error": error}), 500
+
+        def _to_int(val, default: int) -> int:
+            try:
+                return int(val)
+            except Exception:
+                return int(default)
+
+        limit = max(1, min(1000, _to_int(request.args.get("limit", 100), 100)))
+        offset = max(0, _to_int(request.args.get("offset", 0), 0))
+        search_query = (request.args.get("q") or "").strip()
+
+        where_sql = ""
+        params: List[Any] = []
+        if search_query:
+            where_sql = "WHERE player_name LIKE ? OR steam_id LIKE ? OR CAST(kit_code AS TEXT) LIKE ? OR kit_name LIKE ?"
+            like = f"%{search_query}%"
+            params = [like, like, like, like]
+
+        with DatabaseConnector.get_connection(ssm_db_path, timeout=30.0, write_mode=True) as conn:
+            ensure_daily_pack_tables(conn)
+            conn.row_factory = sqlite3.Row
+            cur = conn.cursor()
+
+            cur.execute(f"SELECT COUNT(*) FROM daily_pack_claim_history {where_sql}", params)
+            total = int(cur.fetchone()[0] or 0)
+
+            cur.execute(
+                f"""
+                SELECT id, steam_id, player_name, kit_code, kit_name, bonus_coins,
+                       command_at, claimed_ts, order_id, created_at
+                FROM daily_pack_claim_history
+                {where_sql}
+                ORDER BY claimed_ts DESC, id DESC
+                LIMIT ? OFFSET ?
+                """,
+                params + [limit, offset],
+            )
+            rows = cur.fetchall() or []
+
+        items = [
+            {
+                "id": int(r["id"]),
+                "steam_id": str(r["steam_id"]),
+                "player_name": str(r["player_name"]) if r["player_name"] is not None else None,
+                "kit_code": int(r["kit_code"]) if r["kit_code"] is not None else None,
+                "kit_name": str(r["kit_name"]) if r["kit_name"] else None,
+                "bonus_coins": int(r["bonus_coins"] or 0),
+                "command_at": str(r["command_at"]),
+                "claimed_ts": int(r["claimed_ts"]),
+                "order_id": str(r["order_id"]) if r["order_id"] else None,
+                "created_at": str(r["created_at"]),
+            }
+            for r in rows
+        ]
+
+        return jsonify(
+            {
+                "success": True,
+                "data": {
+                    "items": items,
+                    "total": total,
+                    "count": len(items),
+                    "limit": limit,
+                    "offset": offset,
+                },
+            }
+        ), 200
+    except Exception as e:
+        if logger:
+            logger.error(f"Erro em shop_admin_daily_pack_history: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+@shop_bp.route("/api/shop/admin/daily-pack/reset/<steam_id>", methods=["POST"])
+@require_auth
+@require_admin
+def shop_admin_reset_daily_pack_player(steam_id: str):
+    """Remove o cooldown atual do /daily de um jogador específico preservando o histórico."""
+    services = get_services()
+    logger = getattr(services, "logger", None)
+    try:
+        ssm_db_path, error = _get_ssm_database_path()
+        if error:
+            return jsonify({"success": False, "error": error}), 500
+
+        sid = str(steam_id or "").strip()
+        if not sid:
+            return jsonify({"success": False, "error": "Missing steam_id"}), 400
+
+        with DatabaseConnector.get_connection(ssm_db_path, timeout=30.0, write_mode=True) as conn:
+            ensure_daily_pack_tables(conn)
+            cur = conn.cursor()
+            cur.execute("DELETE FROM daily_pack_claims WHERE steam_id = ?", (sid,))
+            deleted = cur.rowcount > 0
+            conn.commit()
+
+        return jsonify({"success": True, "data": {"steam_id": sid, "reset": deleted}}), 200
+    except Exception as e:
+        if logger:
+            logger.error(f"Erro em shop_admin_reset_daily_pack_player: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
+
 
 
 

@@ -358,10 +358,32 @@ class VehicleDestructionProcessor:
                         int(discord_sent or 0),
                     ),
                 )
-                cursor.execute(
-                    "UPDATE vehicle_current_ownership SET status = ? WHERE vehicle_entity_id = ?",
-                    (parsed_data['status'], parsed_data['vehicle_id']),
-                )
+                loc = parsed_data.get('location') or {}
+                try:
+                    cursor.execute(
+                        """
+                        UPDATE vehicle_current_ownership
+                        SET status = ?,
+                            current_location_x = COALESCE(?, current_location_x),
+                            current_location_y = COALESCE(?, current_location_y),
+                            current_location_z = COALESCE(?, current_location_z),
+                            current_location_updated_at = CURRENT_TIMESTAMP,
+                            updated_at = CURRENT_TIMESTAMP
+                        WHERE vehicle_entity_id = ?
+                        """,
+                        (
+                            parsed_data['status'],
+                            loc.get('x'),
+                            loc.get('y'),
+                            loc.get('z'),
+                            parsed_data['vehicle_id'],
+                        ),
+                    )
+                except sqlite3.OperationalError:
+                    cursor.execute(
+                        "UPDATE vehicle_current_ownership SET status = ? WHERE vehicle_entity_id = ?",
+                        (parsed_data['status'], parsed_data['vehicle_id']),
+                    )
 
             logger.info(f"Evento salvo no banco: {parsed_data['event_type']} - {parsed_data['vehicle_name']}")
             

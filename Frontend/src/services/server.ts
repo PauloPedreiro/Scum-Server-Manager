@@ -637,9 +637,13 @@ export interface Vehicle {
   vehicle_class_display: string;
   status: number;
   status_text: string;
-  location_x: number;
-  location_y: number;
-  location_z: number;
+  location_x: number | null;
+  location_y: number | null;
+  location_z: number | null;
+  current_location_x?: number | null;
+  current_location_y?: number | null;
+  current_location_z?: number | null;
+  current_location_updated_at?: string | null;
   last_ownership_change: string;
   is_vehicle_functional: number;
   container_class?: string;

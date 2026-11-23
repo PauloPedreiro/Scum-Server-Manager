@@ -106,6 +106,8 @@ OPTIONAL_TABLES = [
     "custom_zone_region",
     "abandoned_bunker",
     "abandoned_bunker_mesh_instance_bound_to_activation",
+    "daily_pack_claims",
+    "daily_pack_claim_history",
 ]
 
 
@@ -1229,6 +1231,7 @@ def _init_shop_kit(
                         enabled INTEGER NOT NULL DEFAULT 1,
                         only_once INTEGER NOT NULL DEFAULT 0,
                         auto_deliver_on_register INTEGER NOT NULL DEFAULT 0,
+                        is_daily_pack INTEGER NOT NULL DEFAULT 0,
                         created_at TEXT NOT NULL DEFAULT (datetime('now')),
                         updated_at TEXT NOT NULL DEFAULT (datetime('now'))
                     )
@@ -1252,6 +1255,7 @@ def _init_shop_kit(
                         enabled INTEGER NOT NULL DEFAULT 1,
                         only_once INTEGER NOT NULL DEFAULT 0,
                         auto_deliver_on_register INTEGER NOT NULL DEFAULT 0,
+                        is_daily_pack INTEGER NOT NULL DEFAULT 0,
                         created_at TEXT NOT NULL DEFAULT (datetime('now')),
                         updated_at TEXT NOT NULL DEFAULT (datetime('now'))
                     )
@@ -1270,6 +1274,9 @@ def _init_shop_kit(
                 if "auto_deliver_on_register" in old_cols:
                     src_cols.append("auto_deliver_on_register")
                     dest_cols.append("auto_deliver_on_register")
+                if "is_daily_pack" in old_cols:
+                    src_cols.append("is_daily_pack")
+                    dest_cols.append("is_daily_pack")
                 if "created_at" in old_cols:
                     src_cols.append("created_at")
                     dest_cols.append("created_at")
@@ -1295,6 +1302,12 @@ def _init_shop_kit(
             # Ativar foreign keys novamente
             cursor.execute("PRAGMA foreign_keys = ON")
 
+            # Garantir coluna is_daily_pack na tabela shop_kit existente
+            cursor.execute("PRAGMA table_info('shop_kit')")
+            current_cols = {str(r[1]) for r in (cursor.fetchall() or [])}
+            if "is_daily_pack" not in current_cols:
+                cursor.execute("ALTER TABLE shop_kit ADD COLUMN is_daily_pack INTEGER NOT NULL DEFAULT 0")
+
             # Criar tabela de itens do kit
             cursor.execute(
                 """
@@ -1310,6 +1323,10 @@ def _init_shop_kit(
             cursor.execute(
                 "CREATE INDEX IF NOT EXISTS idx_shop_kit_item_kit_id ON shop_kit_item(kit_id)"
             )
+
+            # Garantir tabelas e migrações de Daily Pack (/daily)
+            from core.shop.daily_pack_service import ensure_daily_pack_tables
+            ensure_daily_pack_tables(conn)
 
             conn.commit()
     except Exception as e:
@@ -1731,6 +1748,10 @@ def _init_vehicle_events(
                     location_x REAL,
                     location_y REAL,
                     location_z REAL,
+                    current_location_x REAL,
+                    current_location_y REAL,
+                    current_location_z REAL,
+                    current_location_updated_at DATETIME,
                     last_ownership_change DATETIME NOT NULL,
                     container_class TEXT,
                     vehicle_class TEXT,
@@ -1742,6 +1763,20 @@ def _init_vehicle_events(
                 )
             """
             )
+
+            # Migração leve: garantir colunas de localização atual em bancos existentes
+            cursor.execute("PRAGMA table_info('vehicle_current_ownership')")
+            vco_cols = {str(r[1]) for r in (cursor.fetchall() or [])}
+            for col_name, col_type in (
+                ("current_location_x", "REAL"),
+                ("current_location_y", "REAL"),
+                ("current_location_z", "REAL"),
+                ("current_location_updated_at", "DATETIME"),
+            ):
+                if col_name not in vco_cols:
+                    cursor.execute(
+                        f"ALTER TABLE vehicle_current_ownership ADD COLUMN {col_name} {col_type}"
+                    )
 
             # vehicle_ownership_history
             cursor.execute(
