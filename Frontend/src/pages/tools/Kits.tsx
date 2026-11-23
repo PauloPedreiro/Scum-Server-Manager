@@ -35,6 +35,7 @@ export default function Kits({ isTab = false }: { isTab?: boolean } = {}) {
   const [enabled, setEnabled] = useState(true);
   const [onlyOnce, setOnlyOnce] = useState(false);
   const [autoDeliver, setAutoDeliver] = useState(false);
+  const [dailyPack, setDailyPack] = useState(false);
   const [items, setItems] = useState<ShopAdminKitItemDetail[]>([{ setup: '', qty: 1 }]);
 
   // Modal de Escaneamento de Baú
@@ -46,6 +47,7 @@ export default function Kits({ isTab = false }: { isTab?: boolean } = {}) {
   const [scanEnabled, setScanEnabled] = useState(true);
   const [scanOnlyOnce, setScanOnlyOnce] = useState(false);
   const [scanAutoDeliver, setScanAutoDeliver] = useState(false);
+  const [scanDailyPack, setScanDailyPack] = useState(false);
   const [scanCode, setScanCode] = useState<number | ''>('');
 
   const loadKits = async () => {
@@ -81,6 +83,7 @@ export default function Kits({ isTab = false }: { isTab?: boolean } = {}) {
     setEnabled(true);
     setOnlyOnce(false);
     setAutoDeliver(false);
+    setDailyPack(false);
     setItems([{ setup: '', qty: 1 }]);
     setManualModalOpen(true);
   };
@@ -96,6 +99,7 @@ export default function Kits({ isTab = false }: { isTab?: boolean } = {}) {
     setScanEnabled(true);
     setScanOnlyOnce(false);
     setScanAutoDeliver(false);
+    setScanDailyPack(false);
     setChestId('');
     setScanModalOpen(true);
   };
@@ -110,6 +114,7 @@ export default function Kits({ isTab = false }: { isTab?: boolean } = {}) {
     setEnabled(!!kit.enabled);
     setOnlyOnce(!!kit.only_once);
     setAutoDeliver(!!kit.auto_deliver_on_register);
+    setDailyPack(!!kit.is_daily_pack);
     setItems(kit.items.length > 0 ? kit.items.map(it => ({ ...it })) : [{ setup: '', qty: 1 }]);
     setManualModalOpen(true);
   };
@@ -169,8 +174,9 @@ export default function Kits({ isTab = false }: { isTab?: boolean } = {}) {
         name: cleanName,
         price: Number(price),
         enabled: enabled,
-        only_once: onlyOnce,
+        only_once: dailyPack ? false : onlyOnce,
         auto_deliver_on_register: autoDeliver,
+        is_daily_pack: dailyPack,
         items: validItems.map(it => ({ setup: it.setup.trim(), qty: Number(it.qty) })),
       });
 
@@ -255,8 +261,9 @@ export default function Kits({ isTab = false }: { isTab?: boolean } = {}) {
         name: cleanScanName,
         price: Number(scanPrice),
         enabled: scanEnabled,
-        only_once: scanOnlyOnce,
+        only_once: scanDailyPack ? false : scanOnlyOnce,
         auto_deliver_on_register: scanAutoDeliver,
+        is_daily_pack: scanDailyPack,
         code: scanCode !== '' ? Number(scanCode) : undefined,
       });
 
@@ -270,6 +277,7 @@ export default function Kits({ isTab = false }: { isTab?: boolean } = {}) {
         setScanEnabled(true);
         setScanOnlyOnce(false);
         setScanAutoDeliver(false);
+        setScanDailyPack(false);
         setScanCode('');
         await loadKits();
 
@@ -379,6 +387,11 @@ export default function Kits({ isTab = false }: { isTab?: boolean } = {}) {
                           {!!kit.auto_deliver_on_register && (
                             <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-green-500/15 border border-green-500/40 text-xs font-semibold text-green-300 ml-2">
                               Welcome Pack
+                            </span>
+                          )}
+                          {!!kit.is_daily_pack && (
+                            <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-blue-500/15 border border-blue-500/40 text-xs font-semibold text-blue-300 ml-2">
+                              Daily Pack
                             </span>
                           )}
                         </td>
@@ -535,18 +548,20 @@ export default function Kits({ isTab = false }: { isTab?: boolean } = {}) {
               </div>
 
               {/* Checkbox Compra Única */}
-              <div className={`flex items-center gap-3 p-3 rounded-lg border ${autoDeliver ? 'border-white/10 bg-white/5 opacity-50' : 'border-amber-500/20 bg-amber-500/5'}`}>
+              <div className={`flex items-center gap-3 p-3 rounded-lg border ${(autoDeliver || dailyPack) ? 'border-white/10 bg-white/5 opacity-50' : 'border-amber-500/20 bg-amber-500/5'}`}>
                 <input
                   type="checkbox"
                   id="onlyOnce"
-                  checked={autoDeliver ? true : onlyOnce}
+                  checked={autoDeliver ? true : (dailyPack ? false : onlyOnce)}
                   onChange={(e) => setOnlyOnce(e.target.checked)}
-                  disabled={autoDeliver}
+                  disabled={autoDeliver || dailyPack}
                   className="w-4 h-4 text-scum-orange border-white/20 bg-white/5 rounded focus:ring-scum-orange disabled:cursor-not-allowed"
                 />
                 <label htmlFor="onlyOnce" className="text-sm text-white/80 cursor-pointer select-none">
                   <span className="font-semibold text-white block">Permitir compra apenas uma vez</span>
-                  <span className="text-xs text-white/50 block mt-0.5">Indicado para Welcome Kits. Evita recompra.</span>
+                  <span className="text-xs text-white/50 block mt-0.5">
+                    {dailyPack ? 'Desativado para Daily Pack (permite resgate recorrente a cada 24h).' : 'Indicado para Welcome Kits. Evita recompra.'}
+                  </span>
                 </label>
               </div>
 
@@ -556,13 +571,43 @@ export default function Kits({ isTab = false }: { isTab?: boolean } = {}) {
                   type="checkbox"
                   id="autoDeliver"
                   checked={autoDeliver}
-                  onChange={(e) => setAutoDeliver(e.target.checked)}
+                  onChange={(e) => {
+                    const checked = e.target.checked;
+                    setAutoDeliver(checked);
+                    if (checked) {
+                      setDailyPack(false);
+                    }
+                  }}
                   className="w-4 h-4 text-scum-orange border-white/20 bg-white/5 rounded focus:ring-scum-orange"
                 />
                 <label htmlFor="autoDeliver" className="text-sm text-white/80 cursor-pointer select-none">
                   <span className="font-semibold text-white block">Entregar automaticamente no registro</span>
                   <span className="text-xs text-white/50 block mt-0.5">
                     Entrega este kit ao jogador no momento do registro via Discord. Só 1 kit pode ter esta opção ativa.
+                  </span>
+                </label>
+              </div>
+
+              {/* Checkbox Daily Pack (/daily) */}
+              <div className="flex items-center gap-3 p-3 rounded-lg border border-blue-500/20 bg-blue-500/5">
+                <input
+                  type="checkbox"
+                  id="dailyPack"
+                  checked={dailyPack}
+                  onChange={(e) => {
+                    const checked = e.target.checked;
+                    setDailyPack(checked);
+                    if (checked) {
+                      setAutoDeliver(false);
+                      setOnlyOnce(false);
+                    }
+                  }}
+                  className="w-4 h-4 text-scum-orange border-white/20 bg-white/5 rounded focus:ring-scum-orange"
+                />
+                <label htmlFor="dailyPack" className="text-sm text-white/80 cursor-pointer select-none">
+                  <span className="font-semibold text-white block">Definir como Daily Pack (/daily)</span>
+                  <span className="text-xs text-white/50 block mt-0.5">
+                    Define este kit como a recompensa diária entregue no comando /daily. Só 1 kit pode ter esta opção ativa.
                   </span>
                 </label>
               </div>
@@ -716,13 +761,13 @@ export default function Kits({ isTab = false }: { isTab?: boolean } = {}) {
                   <input
                     type="checkbox"
                     id="scanOnlyOnce"
-                    checked={scanAutoDeliver ? true : scanOnlyOnce}
+                    checked={scanAutoDeliver ? true : (scanDailyPack ? false : scanOnlyOnce)}
                     onChange={(e) => setScanOnlyOnce(e.target.checked)}
-                    disabled={scanAutoDeliver}
+                    disabled={scanAutoDeliver || scanDailyPack}
                     className="w-4 h-4 text-scum-orange border-white/20 bg-white/5 rounded focus:ring-scum-orange disabled:cursor-not-allowed"
                   />
                   <label htmlFor="scanOnlyOnce" className="text-xs text-white/80 cursor-pointer select-none">
-                    Compra única? (Impede recompra - ex: Welcome Kit)
+                    {scanDailyPack ? 'Compra única desativada para Daily Pack (permite resgate diário)' : 'Compra única? (Impede recompra - ex: Welcome Kit)'}
                   </label>
                 </div>
 
@@ -731,13 +776,43 @@ export default function Kits({ isTab = false }: { isTab?: boolean } = {}) {
                     type="checkbox"
                     id="scanAutoDeliver"
                     checked={scanAutoDeliver}
-                    onChange={(e) => setScanAutoDeliver(e.target.checked)}
+                    onChange={(e) => {
+                      const checked = e.target.checked;
+                      setScanAutoDeliver(checked);
+                      if (checked) {
+                        setScanDailyPack(false);
+                      }
+                    }}
                     className="w-4 h-4 text-scum-orange border-white/20 bg-white/5 rounded focus:ring-scum-orange"
                   />
                   <label htmlFor="scanAutoDeliver" className="text-sm text-white/80 cursor-pointer select-none">
                     <span className="font-semibold text-white block">Entregar automaticamente no registro</span>
                     <span className="text-xs text-white/50 block mt-0.5">
                       Entrega este kit ao jogador no momento do registro via Discord. Só 1 kit pode ter esta opção ativa.
+                    </span>
+                  </label>
+                </div>
+
+                {/* Checkbox Daily Pack no Scan Modal */}
+                <div className="flex items-center gap-3 p-3 rounded-lg border border-blue-500/20 bg-blue-500/5">
+                  <input
+                    type="checkbox"
+                    id="scanDailyPack"
+                    checked={scanDailyPack}
+                    onChange={(e) => {
+                      const checked = e.target.checked;
+                      setScanDailyPack(checked);
+                      if (checked) {
+                        setScanAutoDeliver(false);
+                        setScanOnlyOnce(false);
+                      }
+                    }}
+                    className="w-4 h-4 text-scum-orange border-white/20 bg-white/5 rounded focus:ring-scum-orange"
+                  />
+                  <label htmlFor="scanDailyPack" className="text-sm text-white/80 cursor-pointer select-none">
+                    <span className="font-semibold text-white block">Definir como Daily Pack (/daily)</span>
+                    <span className="text-xs text-white/50 block mt-0.5">
+                      Define este kit como a recompensa diária entregue no comando /daily. Só 1 kit pode ter esta opção ativa.
                     </span>
                   </label>
                 </div>

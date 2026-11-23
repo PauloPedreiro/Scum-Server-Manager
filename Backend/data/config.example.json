@@ -262,7 +262,8 @@
     "enabled": true,
     "auto_start": true,
     "verification_interval_hours": 24,
-    "description": "Verificação periódica se os veículos registrados ainda existem no SCUM.db"
+    "location_sync_interval_minutes": 5,
+    "description": "Verificação periódica se os veículos registrados ainda existem no SCUM.db e sincronização das coordenadas atuais"
   },
   "vehicle_registration": {
     "show_location": true,
@@ -351,5 +352,16 @@
     "welcome_kit_delivered": "Your kit has been successfully delivered!",
     "items_delivered": "Seus itens foram entregues com sucesso!",
     "insufficient_funds": "Saldo insuficiente! Seu saldo atual: R$ {balance}"
+  },
+  "daily_pack": {
+    "enabled": true,
+    "kit_code": 1,
+    "cooldown_seconds": 86400,
+    "bonus_coins": 50,
+    "discord_invite_url": "",
+    "reminder_enabled": false,
+    "reminder_interval_minutes": 30,
+    "reminder_chat_color": 6,
+    "reminder_message": "Atenção jogadores, seu Presente diário pode estar disponível! use /daily em seu chat para conferir"
   }
 }

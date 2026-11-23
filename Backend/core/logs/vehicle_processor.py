@@ -11,7 +11,10 @@ import threading
 from datetime import datetime
 from typing import Dict, Any, Optional, List
 from .chest_ownership_parser import ChestOwnershipParser
-from utils.scum_db_helper import scum_db_readonly_connection
+from utils.scum_db_helper import (
+    scum_db_readonly_connection,
+    scum_db_readonly_connection_strict,
+)
 
 class VehicleProcessor:
     def __init__(self, scum_db_path: str = None):
@@ -541,6 +544,72 @@ class VehicleProcessor:
             print(f"ERRO: Erro ao verificar existência de veículos em lote: {e}")
             # Em caso de erro, retornar False para todos
             return {vid: False for vid in vehicle_entity_ids}
+
+    def get_vehicles_live_locations_batch(
+        self, vehicle_entity_ids: List[int], strict_readonly: bool = False
+    ) -> Dict[int, Dict[str, Any]]:
+        """
+        Consultar coordenadas atuais e estado funcional dos veículos na tabela entity do SCUM.db.
+
+        Args:
+            vehicle_entity_ids: Lista de IDs de entidades de veículos
+            strict_readonly: Quando True, tenta leitura direta URI ?mode=ro do SCUM.db
+                com fallback para a cópia compartilhada em caso de lock/erro.
+
+        Returns:
+            Dicionário mapeando vehicle_entity_id -> dict com location_x/y/z e is_vehicle_functional
+        """
+        clean_ids = sorted({int(vid) for vid in vehicle_entity_ids if vid is not None})
+        if not clean_ids:
+            return {}
+
+        batch_size = 500
+
+        def _query_with_connection(conn) -> Dict[int, Dict[str, Any]]:
+            locations: Dict[int, Dict[str, Any]] = {}
+            conn.execute("PRAGMA busy_timeout = 8000")
+            cursor = conn.cursor()
+
+            for i in range(0, len(clean_ids), batch_size):
+                batch = clean_ids[i : i + batch_size]
+                placeholders = ",".join(["?" for _ in batch])
+                query = f"""
+                    SELECT
+                        vs.vehicle_entity_id,
+                        e.location_x,
+                        e.location_y,
+                        e.location_z,
+                        vs.is_vehicle_functional
+                    FROM vehicle_spawner vs
+                    INNER JOIN entity e ON e.id = vs.vehicle_entity_id
+                    WHERE vs.vehicle_entity_id IN ({placeholders})
+                """
+                cursor.execute(query, batch)
+                for row in cursor.fetchall():
+                    vid, lx, ly, lz, func = row
+                    locations[int(vid)] = {
+                        "location_x": float(lx) if lx is not None else None,
+                        "location_y": float(ly) if ly is not None else None,
+                        "location_z": float(lz) if lz is not None else None,
+                        "is_vehicle_functional": int(func) if func is not None else None,
+                    }
+            return locations
+
+        try:
+            if strict_readonly:
+                try:
+                    with scum_db_readonly_connection_strict(self.scum_db_path) as conn:
+                        return _query_with_connection(conn)
+                except Exception as strict_err:
+                    print(
+                        f"AVISO: Leitura estrita do SCUM.db falhou ({strict_err}), usando cópia compartilhada."
+                    )
+
+            with scum_db_readonly_connection(self.scum_db_path) as conn:
+                return _query_with_connection(conn)
+        except Exception as e:
+            print(f"ERRO: Erro ao consultar localização atual dos veículos no SCUM.db: {e}")
+            return {}
     
     def get_processor_stats(self) -> Dict[str, Any]:
         """Obter estatísticas do processador"""

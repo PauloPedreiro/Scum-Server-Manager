@@ -201,6 +201,10 @@ class DatabaseManager:
                         location_x REAL,
                         location_y REAL,
                         location_z REAL,
+                        current_location_x REAL,
+                        current_location_y REAL,
+                        current_location_z REAL,
+                        current_location_updated_at DATETIME,
                         last_ownership_change DATETIME NOT NULL,
                         container_class TEXT,
                         vehicle_class TEXT,
@@ -211,6 +215,23 @@ class DatabaseManager:
                         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
                     )
                 ''')
+
+                # Migração leve: garantir colunas de localização atual em bancos existentes
+                try:
+                    cur_vco = conn.execute("PRAGMA table_info('vehicle_current_ownership')")
+                    vco_cols = {str(r[1]) for r in (cur_vco.fetchall() or [])}
+                    for col_name, col_type in (
+                        ("current_location_x", "REAL"),
+                        ("current_location_y", "REAL"),
+                        ("current_location_z", "REAL"),
+                        ("current_location_updated_at", "DATETIME"),
+                    ):
+                        if col_name not in vco_cols:
+                            conn.execute(
+                                f"ALTER TABLE vehicle_current_ownership ADD COLUMN {col_name} {col_type}"
+                            )
+                except Exception:
+                    pass
 
                 # Tabela para deduplicação robusta de notificações Discord de veículos
                 # Usa event_key único (hash da linha original do log) para idempotência.
@@ -1418,6 +1439,76 @@ class DatabaseManager:
     # MÉTODOS PARA VEÍCULOS
     # ============================================================================
     
+    def _upsert_vehicle_current_ownership(self, conn: sqlite3.Connection, vehicle_data: Dict[str, Any]) -> None:
+        """Executa UPSERT em vehicle_current_ownership preservando a localização original da tranca e a última localização atual conhecida."""
+        conn.execute(
+            '''
+            INSERT INTO vehicle_current_ownership
+            (entity_id, vehicle_entity_id, steam_id, player_id, player_name, location_x, location_y, location_z,
+             current_location_x, current_location_y, current_location_z, current_location_updated_at,
+             last_ownership_change, container_class, vehicle_class, vehicle_asset_id, is_vehicle_functional)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, ?, ?, ?, ?, ?)
+            ON CONFLICT(vehicle_entity_id) DO UPDATE SET
+                entity_id = excluded.entity_id,
+                steam_id = excluded.steam_id,
+                player_id = excluded.player_id,
+                player_name = excluded.player_name,
+                location_x = excluded.location_x,
+                location_y = excluded.location_y,
+                location_z = excluded.location_z,
+                current_location_x = CASE
+                    WHEN vehicle_current_ownership.current_location_x IS NULL THEN excluded.location_x
+                    WHEN vehicle_current_ownership.last_ownership_change IS NULL
+                      OR excluded.last_ownership_change > vehicle_current_ownership.last_ownership_change THEN excluded.location_x
+                    ELSE vehicle_current_ownership.current_location_x
+                END,
+                current_location_y = CASE
+                    WHEN vehicle_current_ownership.current_location_y IS NULL THEN excluded.location_y
+                    WHEN vehicle_current_ownership.last_ownership_change IS NULL
+                      OR excluded.last_ownership_change > vehicle_current_ownership.last_ownership_change THEN excluded.location_y
+                    ELSE vehicle_current_ownership.current_location_y
+                END,
+                current_location_z = CASE
+                    WHEN vehicle_current_ownership.current_location_z IS NULL THEN excluded.location_z
+                    WHEN vehicle_current_ownership.last_ownership_change IS NULL
+                      OR excluded.last_ownership_change > vehicle_current_ownership.last_ownership_change THEN excluded.location_z
+                    ELSE vehicle_current_ownership.current_location_z
+                END,
+                current_location_updated_at = CASE
+                    WHEN vehicle_current_ownership.current_location_x IS NULL
+                      OR vehicle_current_ownership.last_ownership_change IS NULL
+                      OR excluded.last_ownership_change > vehicle_current_ownership.last_ownership_change THEN CURRENT_TIMESTAMP
+                    ELSE vehicle_current_ownership.current_location_updated_at
+                END,
+                last_ownership_change = excluded.last_ownership_change,
+                container_class = excluded.container_class,
+                vehicle_class = excluded.vehicle_class,
+                vehicle_asset_id = excluded.vehicle_asset_id,
+                is_vehicle_functional = excluded.is_vehicle_functional,
+                updated_at = CURRENT_TIMESTAMP
+            WHERE vehicle_current_ownership.last_ownership_change IS NULL
+               OR excluded.last_ownership_change >= vehicle_current_ownership.last_ownership_change
+            ''',
+            (
+                vehicle_data['entity_id'],
+                vehicle_data['vehicle_entity_id'],
+                vehicle_data['steam_id'],
+                vehicle_data.get('player_id'),
+                vehicle_data['player_name'],
+                vehicle_data.get('location_x'),
+                vehicle_data.get('location_y'),
+                vehicle_data.get('location_z'),
+                vehicle_data.get('location_x'),
+                vehicle_data.get('location_y'),
+                vehicle_data.get('location_z'),
+                vehicle_data['timestamp'],
+                vehicle_data.get('container_class'),
+                vehicle_data.get('vehicle_class'),
+                vehicle_data.get('vehicle_asset_id'),
+                vehicle_data.get('is_vehicle_functional'),
+            ),
+        )
+
     def insert_vehicle_ownership(self, vehicle_data: Dict[str, Any]) -> bool:
         """Inserir dados de propriedade de veículo no banco"""
         vehicle_entity_id = vehicle_data.get('vehicle_entity_id')
@@ -1472,45 +1563,7 @@ class DatabaseManager:
                         ))
 
                     # Atualizar propriedade atual por vehicle_entity_id (identidade estável do veículo)
-                    conn.execute(
-                        '''
-                        INSERT INTO vehicle_current_ownership
-                        (entity_id, vehicle_entity_id, steam_id, player_id, player_name, location_x, location_y, location_z,
-                         last_ownership_change, container_class, vehicle_class, vehicle_asset_id, is_vehicle_functional)
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                        ON CONFLICT(vehicle_entity_id) DO UPDATE SET
-                            entity_id = excluded.entity_id,
-                            steam_id = excluded.steam_id,
-                            player_id = excluded.player_id,
-                            player_name = excluded.player_name,
-                            location_x = excluded.location_x,
-                            location_y = excluded.location_y,
-                            location_z = excluded.location_z,
-                            last_ownership_change = excluded.last_ownership_change,
-                            container_class = excluded.container_class,
-                            vehicle_class = excluded.vehicle_class,
-                            vehicle_asset_id = excluded.vehicle_asset_id,
-                            is_vehicle_functional = excluded.is_vehicle_functional,
-                            updated_at = CURRENT_TIMESTAMP
-                        WHERE vehicle_current_ownership.last_ownership_change IS NULL
-                           OR excluded.last_ownership_change >= vehicle_current_ownership.last_ownership_change
-                        ''',
-                        (
-                            vehicle_data['entity_id'],
-                            vehicle_entity_id,
-                            vehicle_data['steam_id'],
-                            vehicle_data.get('player_id'),
-                            vehicle_data['player_name'],
-                            vehicle_data.get('location_x'),
-                            vehicle_data.get('location_y'),
-                            vehicle_data.get('location_z'),
-                            vehicle_data['timestamp'],
-                            vehicle_data.get('container_class'),
-                            vehicle_data.get('vehicle_class'),
-                            vehicle_data.get('vehicle_asset_id'),
-                            vehicle_data.get('is_vehicle_functional'),
-                        ),
-                    )
+                    self._upsert_vehicle_current_ownership(conn, vehicle_data)
 
                     conn.commit()
                     return True
@@ -1638,45 +1691,7 @@ class DatabaseManager:
                             # Importante: vehicle_entity_id é a identidade estável do veículo.
                             # entity_id (container) pode mudar, então não pode ser a chave lógica para deduplicação.
                             # Fazemos UPSERT por vehicle_entity_id quando disponível.
-                            conn.execute(
-                                '''
-                                INSERT INTO vehicle_current_ownership
-                                (entity_id, vehicle_entity_id, steam_id, player_id, player_name, location_x, location_y, location_z,
-                                 last_ownership_change, container_class, vehicle_class, vehicle_asset_id, is_vehicle_functional)
-                                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                                ON CONFLICT(vehicle_entity_id) DO UPDATE SET
-                                    entity_id = excluded.entity_id,
-                                    steam_id = excluded.steam_id,
-                                    player_id = excluded.player_id,
-                                    player_name = excluded.player_name,
-                                    location_x = excluded.location_x,
-                                    location_y = excluded.location_y,
-                                    location_z = excluded.location_z,
-                                    last_ownership_change = excluded.last_ownership_change,
-                                    container_class = excluded.container_class,
-                                    vehicle_class = excluded.vehicle_class,
-                                    vehicle_asset_id = excluded.vehicle_asset_id,
-                                    is_vehicle_functional = excluded.is_vehicle_functional,
-                                    updated_at = CURRENT_TIMESTAMP
-                                WHERE vehicle_current_ownership.last_ownership_change IS NULL
-                                   OR excluded.last_ownership_change >= vehicle_current_ownership.last_ownership_change
-                                ''',
-                                (
-                                    entity_id,
-                                    vehicle_entity_id,
-                                    vehicle_data['steam_id'],
-                                    vehicle_data.get('player_id'),
-                                    vehicle_data['player_name'],
-                                    vehicle_data.get('location_x'),
-                                    vehicle_data.get('location_y'),
-                                    vehicle_data.get('location_z'),
-                                    vehicle_data['timestamp'],
-                                    vehicle_data.get('container_class'),
-                                    vehicle_data.get('vehicle_class'),
-                                    vehicle_data.get('vehicle_asset_id'),
-                                    vehicle_data.get('is_vehicle_functional'),
-                                ),
-                            )
+                            self._upsert_vehicle_current_ownership(conn, vehicle_data)
                             
                             success_count += 1
                         except Exception as e:
@@ -2135,6 +2150,98 @@ class DatabaseManager:
         except Exception as e:
             print(f"ERRO: Erro ao obter vehicle_entity_ids: {e}")
             return []
+
+    def get_active_vehicle_entity_ids(self) -> List[int]:
+        """Obter todos os vehicle_entity_id com status = 0 (Ativo)."""
+        try:
+            with self._connect(write_mode=False) as conn:
+                cursor = conn.execute(
+                    """
+                    SELECT DISTINCT vehicle_entity_id
+                    FROM vehicle_current_ownership
+                    WHERE vehicle_entity_id IS NOT NULL
+                      AND status = 0
+                    """
+                )
+                return [int(row[0]) for row in cursor.fetchall()]
+        except Exception as e:
+            print(f"ERRO: Erro ao obter vehicle_entity_ids ativos: {e}")
+            return []
+
+    def update_vehicles_locations_batch(
+        self, vehicle_locations_map: Dict[int, Dict[str, Any]]
+    ) -> int:
+        """
+        Atualizar localização atual (current_location_x/y/z) de múltiplos veículos em lote.
+        Só executa UPDATE quando a posição mudou mais de 0.5 unidade (ou era NULL) ou quando is_vehicle_functional mudou.
+        """
+        if not vehicle_locations_map:
+            return 0
+
+        for attempt in range(self.max_retries):
+            try:
+                with self._connect() as conn:
+                    updated_count = 0
+                    for vehicle_entity_id, loc_data in vehicle_locations_map.items():
+                        lx = loc_data.get("location_x")
+                        ly = loc_data.get("location_y")
+                        lz = loc_data.get("location_z")
+                        func = loc_data.get("is_vehicle_functional")
+                        if lx is None or ly is None or lz is None:
+                            continue
+
+                        lx_f = float(lx)
+                        ly_f = float(ly)
+                        lz_f = float(lz)
+                        func_i = int(func) if func is not None else None
+
+                        cursor = conn.execute(
+                            """
+                            UPDATE vehicle_current_ownership
+                            SET current_location_x = ?,
+                                current_location_y = ?,
+                                current_location_z = ?,
+                                current_location_updated_at = CURRENT_TIMESTAMP,
+                                is_vehicle_functional = COALESCE(?, is_vehicle_functional),
+                                updated_at = CURRENT_TIMESTAMP
+                            WHERE vehicle_entity_id = ?
+                              AND (
+                                  current_location_x IS NULL
+                                  OR current_location_y IS NULL
+                                  OR current_location_z IS NULL
+                                  OR ABS(current_location_x - ?) > 0.5
+                                  OR ABS(current_location_y - ?) > 0.5
+                                  OR ABS(current_location_z - ?) > 0.5
+                                  OR (? IS NOT NULL AND is_vehicle_functional IS NOT ?)
+                              )
+                            """,
+                            (
+                                lx_f,
+                                ly_f,
+                                lz_f,
+                                func_i,
+                                int(vehicle_entity_id),
+                                lx_f,
+                                ly_f,
+                                lz_f,
+                                func_i,
+                                func_i,
+                            ),
+                        )
+                        updated_count += cursor.rowcount
+
+                    conn.commit()
+                    return updated_count
+            except sqlite3.OperationalError as e:
+                if "database is locked" in str(e).lower() and attempt < self.max_retries - 1:
+                    self._sleep_backoff(attempt)
+                    continue
+                print(f"ERRO: Erro ao atualizar localizações atuais de veículos: {e}")
+                return 0
+            except Exception as e:
+                print(f"ERRO: Erro ao atualizar localizações atuais de veículos: {e}")
+                return 0
+        return 0
     
     def update_vehicles_status_batch(self, vehicle_status_map: Dict[int, int]) -> int:
         """

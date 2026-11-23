@@ -1690,6 +1690,132 @@ def run_vehicle_verification_now():
         return jsonify({"success": False, "error": str(e)}), 500
 
 
+def _sync_and_enrich_vehicle_locations(
+    vehicles: List[Dict[str, Any]],
+    log_processor: Any,
+    db_path: str,
+    logger: Any = None,
+) -> None:
+    """
+    Atualiza sob demanda (Ideia 2) a localização atual (current_location_x/y/z)
+    dos veículos ativos via tabela entity do SCUM.db e aplica fallback para
+    veículos inativos/desaparecidos/destruídos sem sobrescrever a Loc. tranca (location_x/y/z).
+    """
+    if not vehicles:
+        return
+
+    active_ids = sorted(
+        {
+            int(v["vehicle_entity_id"])
+            for v in vehicles
+            if v.get("vehicle_entity_id") is not None and int(v.get("status", 0) or 0) == 0
+        }
+    )
+
+    live_locations: Dict[int, Dict[str, Any]] = {}
+    vehicle_processor = getattr(log_processor, "vehicle_processor", None)
+    db_manager = getattr(log_processor, "db_manager", None)
+
+    if active_ids and vehicle_processor and hasattr(
+        vehicle_processor, "get_vehicles_live_locations_batch"
+    ):
+        try:
+            live_locations = vehicle_processor.get_vehicles_live_locations_batch(
+                active_ids, strict_readonly=True
+            )
+        except Exception as err:
+            if logger:
+                logger.warn(f"Falha ao consultar localização ao vivo dos veículos: {err}")
+
+    if live_locations:
+        now_iso = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+        for v in vehicles:
+            vid = v.get("vehicle_entity_id")
+            if vid is None:
+                continue
+            live = live_locations.get(int(vid))
+            if not live:
+                continue
+            if (
+                live.get("location_x") is not None
+                and live.get("location_y") is not None
+                and live.get("location_z") is not None
+            ):
+                v["current_location_x"] = live["location_x"]
+                v["current_location_y"] = live["location_y"]
+                v["current_location_z"] = live["location_z"]
+                v["current_location_updated_at"] = now_iso
+            if live.get("is_vehicle_functional") is not None:
+                v["is_vehicle_functional"] = live["is_vehicle_functional"]
+
+        if db_manager and hasattr(db_manager, "update_vehicles_locations_batch"):
+            try:
+                db_manager.update_vehicles_locations_batch(live_locations)
+            except Exception as err:
+                if logger:
+                    logger.warn(f"Falha ao persistir localização atual dos veículos: {err}")
+
+    # Fallback para veículos inativos/desaparecidos/destruídos que ainda não têm current_location
+    missing_inactive_ids = sorted(
+        {
+            int(v["vehicle_entity_id"])
+            for v in vehicles
+            if v.get("vehicle_entity_id") is not None
+            and int(v.get("status", 0) or 0) in (1, 2, 3)
+            and (v.get("current_location_x") is None or v.get("current_location_y") is None)
+        }
+    )
+    if missing_inactive_ids:
+        try:
+            fallback_locations: Dict[int, Dict[str, Any]] = {}
+            placeholders = ",".join(["?" for _ in missing_inactive_ids])
+            with DatabaseConnector.get_connection(db_path, timeout=30.0) as conn:
+                conn.row_factory = sqlite3.Row
+                rows = conn.execute(
+                    f"""
+                    SELECT vehicle_id, location_x, location_y, location_z, timestamp
+                    FROM vehicle_destruction_events
+                    WHERE vehicle_id IN ({placeholders})
+                      AND location_x IS NOT NULL
+                      AND location_y IS NOT NULL
+                    ORDER BY timestamp DESC, id DESC
+                    """,
+                    missing_inactive_ids,
+                ).fetchall()
+                for row in rows:
+                    vid = int(row["vehicle_id"])
+                    if vid not in fallback_locations:
+                        fallback_locations[vid] = {
+                            "location_x": row["location_x"],
+                            "location_y": row["location_y"],
+                            "location_z": row["location_z"],
+                            "timestamp": row["timestamp"],
+                        }
+
+            if fallback_locations:
+                for v in vehicles:
+                    vid = v.get("vehicle_entity_id")
+                    if vid is None or int(v.get("status", 0) or 0) not in (1, 2, 3):
+                        continue
+                    if v.get("current_location_x") is not None and v.get("current_location_y") is not None:
+                        continue
+                    fb = fallback_locations.get(int(vid))
+                    if fb:
+                        v["current_location_x"] = fb["location_x"]
+                        v["current_location_y"] = fb["location_y"]
+                        v["current_location_z"] = fb["location_z"]
+                        v["current_location_updated_at"] = fb.get("timestamp")
+                if db_manager and hasattr(db_manager, "update_vehicles_locations_batch"):
+                    try:
+                        db_manager.update_vehicles_locations_batch(fallback_locations)
+                    except Exception as err:
+                        if logger:
+                            logger.warn(f"Falha ao persistir fallback de veículos: {err}")
+        except Exception as err:
+            if logger:
+                logger.warn(f"Falha ao buscar fallback de vehicle_destruction_events: {err}")
+
+
 @vehicles_bp.route("/api/vehicles/player/<steam_id>/by-status", methods=["GET"])
 def get_player_vehicles_by_status(steam_id: str):
     """Listar veículos de um player específico agrupados por status ou filtrados"""
@@ -1807,6 +1933,9 @@ def get_player_vehicles_by_status(steam_id: str):
             rows = cursor.fetchall()
 
             vehicles = [dict(row) for row in rows]
+
+        # Ideia 2: atualizar localização atual sob demanda ao abrir aba do jogador
+        _sync_and_enrich_vehicle_locations(vehicles, log_processor, db_path, logger=logger)
 
         # Mapear status para texto legível
         status_map = {0: "Ativo", 1: "Inativo", 2: "Desaparecido", 3: "Destruído"}
@@ -2129,6 +2258,20 @@ def get_all_players_vehicles():
                     }
 
                 players_data.append(player_data)
+
+        # Ideia 2: atualizar localização atual em lote fora da transação de leitura
+        all_returned_vehicles: List[Dict[str, Any]] = []
+        for pdata in players_data:
+            if "vehicles" in pdata:
+                all_returned_vehicles.extend(pdata["vehicles"])
+            elif "vehicles_by_status" in pdata:
+                for slist in pdata["vehicles_by_status"].values():
+                    all_returned_vehicles.extend(slist)
+
+        if all_returned_vehicles:
+            _sync_and_enrich_vehicle_locations(
+                all_returned_vehicles, log_processor, db_path, logger=logger
+            )
 
         response_data = {
             "total_players": total_players,

@@ -2512,8 +2512,13 @@ const [survivalError, setSurvivalError] = useState<Map<string, string>>(new Map(
                                                             <span className="font-mono">{vehicle.entity_id}</span>
                                                           </div>
                                                           <div className="whitespace-nowrap">
-                                                            <span className="text-white/40">{t('players.vehicles.details.location')}: </span>
-                                                            {Number.isFinite(vehicle.location_x) && Number.isFinite(vehicle.location_y) ? (
+                                                            <span className="text-white/40">{t('players.vehicles.details.lockLocation')}: </span>
+                                                            {typeof vehicle.location_x === 'number' &&
+                                                            Number.isFinite(vehicle.location_x) &&
+                                                            typeof vehicle.location_y === 'number' &&
+                                                            Number.isFinite(vehicle.location_y) &&
+                                                            typeof vehicle.location_z === 'number' &&
+                                                            Number.isFinite(vehicle.location_z) ? (
                                                               <a
                                                                 href={`https://scum-map.com/en/shared/scum/island/${vehicle.location_x.toFixed(4)},${vehicle.location_y.toFixed(4)},4`}
                                                                 target="_blank"
@@ -2524,8 +2529,31 @@ const [survivalError, setSurvivalError] = useState<Map<string, string>>(new Map(
                                                                 ({vehicle.location_x.toFixed(0)}, {vehicle.location_y.toFixed(0)}, {vehicle.location_z.toFixed(0)})
                                                               </a>
                                                             ) : (
-                                                              <span className="font-mono">
-                                                                ({vehicle.location_x.toFixed(0)}, {vehicle.location_y.toFixed(0)}, {vehicle.location_z.toFixed(0)})
+                                                              <span className="text-white/40 italic">
+                                                                {t('players.vehicles.details.locationUnavailable')}
+                                                              </span>
+                                                            )}
+                                                          </div>
+                                                          <div className="whitespace-nowrap">
+                                                            <span className="text-white/40">{t('players.vehicles.details.currentLocation')}: </span>
+                                                            {typeof vehicle.current_location_x === 'number' &&
+                                                            Number.isFinite(vehicle.current_location_x) &&
+                                                            typeof vehicle.current_location_y === 'number' &&
+                                                            Number.isFinite(vehicle.current_location_y) &&
+                                                            typeof vehicle.current_location_z === 'number' &&
+                                                            Number.isFinite(vehicle.current_location_z) ? (
+                                                              <a
+                                                                href={`https://scum-map.com/en/shared/scum/island/${vehicle.current_location_x.toFixed(4)},${vehicle.current_location_y.toFixed(4)},4`}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                className="font-mono text-emerald-300 hover:text-emerald-200 hover:underline"
+                                                                title={t('players.vehicles.details.openMap') ?? undefined}
+                                                              >
+                                                                ({vehicle.current_location_x.toFixed(0)}, {vehicle.current_location_y.toFixed(0)}, {vehicle.current_location_z.toFixed(0)})
+                                                              </a>
+                                                            ) : (
+                                                              <span className="text-white/40 italic">
+                                                                {t('players.vehicles.details.locationUnavailable')}
                                                               </span>
                                                             )}
                                                           </div>
